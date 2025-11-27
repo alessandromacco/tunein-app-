@@ -8,25 +8,26 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glow { box-shadow: 0 0 40px rgba(168, 85, 247, 0.4), 0 0 80px rgba(236, 72, 153, 0.2); }
+        .radio-waves { background: radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(168, 85, 247, 0.1) 40%, rgba(168, 85, 247, 0.1) 41%, transparent 41%), radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(236, 72, 153, 0.08) 60%, rgba(236, 72, 153, 0.08) 61%, transparent 61%), radial-gradient(ellipse at center, transparent 0%, transparent 80%, rgba(168, 85, 247, 0.05) 80%, rgba(168, 85, 247, 0.05) 81%, transparent 81%); animation: pulse 4s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
+        .frequency-display { background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2)); position: relative; overflow: hidden; }
+        .frequency-display::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent); animation: shine 3s infinite; }
+        @keyframes shine { 0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); } 100% { transform: translateX(100%) translateY(100%) rotate(45deg); } }
+    </style>
 </head>
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        const Play = (props) => (
-          <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        );
-        const Pause = (props) => (
-          <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-        );
-        const RotateCcw = (props) => (
-          <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-        );
-        const Volume2 = (props) => (
-          <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
-        );
-        const Info = (props) => (
-          <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        );
+        const Play = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>);
+        const Pause = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>);
+        const RotateCcw = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>);
+        const Volume2 = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>);
+        const Radio = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"></path><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"></path><circle cx="12" cy="12" r="2"></circle><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"></path><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"></path></svg>);
 
         function TuneIn() {
           const [frequency, setFrequency] = React.useState(90.0);
@@ -34,165 +35,89 @@
           const [currentTime, setCurrentTime] = React.useState(0);
           const [duration, setDuration] = React.useState(0);
           const [volume, setVolume] = React.useState(0.7);
-          const [showInfo, setShowInfo] = React.useState(false);
           const audioRef = React.useRef(null);
-          const AUDIO_URL = https://github.com/alessandromacco/tunein-app-/releases/download/v1.0/Track.mp3
+          const AUDIO_URL = "https://github.com/alessandromacco/tunein-app/releases/download/v1.0/Track.mp3";
           const FM_MIN = 88.0;
           const FM_MAX = 108.0;
           const AUDIO_DURATION_MINUTES = 60;
           
-          React.useEffect(() => {
-            if (audioRef.current) audioRef.current.volume = volume;
-          }, [volume]);
-          
-          const frequencyToTime = (freq) => {
-            const normalized = (freq - FM_MIN) / (FM_MAX - FM_MIN);
-            return normalized * AUDIO_DURATION_MINUTES * 60;
-          };
-          
-          const timeToFrequency = (time) => {
-            const normalized = time / (AUDIO_DURATION_MINUTES * 60);
-            return FM_MIN + normalized * (FM_MAX - FM_MIN);
-          };
-          
-          const handleFrequencyChange = (newFreq) => {
-            const clampedFreq = Math.max(FM_MIN, Math.min(FM_MAX, newFreq));
-            setFrequency(clampedFreq);
-            if (audioRef.current) {
-              const newTime = frequencyToTime(clampedFreq);
-              audioRef.current.currentTime = newTime;
-              setCurrentTime(newTime);
-            }
-          };
-          
-          const handlePlayPause = () => {
-            if (audioRef.current) {
-              if (isPlaying) {
-                audioRef.current.pause();
-              } else {
-                audioRef.current.play();
-              }
-              setIsPlaying(!isPlaying);
-            }
-          };
-          
-          const handleReset = () => {
-            setFrequency(90.0);
-            if (audioRef.current) {
-              const resetTime = frequencyToTime(90.0);
-              audioRef.current.currentTime = resetTime;
-              setCurrentTime(resetTime);
-            }
-          };
-          
-          const handleTimeUpdate = () => {
-            if (audioRef.current) {
-              const time = audioRef.current.currentTime;
-              setCurrentTime(time);
-              const newFreq = timeToFrequency(time);
-              setFrequency(newFreq);
-            }
-          };
-          
-          const handleLoadedMetadata = () => {
-            if (audioRef.current) {
-              setDuration(audioRef.current.duration);
-              const initialTime = frequencyToTime(frequency);
-              audioRef.current.currentTime = initialTime;
-              setCurrentTime(initialTime);
-            }
-          };
-          
-          const formatTime = (seconds) => {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-          };
-          
-          const getFrequencyColor = (freq) => {
-            const hue = ((freq - FM_MIN) / (FM_MAX - FM_MIN)) * 280;
-            return `hsl(${hue}, 70%, 50%)`;
-          };
+          React.useEffect(() => { if (audioRef.current) audioRef.current.volume = volume; }, [volume]);
+          const frequencyToTime = (freq) => { const normalized = (freq - FM_MIN) / (FM_MAX - FM_MIN); return normalized * AUDIO_DURATION_MINUTES * 60; };
+          const timeToFrequency = (time) => { const normalized = time / (AUDIO_DURATION_MINUTES * 60); return FM_MIN + normalized * (FM_MAX - FM_MIN); };
+          const handleFrequencyChange = (newFreq) => { const clampedFreq = Math.max(FM_MIN, Math.min(FM_MAX, newFreq)); setFrequency(clampedFreq); if (audioRef.current) { const newTime = frequencyToTime(clampedFreq); audioRef.current.currentTime = newTime; setCurrentTime(newTime); } };
+          const handlePlayPause = () => { if (audioRef.current) { if (isPlaying) { audioRef.current.pause(); } else { audioRef.current.play(); } setIsPlaying(!isPlaying); } };
+          const handleReset = () => { setFrequency(90.0); if (audioRef.current) { const resetTime = frequencyToTime(90.0); audioRef.current.currentTime = resetTime; setCurrentTime(resetTime); } };
+          const handleTimeUpdate = () => { if (audioRef.current) { const time = audioRef.current.currentTime; setCurrentTime(time); const newFreq = timeToFrequency(time); setFrequency(newFreq); } };
+          const handleLoadedMetadata = () => { if (audioRef.current) { setDuration(audioRef.current.duration); const initialTime = frequencyToTime(frequency); audioRef.current.currentTime = initialTime; setCurrentTime(initialTime); } };
+          const formatTime = (seconds) => { const mins = Math.floor(seconds / 60); const secs = Math.floor(seconds % 60); return `${mins}:${secs.toString().padStart(2, '0')}`; };
+          const getFrequencyColor = (freq) => { const hue = ((freq - FM_MIN) / (FM_MAX - FM_MIN)) * 280; return `hsl(${hue}, 70%, 60%)`; };
           
           return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-              <div className="w-full max-w-2xl">
-                <div className="bg-black/40 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/10">
-                  <div className="text-center mb-8">
-                    <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">Tune In</h1>
-                    <p className="text-purple-300 text-lg">Radio Frequency Converter</p>
+            <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950 flex items-center justify-center p-4 relative overflow-hidden">
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500 rounded-full blur-3xl"></div>
+              </div>
+              <div className="w-full max-w-4xl relative z-10">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center gap-3 mb-4">
+                    <Radio className="w-12 h-12 text-purple-400" />
+                    <h1 className="text-6xl font-black text-white tracking-tight">Tune<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">In</span></h1>
                   </div>
-                  <div className="relative mb-8">
-                    <div className="text-center py-8 rounded-2xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-2 transition-all duration-300"
-                         style={{ borderColor: getFrequencyColor(frequency) }}>
-                      <div className="text-7xl font-bold text-white mb-2 tracking-tighter">{frequency.toFixed(1)}</div>
-                      <div className="text-xl text-purple-200">MHz FM</div>
+                  <p className="text-purple-300 text-sm uppercase tracking-widest font-light">Radio Frequency Converter</p>
+                </div>
+                <div className="glass rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                  <div className="relative mb-10">
+                    <div className="radio-waves absolute inset-0 rounded-3xl"></div>
+                    <div className="frequency-display relative z-10 text-center py-12 rounded-3xl border border-white/10">
+                      <div className="text-8xl md:text-9xl font-black text-white mb-2 tracking-tighter" style={{ textShadow: `0 0 30px ${getFrequencyColor(frequency)}` }}>{frequency.toFixed(1)}</div>
+                      <div className="text-2xl font-light text-purple-200 tracking-wider">MHz FM</div>
                     </div>
                   </div>
-                  <div className="mb-8">
-                    <input type="range" min={FM_MIN} max={FM_MAX} step="0.1" value={frequency}
-                           onChange={(e) => handleFrequencyChange(parseFloat(e.target.value))}
-                           className="w-full h-3 rounded-lg appearance-none cursor-pointer"
-                           style={{ background: 'linear-gradient(to right, hsl(0, 70%, 50%) 0%, hsl(60, 70%, 50%) 25%, hsl(120, 70%, 50%) 50%, hsl(200, 70%, 50%) 75%, hsl(280, 70%, 50%) 100%)' }} />
-                    <div className="flex justify-between text-sm text-purple-300 mt-2">
-                      <span>{FM_MIN} MHz</span>
-                      <span>{FM_MAX} MHz</span>
+                  <div className="mb-10">
+                    <div className="relative">
+                      <input type="range" min={FM_MIN} max={FM_MAX} step="0.1" value={frequency} onChange={(e) => handleFrequencyChange(parseFloat(e.target.value))} className="w-full h-4 rounded-full appearance-none cursor-pointer" style={{ background: 'linear-gradient(to right, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6, #ec4899)' }} />
+                      <div className="flex justify-between text-xs text-purple-300 mt-3 font-medium">
+                        <span>{FM_MIN} MHz</span>
+                        <span className="text-white font-semibold">{frequency.toFixed(1)} MHz</span>
+                        <span>{FM_MAX} MHz</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex gap-2 mb-8 justify-center">
-                    <button onClick={() => handleFrequencyChange(frequency - 0.1)}
-                            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all">-0.1</button>
-                    <button onClick={() => handleFrequencyChange(frequency + 0.1)}
-                            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all">+0.1</button>
+                  <div className="flex gap-3 mb-10 justify-center">
+                    <button onClick={() => handleFrequencyChange(frequency - 0.1)} className="glass px-8 py-3 text-white rounded-xl transition-all hover:bg-white/10 font-semibold text-lg">-0.1</button>
+                    <button onClick={() => handleFrequencyChange(frequency + 0.1)} className="glass px-8 py-3 text-white rounded-xl transition-all hover:bg-white/10 font-semibold text-lg">+0.1</button>
                   </div>
-                  <div className="flex items-center gap-4 mb-6">
-                    <button onClick={handlePlayPause}
-                            className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                      {isPlaying ? <Pause className="w-8 h-8 text-white" fill="white" /> : <Play className="w-8 h-8 text-white ml-1" fill="white" />}
+                  <div className="flex items-center gap-6 mb-8">
+                    <button onClick={handlePlayPause} className="glow flex-shrink-0 w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl">
+                      {isPlaying ? <Pause className="w-10 h-10 text-white" fill="white" /> : <Play className="w-10 h-10 text-white ml-1" fill="white" />}
                     </button>
-                    <button onClick={handleReset}
-                            className="flex-shrink-0 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-                      <RotateCcw className="w-5 h-5 text-white" />
+                    <button onClick={handleReset} className="glass flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center transition-all hover:bg-white/10">
+                      <RotateCcw className="w-6 h-6 text-white" />
                     </button>
-                    <div className="flex-1 flex items-center gap-3">
-                      <Volume2 className="w-5 h-5 text-purple-300 flex-shrink-0" />
-                      <input type="range" min="0" max="1" step="0.01" value={volume}
-                             onChange={(e) => setVolume(parseFloat(e.target.value))}
-                             className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-white/20" />
+                    <div className="flex-1 flex items-center gap-4">
+                      <Volume2 className="w-6 h-6 text-purple-300 flex-shrink-0" />
+                      <input type="range" min="0" max="1" step="0.01" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))} className="flex-1 h-2 rounded-full appearance-none cursor-pointer bg-white/20" />
+                      <span className="text-white text-sm font-medium w-10">{Math.round(volume * 100)}%</span>
                     </div>
-                    <button onClick={() => setShowInfo(!showInfo)}
-                            className="flex-shrink-0 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-                      <Info className="w-5 h-5 text-white" />
-                    </button>
                   </div>
-                  <div className="mb-4">
-                    <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300"
-                           style={{ width: `${(currentTime / duration) * 100}%` }} />
+                  <div className="glass rounded-full p-2">
+                    <div className="relative h-3 bg-white/10 rounded-full overflow-hidden">
+                      <div className="absolute h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 rounded-full" style={{ width: `${(currentTime / duration) * 100}%` }} />
                     </div>
-                    <div className="flex justify-between text-sm text-purple-300 mt-2">
+                    <div className="flex justify-between text-xs text-purple-300 mt-2 px-2 font-medium">
                       <span>{formatTime(currentTime)}</span>
                       <span>{formatTime(duration)}</span>
                     </div>
                   </div>
-                  {showInfo && (
-                    <div className="mt-6 p-6 bg-white/5 rounded-xl border border-white/10">
-                      <h3 className="text-white font-semibold mb-3 text-lg">How it works</h3>
-                      <ul className="text-purple-200 space-y-2 text-sm leading-relaxed">
-                        <li>• Move the slider or use buttons to change frequency</li>
-                        <li>• Each frequency (88.0-108.0 MHz) corresponds to a moment in the audio</li>
-                        <li>• The audio plays continuously as you tune through frequencies</li>
-                        <li>• Press Reset to return to 90.0 MHz</li>
-                      </ul>
-                    </div>
-                  )}
                 </div>
-                <div className="text-center mt-6 text-purple-300/60 text-sm">Tune In © 2025 - Explore the FM spectrum</div>
+                <div className="text-center mt-8 text-purple-300/60 text-sm font-light">© 2025 Tune In · Explore the FM spectrum</div>
               </div>
               <audio ref={audioRef} src={AUDIO_URL} onTimeUpdate={handleTimeUpdate} onLoadedMetadata={handleLoadedMetadata} onEnded={() => setIsPlaying(false)} preload="metadata" />
               <style>{`
-                input[type="range"]::-webkit-slider-thumb { appearance: none; width: 24px; height: 24px; border-radius: 50%; background: white; cursor: pointer; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
-                input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: white; cursor: pointer; border: none; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
+                input[type="range"]::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; border-radius: 50%; background: white; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 255, 255, 0.2); transition: all 0.2s; }
+                input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7), 0 0 0 6px rgba(255, 255, 255, 0.3); }
+                input[type="range"]::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: white; cursor: pointer; border: none; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 255, 255, 0.2); transition: all 0.2s; }
               `}</style>
             </div>
           );
@@ -201,4 +126,4 @@
         root.render(<TuneIn />);
     </script>
 </body>
-</html>Fix icons - working versionUpdate audio URL
+</html>Update with new design and GitHub audio
