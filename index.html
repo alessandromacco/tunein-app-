@@ -36,10 +36,10 @@
           const [duration, setDuration] = React.useState(0);
           const [volume, setVolume] = React.useState(0.7);
           const audioRef = React.useRef(null);
-          const AUDIO_URL = https://dl.dropboxusercontent.com/scl/fi/9udwcm3bbysdjv1peq1wx/Track.mp3?rlkey=p1zx9mpdeahj6vsic3eq132va&st=axpc3b8s
+          const AUDIO_URL = https://archive.org/download/track_20251128_1844/Fioritura%20senza%20frutteto.mp3
           const FM_MIN = 88.0;
           const FM_MAX = 108.0;
-          const AUDIO_DURATION_MINUTES = 60;
+          const AUDIO_DURATION_MINUTES = 122;
           
           React.useEffect(() => { if (audioRef.current) audioRef.current.volume = volume; }, [volume]);
           const frequencyToTime = (freq) => { const normalized = (freq - FM_MIN) / (FM_MAX - FM_MIN); return normalized * AUDIO_DURATION_MINUTES * 60; };
