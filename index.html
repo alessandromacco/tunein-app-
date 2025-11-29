@@ -24,19 +24,56 @@
         const Pause = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>);
         const Volume2 = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>);
         const Music = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>);
+        const Globe = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>);
 
-        const PRESET_FREQUENCIES = [
-          { hz: 396, name: "396 Hz", description: "Liberazione paura", color: "#ef4444" },
-          { hz: 417, name: "417 Hz", description: "Cambiamento", color: "#f59e0b" },
-          { hz: 432, name: "432 Hz", description: "Armonia universale", color: "#10b981" },
-          { hz: 440, name: "440 Hz", description: "Standard (LA)", color: "#3b82f6" },
-          { hz: 528, name: "528 Hz", description: "Trasformazione DNA", color: "#8b5cf6" },
-          { hz: 639, name: "639 Hz", description: "Relazioni", color: "#ec4899" },
-          { hz: 741, name: "741 Hz", description: "Risveglio intuizione", color: "#f97316" },
-          { hz: 852, name: "852 Hz", description: "Ordine spirituale", color: "#06b6d4" }
-        ];
+        const TRANSLATIONS = {
+          it: {
+            title: "Tune In",
+            subtitle: "Convertitore di Frequenze Audio",
+            preset: "Preset",
+            custom: "Personalizzato",
+            howItWorks: "Come Funziona",
+            description: "La fisica delle vibrazioni è alla base delle pratiche di guarigione sonora. Specifiche frequenze influenzano l'attività delle onde cerebrali attraverso l'entrainment neurale, sincronizzando i ritmi biologici. Gli effetti misurabili includono riduzione di frequenza cardiaca, pressione sanguigna e cortisolo. Le frequenze Solfeggio sono toni della scala usata nella musica sacra medievale, riscoperta negli anni '70. Nella tradizione yogica, queste frequenze corrispondono ai sette chakra principali, centri energetici lungo la colonna vertebrale che regolano aspetti fisici, emotivi e spirituali dell'essere. Questo convertitore permette di ascoltare lo stesso audio a frequenze diverse, esplorando personalmente gli effetti della risonanza vibrazionale.",
+            footer: "© 2025 Tune In · Guarigione attraverso le Frequenze"
+          },
+          en: {
+            title: "Tune In",
+            subtitle: "Audio Frequency Converter",
+            preset: "Preset",
+            custom: "Custom",
+            howItWorks: "How It Works",
+            description: "The physics of vibrations is the foundation of sound healing practices. Specific frequencies influence brainwave activity through neural entrainment, synchronizing biological rhythms. Measurable effects include reduced heart rate, blood pressure, and cortisol levels. Solfeggio frequencies are tones from the scale used in medieval sacred music, rediscovered in the 1970s. In yogic tradition, these frequencies correspond to the seven main chakras, energy centers along the spine that regulate physical, emotional, and spiritual aspects of being. This converter allows you to listen to the same audio at different frequencies, personally exploring the effects of vibrational resonance.",
+            footer: "© 2025 Tune In · Healing Through Frequencies"
+          }
+        };
+
+        const PRESET_FREQUENCIES = {
+          it: [
+            { hz: 396, name: "396 Hz", title: "Radicamento", chakra: "Muladhara", description: "Riduce ansia e paura, stabilizza lo stato emotivo. Scioglie senso di colpa e tensioni profonde. Favorisce radicamento e sicurezza interiore.", color: "#ef4444" },
+            { hz: 417, name: "417 Hz", title: "Cambiamento", chakra: "Svadhisthana", description: "Rimuove energia negativa e schemi comportamentali dannosi. Centro della creatività. Facilita trasformazione e nuovi inizi.", color: "#f59e0b" },
+            { hz: 432, name: "432 Hz", title: "Armonia universale", chakra: "", description: "Riduce frequenza cardiaca e pressione sanguigna. Risuona con le vibrazioni naturali dell'universo. Rilassamento profondo e allineamento.", color: "#10b981" },
+            { hz: 440, name: "440 Hz", title: "Standard occidentale", chakra: "", description: "Frequenza di riferimento internazionale dal 1950. Ottimale per concentrazione e attività ad alta intensità. Focus mentale e produttività.", color: "#3b82f6" },
+            { hz: 528, name: "528 Hz", title: "Frequenza dell'amore", chakra: "Manipura", description: "Riduzione degli ormoni dello stress in 5 minuti. Centro della trasformazione. Chiarezza mentale e riparazione energetica.", color: "#8b5cf6" },
+            { hz: 639, name: "639 Hz", title: "Connessione", chakra: "Anahata", description: "Bilancia emozioni, guarisce ferite da relazioni tossiche. Centro della compassione. Migliora comunicazione e relazioni interpersonali.", color: "#ec4899" },
+            { hz: 741, name: "741 Hz", title: "Espressione", chakra: "Vishuddha", description: "Purificazione e risveglio intuitivo. Centro dell'espressione. Favorisce problem-solving e autoespressione autentica.", color: "#f97316" },
+            { hz: 852, name: "852 Hz", title: "Intuizione", chakra: "Ajna", description: "Riduzione del 40% dei livelli di cortisolo. Risveglia saggezza interiore e connessione con coscienza superiore. Intuizione profonda.", color: "#06b6d4" },
+            { hz: 963, name: "963 Hz", title: "Unità", chakra: "Sahasrara", description: "Attiva la ghiandola pineale, connessione con il divino e coscienza universale. Esperienza di unità con il Tutto.", color: "#a855f7" }
+          ],
+          en: [
+            { hz: 396, name: "396 Hz", title: "Grounding", chakra: "Muladhara", description: "Reduces anxiety and fear, stabilizes emotional state. Dissolves guilt and deep tensions. Promotes grounding and inner security.", color: "#ef4444" },
+            { hz: 417, name: "417 Hz", title: "Change", chakra: "Svadhisthana", description: "Removes negative energy and harmful behavioral patterns. Creativity center. Facilitates transformation and new beginnings.", color: "#f59e0b" },
+            { hz: 432, name: "432 Hz", title: "Universal harmony", chakra: "", description: "Reduces heart rate and blood pressure. Resonates with natural vibrations of the universe. Deep relaxation and alignment.", color: "#10b981" },
+            { hz: 440, name: "440 Hz", title: "Western standard", chakra: "", description: "International reference frequency since 1950. Optimal for concentration and high-intensity activities. Mental focus and productivity.", color: "#3b82f6" },
+            { hz: 528, name: "528 Hz", title: "Love frequency", chakra: "Manipura", description: "Stress hormone reduction in 5 minutes. Transformation center. Mental clarity and energetic repair.", color: "#8b5cf6" },
+            { hz: 639, name: "639 Hz", title: "Connection", chakra: "Anahata", description: "Balances emotions, heals wounds from toxic relationships. Compassion center. Improves communication and interpersonal relationships.", color: "#ec4899" },
+            { hz: 741, name: "741 Hz", title: "Expression", chakra: "Vishuddha", description: "Purification and intuitive awakening. Expression center. Promotes problem-solving and authentic self-expression.", color: "#f97316" },
+            { hz: 852, name: "852 Hz", title: "Intuition", chakra: "Ajna", description: "40% reduction in cortisol levels. Awakens inner wisdom and connection with higher consciousness. Deep intuition.", color: "#06b6d4" },
+            { hz: 963, name: "963 Hz", title: "Unity", chakra: "Sahasrara", description: "Activates pineal gland, connection with the divine and universal consciousness. Experience of unity with the All.", color: "#a855f7" }
+          ]
+        };
 
         function TuneIn() {
+          const [lang, setLang] = React.useState('it');
           const [selectedFreq, setSelectedFreq] = React.useState(432);
           const [customFreq, setCustomFreq] = React.useState(432);
           const [isPlaying, setIsPlaying] = React.useState(false);
@@ -44,15 +81,18 @@
           const [duration, setDuration] = React.useState(0);
           const [volume, setVolume] = React.useState(0.7);
           const [isCustomMode, setIsCustomMode] = React.useState(false);
+          const [showInfo, setShowInfo] = React.useState(false);
           
           const audioContextRef = React.useRef(null);
           const sourceNodeRef = React.useRef(null);
           const gainNodeRef = React.useRef(null);
           const audioElementRef = React.useRef(null);
-          const pitchShiftRef = React.useRef(null);
 
           const AUDIO_URL = "https://archive.org/download/track_20251128_1844/Fioritura%20senza%20frutteto.mp3";
           const STANDARD_FREQ = 440;
+
+          const t = TRANSLATIONS[lang];
+          const frequencies = PRESET_FREQUENCIES[lang];
 
           React.useEffect(() => {
             const audio = new Audio(AUDIO_URL);
@@ -134,11 +174,11 @@
 
           const getFrequencyColor = () => {
             const freq = isCustomMode ? customFreq : selectedFreq;
-            const preset = PRESET_FREQUENCIES.find(p => p.hz === freq);
+            const preset = frequencies.find(p => p.hz === freq);
             return preset ? preset.color : '#8b5cf6';
           };
 
-          const currentPreset = PRESET_FREQUENCIES.find(p => p.hz === selectedFreq);
+          const currentPreset = frequencies.find(p => p.hz === selectedFreq);
 
           return (
             <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950 flex items-center justify-center p-4 relative overflow-hidden">
@@ -147,15 +187,21 @@
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500 rounded-full blur-3xl"></div>
               </div>
 
+              {/* Language Selector */}
+              <div className="absolute top-4 right-4 z-20 flex gap-2">
+                <button onClick={() => setLang('it')} className={`px-4 py-2 rounded-lg font-semibold transition-all ${lang === 'it' ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}>IT</button>
+                <button onClick={() => setLang('en')} className={`px-4 py-2 rounded-lg font-semibold transition-all ${lang === 'en' ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}>EN</button>
+              </div>
+
               <div className="w-full max-w-4xl relative z-10">
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center gap-3 mb-4">
                     <Music className="w-12 h-12 text-purple-400" />
                     <h1 className="text-6xl font-black text-white tracking-tight">
-                      Tune<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">In</span>
+                      {t.title.split('In')[0]}<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">In</span>
                     </h1>
                   </div>
-                  <p className="text-purple-300 text-sm uppercase tracking-widest font-light">Audio Frequency Converter</p>
+                  <p className="text-purple-300 text-sm uppercase tracking-widest font-light">{t.subtitle}</p>
                 </div>
 
                 <div className="glass rounded-3xl p-8 md:p-12">
@@ -173,63 +219,42 @@
                     <div className="text-3xl font-light text-purple-200 tracking-wider">Hz</div>
                     {!isCustomMode && currentPreset && (
                       <div className="mt-4">
-                        <div className="text-purple-300 text-lg font-medium">{currentPreset.description}</div>
+                        <div className="text-2xl text-white font-semibold">{currentPreset.title}</div>
+                        {currentPreset.chakra && <div className="text-purple-300 text-sm mt-1">{currentPreset.chakra}</div>}
+                        <div className="text-purple-200 text-sm mt-3 max-w-2xl mx-auto leading-relaxed">{currentPreset.description}</div>
                       </div>
                     )}
                   </div>
 
                   {/* Mode Toggle */}
                   <div className="flex gap-3 mb-8 justify-center">
-                    <button 
-                      onClick={() => setIsCustomMode(false)}
-                      className={`px-6 py-3 rounded-xl font-semibold transition-all ${!isCustomMode ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}>
-                      Preset
-                    </button>
-                    <button 
-                      onClick={() => setIsCustomMode(true)}
-                      className={`px-6 py-3 rounded-xl font-semibold transition-all ${isCustomMode ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}>
-                      Personalizzato
-                    </button>
+                    <button onClick={() => setIsCustomMode(false)} className={`px-6 py-3 rounded-xl font-semibold transition-all ${!isCustomMode ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}>{t.preset}</button>
+                    <button onClick={() => setIsCustomMode(true)} className={`px-6 py-3 rounded-xl font-semibold transition-all ${isCustomMode ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}>{t.custom}</button>
                   </div>
 
                   {/* Frequency Selection */}
                   {!isCustomMode ? (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
-                      {PRESET_FREQUENCIES.map(freq => (
-                        <button
-                          key={freq.hz}
-                          onClick={() => setSelectedFreq(freq.hz)}
-                          className={`p-4 rounded-xl transition-all ${selectedFreq === freq.hz ? 'ring-2 ring-white' : 'hover:bg-white/10'}`}
+                    <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-10">
+                      {frequencies.map(freq => (
+                        <button key={freq.hz} onClick={() => setSelectedFreq(freq.hz)}
+                          className={`p-3 rounded-xl transition-all ${selectedFreq === freq.hz ? 'ring-2 ring-white' : 'hover:bg-white/10'}`}
                           style={{ 
                             background: selectedFreq === freq.hz ? `${freq.color}40` : 'rgba(255,255,255,0.05)',
                             borderLeft: `4px solid ${freq.color}`
                           }}>
-                          <div className="text-2xl font-bold text-white">{freq.hz}</div>
-                          <div className="text-xs text-purple-300 mt-1">{freq.description}</div>
+                          <div className="text-xl font-bold text-white">{freq.hz}</div>
+                          <div className="text-xs text-purple-300 mt-1">{freq.title}</div>
                         </button>
                       ))}
                     </div>
                   ) : (
                     <div className="mb-10">
                       <div className="flex items-center gap-4 mb-4">
-                        <input
-                          type="range"
-                          min="200"
-                          max="1000"
-                          step="1"
-                          value={customFreq}
-                          onChange={(e) => setCustomFreq(parseInt(e.target.value))}
+                        <input type="range" min="200" max="1000" step="1" value={customFreq} onChange={(e) => setCustomFreq(parseInt(e.target.value))}
                           className="flex-1 h-3 rounded-full appearance-none cursor-pointer"
-                          style={{ background: `linear-gradient(to right, ${getFrequencyColor()}, #ec4899)` }}
-                        />
-                        <input
-                          type="number"
-                          min="200"
-                          max="1000"
-                          value={customFreq}
-                          onChange={(e) => setCustomFreq(parseInt(e.target.value))}
-                          className="w-24 px-4 py-2 glass text-white text-center rounded-lg font-semibold"
-                        />
+                          style={{ background: `linear-gradient(to right, ${getFrequencyColor()}, #ec4899)` }} />
+                        <input type="number" min="200" max="1000" value={customFreq} onChange={(e) => setCustomFreq(parseInt(e.target.value))}
+                          className="w-24 px-4 py-2 glass text-white text-center rounded-lg font-semibold" />
                       </div>
                       <div className="flex justify-between text-xs text-purple-300">
                         <span>200 Hz</span>
@@ -240,54 +265,42 @@
 
                   {/* Player Controls */}
                   <div className="flex items-center gap-6 mb-8">
-                    <button 
-                      onClick={handlePlayPause}
-                      className="glow flex-shrink-0 w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl">
+                    <button onClick={handlePlayPause} className="glow flex-shrink-0 w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl">
                       {isPlaying ? <Pause className="w-10 h-10 text-white" fill="white" /> : <Play className="w-10 h-10 text-white ml-1" fill="white" />}
                     </button>
-
                     <div className="flex-1 flex items-center gap-4">
                       <Volume2 className="w-6 h-6 text-purple-300 flex-shrink-0" />
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="1" 
-                        step="0.01" 
-                        value={volume}
-                        onChange={(e) => setVolume(parseFloat(e.target.value))}
+                      <input type="range" min="0" max="1" step="0.01" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))}
                         className="flex-1 h-2 rounded-full appearance-none cursor-pointer bg-white/20" />
                       <span className="text-white text-sm font-medium w-10">{Math.round(volume * 100)}%</span>
                     </div>
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="glass rounded-full p-2">
-                    <input
-                      type="range"
-                      min="0"
-                      max={duration}
-                      value={currentTime}
-                      onChange={handleSeek}
-                      className="w-full h-2 rounded-full appearance-none cursor-pointer bg-white/10"
-                    />
+                  <div className="glass rounded-full p-2 mb-6">
+                    <input type="range" min="0" max={duration} value={currentTime} onChange={handleSeek}
+                      className="w-full h-2 rounded-full appearance-none cursor-pointer bg-white/10" />
                     <div className="flex justify-between text-xs text-purple-300 mt-2 px-2 font-medium">
                       <span>{formatTime(currentTime)}</span>
                       <span>{formatTime(duration)}</span>
                     </div>
                   </div>
 
-                  {/* Info */}
-                  <div className="mt-8 p-4 glass rounded-xl">
-                    <div className="text-purple-200 text-sm leading-relaxed">
-                      <strong>Come funziona:</strong> Questo convertitore modifica la frequenza di riproduzione dell'audio. 
-                      La frequenza standard è 440 Hz (LA). Frequenze diverse possono avere effetti diversi secondo la teoria delle frequenze curative.
+                  {/* Info Toggle */}
+                  <button onClick={() => setShowInfo(!showInfo)}
+                    className="w-full glass px-6 py-3 rounded-xl text-purple-300 hover:bg-white/10 transition-all font-semibold">
+                    {showInfo ? '▼' : '▶'} {t.howItWorks}
+                  </button>
+
+                  {/* Info Panel */}
+                  {showInfo && (
+                    <div className="mt-4 p-6 glass rounded-xl">
+                      <div className="text-purple-200 text-sm leading-relaxed">{t.description}</div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
-                <div className="text-center mt-8 text-purple-300/60 text-sm font-light">
-                  © 2025 Tune In · Audio Frequency Healing
-                </div>
+                <div className="text-center mt-8 text-purple-300/60 text-sm font-light">{t.footer}</div>
               </div>
 
               <style>{`
@@ -303,4 +316,4 @@
         root.render(<TuneIn />);
     </script>
 </body>
-</html>Complete rewrite - Audio Frequency Converter (healing frequencies)
+</html>
