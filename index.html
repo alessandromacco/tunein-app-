@@ -3,70 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sacred Heart Temple - Tune In</title>
+  <title>Tune In - Healing Frequencies</title>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Tone.js for professional pitch-shifting -->
-  <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
 </head>
 <body>
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
-
-    // Audio configuration
-    const AUDIO_URL = 'https://tunein.b-cdn.net/Track.01.wav';
-    const STANDARD_FREQ = 440; // A440 standard
-
-    // Solfeggio frequencies with descriptions
-    const FREQUENCIES = {
-      396: { name: 'Muladhara', color: '#ef4444', desc: 'Grounding & Liberation' },
-      417: { name: 'Svadhisthana', color: '#f59e0b', desc: 'Change & Transformation' },
-      432: { name: 'Universal', color: '#10b981', desc: 'Universal Harmony' },
-      440: { name: 'Standard', color: '#3b82f6', desc: 'Western Standard' },
-      528: { name: 'Manipura', color: '#8b5cf6', desc: 'Love & Healing' },
-      639: { name: 'Anahata', color: '#ec4899', desc: 'Connection & Relationships' },
-      741: { name: 'Vishuddha', color: '#f97316', desc: 'Expression & Solutions' },
-      852: { name: 'Ajna', color: '#06b6d4', desc: 'Intuition & Awareness' },
-      963: { name: 'Sahasrara', color: '#a855f7', desc: 'Unity & Enlightenment' }
-    };
-
-    // Translations
-    const TRANSLATIONS = {
-      it: {
-        title: 'Sacred Heart Temple',
-        subtitle: 'Sintonizzati sulle frequenze di guarigione',
-        presetMode: 'Frequenze Solfeggio',
-        customMode: 'Frequenza Personalizzata',
-        customFreq: 'Hz personalizzati (200-1000)',
-        play: 'Riproduci',
-        pause: 'Pausa',
-        volume: 'Volume',
-        info: 'Info frequenze',
-        infoText: 'Le frequenze Solfeggio sono frequenze sonore specifiche che promuovono vari aspetti della salute fisica e spirituale. Ogni frequenza ha proprietà uniche per il bilanciamento dei chakra e la guarigione.',
-        noteTitle: '🎯 Nota importante',
-        noteText: 'Questo player genera frequenze pure matematicamente esatte usando Tone.js. Per ricevere i benefici completi, ascolta direttamente da questa pagina con cuffie di buona qualità. Lo streaming via OBS/YouTube comprime l\'audio e le frequenze non arrivano integre.',
-        language: 'Lingua'
-      },
-      en: {
-        title: 'Sacred Heart Temple',
-        subtitle: 'Tune into healing frequencies',
-        presetMode: 'Solfeggio Frequencies',
-        customMode: 'Custom Frequency',
-        customFreq: 'Custom Hz (200-1000)',
-        play: 'Play',
-        pause: 'Pause',
-        volume: 'Volume',
-        info: 'Frequency info',
-        infoText: 'Solfeggio frequencies are specific sound frequencies that promote various aspects of physical and spiritual health. Each frequency has unique properties for chakra balancing and healing.',
-        noteTitle: '🎯 Important Note',
-        noteText: 'This player generates mathematically precise pure frequencies using Tone.js. To receive the full benefits, listen directly from this page with good quality headphones. Streaming via OBS/YouTube compresses the audio and frequencies don\'t arrive intact.',
-        language: 'Language'
-      }
-    };
 
     function TuneIn() {
       const [lang, setLang] = useState('it');
@@ -79,133 +26,121 @@
       const [isCustomMode, setIsCustomMode] = useState(false);
       const [showInfo, setShowInfo] = useState(false);
 
-      // Refs for Tone.js
-      const playerRef = useRef(null);
-      const pitchShiftRef = useRef(null);
-      const volumeNodeRef = useRef(null);
-      const isInitializedRef = useRef(false);
+      const audioContextRef = useRef(null);
+      const sourceNodeRef = useRef(null);
+      const gainNodeRef = useRef(null);
+      const audioElementRef = useRef(null);
+
+      const AUDIO_URL = "https://tunein.b-cdn.net/Track.01.wav";
+      const STANDARD_FREQ = 440;
+
+      const FREQUENCIES = {
+        396: { name: 'Muladhara', color: '#ef4444', desc: 'Liberation from Fear' },
+        417: { name: 'Svadhisthana', color: '#f59e0b', desc: 'Facilitating Change' },
+        432: { name: 'Universal', color: '#10b981', desc: 'Cosmic Harmony' },
+        440: { name: 'Standard', color: '#3b82f6', desc: 'Western Standard' },
+        528: { name: 'Manipura', color: '#8b5cf6', desc: 'Love Frequency' },
+        639: { name: 'Anahata', color: '#ec4899', desc: 'Connecting Relationships' },
+        741: { name: 'Vishuddha', color: '#f97316', desc: 'Awakening Intuition' },
+        852: { name: 'Ajna', color: '#06b6d4', desc: 'Returning to Spirit' },
+        963: { name: 'Sahasrara', color: '#a855f7', desc: 'Divine Consciousness' }
+      };
+
+      const TRANSLATIONS = {
+        it: {
+          title: 'Tune In',
+          subtitle: 'Frequenze di Guarigione',
+          presetMode: 'Frequenze Solfeggio',
+          customMode: 'Frequenza Personalizzata',
+          customFreq: 'Hz personalizzati (200-1000)',
+          play: 'Play',
+          pause: 'Pause',
+          volume: 'Volume',
+          info: 'Informazioni',
+          infoText: 'Le frequenze Solfeggio sono toni specifici che promuovono vari aspetti della guarigione fisica e spirituale. Ogni frequenza corrisponde a un chakra specifico e ha proprietà uniche per il bilanciamento energetico.',
+          language: 'Lingua'
+        },
+        en: {
+          title: 'Tune In',
+          subtitle: 'Healing Frequencies',
+          presetMode: 'Solfeggio Frequencies',
+          customMode: 'Custom Frequency',
+          customFreq: 'Custom Hz (200-1000)',
+          play: 'Play',
+          pause: 'Pause',
+          volume: 'Volume',
+          info: 'Information',
+          infoText: 'Solfeggio frequencies are specific tones that promote various aspects of physical and spiritual healing. Each frequency corresponds to a specific chakra and has unique properties for energy balancing.',
+          language: 'Language'
+        }
+      };
 
       const t = TRANSLATIONS[lang];
 
-      // Initialize Tone.js audio chain
+      // Initialize audio
       useEffect(() => {
-        const initAudio = async () => {
-          try {
-            // Create player
-            playerRef.current = new Tone.Player({
-              url: AUDIO_URL,
-              loop: true,
-              onload: () => {
-                setDuration(playerRef.current.buffer.duration);
-                console.log('Audio loaded successfully');
-              }
-            });
+        const audio = new Audio(AUDIO_URL);
+        audio.crossOrigin = "anonymous";
+        audioElementRef.current = audio;
 
-            // Create pitch shift effect (preserves tempo)
-            pitchShiftRef.current = new Tone.PitchShift({
-              pitch: 0, // semitones
-              windowSize: 0.1,
-              delayTime: 0,
-              feedback: 0
-            });
+        audio.addEventListener('loadedmetadata', () => setDuration(audio.duration));
+        audio.addEventListener('timeupdate', () => setCurrentTime(audio.time));
+        audio.addEventListener('ended', () => setIsPlaying(false));
 
-            // Create volume node
-            volumeNodeRef.current = new Tone.Volume(-10); // start at 70% volume
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioContextRef.current = new AudioContext();
+        const source = audioContextRef.current.createMediaElementSource(audio);
+        const gainNode = audioContextRef.current.createGain();
+        
+        source.connect(gainNode);
+        gainNode.connect(audioContextRef.current.destination);
+        
+        sourceNodeRef.current = source;
+        gainNodeRef.current = gainNode;
 
-            // Connect audio chain: Player -> PitchShift -> Volume -> Destination
-            playerRef.current.chain(
-              pitchShiftRef.current,
-              volumeNodeRef.current,
-              Tone.Destination
-            );
-
-            isInitializedRef.current = true;
-
-            // Update time periodically
-            const interval = setInterval(() => {
-              if (playerRef.current && playerRef.current.state === 'started') {
-                setCurrentTime(playerRef.current.buffer.duration * (Tone.Transport.seconds % playerRef.current.buffer.duration) / playerRef.current.buffer.duration);
-              }
-            }, 100);
-
-            return () => clearInterval(interval);
-          } catch (error) {
-            console.error('Error initializing audio:', error);
-          }
-        };
-
-        initAudio();
-
-        // Cleanup
         return () => {
-          if (playerRef.current) {
-            playerRef.current.stop();
-            playerRef.current.dispose();
-          }
-          if (pitchShiftRef.current) {
-            pitchShiftRef.current.dispose();
-          }
-          if (volumeNodeRef.current) {
-            volumeNodeRef.current.dispose();
-          }
+          audio.pause();
+          audio.src = '';
+          audio.load();
         };
       }, []);
 
-      // Update pitch when frequency changes
+      // Update frequency
       useEffect(() => {
-        if (!pitchShiftRef.current) return;
-
+        if (!audioElementRef.current) return;
         const targetFreq = isCustomMode ? customFreq : selectedFreq;
-        
-        // Convert frequency ratio to semitones
-        // semitones = 12 * log2(targetFreq / STANDARD_FREQ)
-        const semitones = 12 * Math.log2(targetFreq / STANDARD_FREQ);
-        
-        pitchShiftRef.current.pitch = semitones;
-        console.log(`Frequency: ${targetFreq}Hz, Semitones: ${semitones.toFixed(2)}`);
+        const ratio = targetFreq / STANDARD_FREQ;
+        audioElementRef.current.playbackRate = ratio;
       }, [selectedFreq, customFreq, isCustomMode]);
 
       // Update volume
       useEffect(() => {
-        if (!volumeNodeRef.current) return;
-        
-        // Convert 0-1 range to decibels (-60 to 0)
-        const db = volume === 0 ? -Infinity : 20 * Math.log10(volume);
-        volumeNodeRef.current.volume.value = db;
+        if (!gainNodeRef.current) return;
+        gainNodeRef.current.gain.value = volume;
       }, [volume]);
 
-      // Play/Pause handler
       const handlePlayPause = async () => {
-        if (!isInitializedRef.current) return;
-
-        try {
-          // Start Tone.js audio context
-          await Tone.start();
-          
-          if (isPlaying) {
-            playerRef.current.stop();
-            Tone.Transport.stop();
-            setIsPlaying(false);
-          } else {
-            Tone.Transport.start();
-            playerRef.current.start();
-            setIsPlaying(true);
-          }
-        } catch (error) {
-          console.error('Error playing audio:', error);
+        if (!audioElementRef.current) return;
+        
+        if (audioContextRef.current.state === 'suspended') {
+          await audioContextRef.current.resume();
         }
+
+        if (isPlaying) {
+          audioElementRef.current.pause();
+        } else {
+          await audioElementRef.current.play();
+        }
+        setIsPlaying(!isPlaying);
       };
 
-      // Seek handler
       const handleSeek = (e) => {
-        if (!playerRef.current || !duration) return;
-        
+        if (!audioElementRef.current) return;
         const seekTime = (e.target.value / 100) * duration;
-        playerRef.current.seek(seekTime);
+        audioElementRef.current.currentTime = seekTime;
         setCurrentTime(seekTime);
       };
 
-      // Format time helper
       const formatTime = (seconds) => {
         if (!seconds || isNaN(seconds)) return '0:00';
         const mins = Math.floor(seconds / 60);
@@ -221,60 +156,59 @@
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-6xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <h1 className="text-6xl font-black text-white tracking-tight mb-4">
                 {t.title}
               </h1>
-              <p className="text-gray-300 text-lg">{t.subtitle}</p>
+              <p className="text-2xl text-purple-300 mb-6">{t.subtitle}</p>
               
-              {/* Language Selector */}
-              <div className="mt-4 flex justify-center gap-2">
+              {/* Language Toggle */}
+              <div className="flex justify-center gap-2">
                 <button
                   onClick={() => setLang('it')}
                   className={`px-4 py-2 rounded-lg transition ${
-                    lang === 'it' ? 'bg-purple-600' : 'bg-purple-900/50 hover:bg-purple-800/50'
+                    lang === 'it' ? 'bg-purple-600' : 'bg-purple-900/30 hover:bg-purple-800/50'
                   }`}
                 >
-                  🇮🇹 Italiano
+                  🇮🇹 IT
                 </button>
                 <button
                   onClick={() => setLang('en')}
                   className={`px-4 py-2 rounded-lg transition ${
-                    lang === 'en' ? 'bg-purple-600' : 'bg-purple-900/50 hover:bg-purple-800/50'
+                    lang === 'en' ? 'bg-purple-600' : 'bg-purple-900/30 hover:bg-purple-800/50'
                   }`}
                 >
-                  🇬🇧 English
+                  🇬🇧 EN
                 </button>
               </div>
-            </div>
-
-            {/* Important Note */}
-            <div className="mb-8 p-6 bg-yellow-900/30 border-2 border-yellow-600/50 rounded-xl backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-2 text-yellow-300">{t.noteTitle}</h3>
-              <p className="text-yellow-100/90 leading-relaxed">{t.noteText}</p>
             </div>
 
             {/* Mode Toggle */}
             <div className="mb-6 flex justify-center gap-4">
               <button
                 onClick={() => setIsCustomMode(false)}
-                className={`px-6 py-3 rounded-lg font-semibold transition ${
-                  !isCustomMode ? 'bg-purple-600' : 'bg-purple-900/50 hover:bg-purple-800/50'
+                className={`px-6 py-3 rounded-xl font-semibold transition ${
+                  !isCustomMode 
+                    ? 'bg-purple-600' 
+                    : 'bg-purple-900/30 hover:bg-purple-800/50'
                 }`}
               >
                 {t.presetMode}
               </button>
               <button
                 onClick={() => setIsCustomMode(true)}
-                className={`px-6 py-3 rounded-lg font-semibold transition ${
-                  isCustomMode ? 'bg-purple-600' : 'bg-purple-900/50 hover:bg-purple-800/50'
+                className={`px-6 py-3 rounded-xl font-semibold transition ${
+                  isCustomMode 
+                    ? 'bg-purple-600' 
+                    : 'bg-purple-900/30 hover:bg-purple-800/50'
                 }`}
               >
                 {t.customMode}
               </button>
             </div>
 
-            {/* Player Card */}
+            {/* Main Player Card */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20">
+              
               {/* Current Frequency Display */}
               <div className="text-center mb-8">
                 <div 
@@ -406,15 +340,13 @@
 
             {/* Footer */}
             <div className="text-center mt-8 text-gray-400 text-sm">
-              <p>🎵 Powered by Tone.js • Pure Frequencies • Tempo Preserved 🎵</p>
-              <p className="mt-2">Sacred Heart Temple © 2025</p>
+              <p>🎵 Pure Healing Frequencies 🎵</p>
             </div>
           </div>
         </div>
       );
     }
 
-    // Render app
     ReactDOM.render(<TuneIn />, document.getElementById('root'));
   </script>
 </body>
