@@ -298,8 +298,9 @@
             // semitones = 12 * log2(targetFreq / STANDARD_FREQ)
             const semitones = 12 * Math.log2(targetFreq / STANDARD_FREQ);
             
-   pitchShiftRef.current.pitch.rampTo(semitones, 1);
-
+            // Smooth transition over 1 second (instead of instant jump)
+            pitchShiftRef.current.pitch.rampTo(semitones, 1);
+            
             console.log(`Frequency: ${targetFreq}Hz, Semitones: ${semitones.toFixed(2)}`);
           }, [selectedFreq, customFreq, isCustomMode]);
 
