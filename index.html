@@ -60,6 +60,8 @@
     <div id="root"></div>
     
     <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
         // ========================================
         // SVG ICONS
         // ========================================
@@ -108,7 +110,7 @@
         );
 
         // ========================================
-        // TRANSLATIONS
+        // TRANSLATIONS & DATA
         // ========================================
         const TRANSLATIONS = {
           it: {
@@ -143,9 +145,6 @@
           }
         };
 
-        // ========================================
-        // PRESET FREQUENCIES
-        // ========================================
         const PRESET_FREQUENCIES = {
           it: [
             { hz: 396, name: "396 Hz", title: "Radicamento", chakra: "Muladhara", description: "Riduce ansia e paura, stabilizza lo stato emotivo. Scioglie senso di colpa e tensioni profonde. Favorisce radicamento e sicurezza interiore.", color: "#ef4444" },
@@ -175,44 +174,36 @@
         // MAIN COMPONENT
         // ========================================
         function TuneIn() {
-          // State
-          const [lang, setLang] = React.useState('it');
-          const [selectedFreq, setSelectedFreq] = React.useState(432);
-          const [customFreq, setCustomFreq] = React.useState(432);
-          const [isPlaying, setIsPlaying] = React.useState(false);
-          const [currentTime, setCurrentTime] = React.useState(0);
-          const [duration, setDuration] = React.useState(0);
-          const [volume, setVolume] = React.useState(0.7);
-          const [isCustomMode, setIsCustomMode] = React.useState(false);
-          const [showInfo, setShowInfo] = React.useState(false);
-          const [showMission, setShowMission] = React.useState(false);
-          const [showAbout, setShowAbout] = React.useState(false);
-          const [usersOnline] = React.useState(Math.floor(Math.random() * 50) + 20);
-          const [isLoading, setIsLoading] = React.useState(true);
+          const [lang, setLang] = useState('it');
+          const [selectedFreq, setSelectedFreq] = useState(432);
+          const [customFreq, setCustomFreq] = useState(432);
+          const [isPlaying, setIsPlaying] = useState(false);
+          const [currentTime, setCurrentTime] = useState(0);
+          const [duration, setDuration] = useState(0);
+          const [volume, setVolume] = useState(0.7);
+          const [isCustomMode, setIsCustomMode] = useState(false);
+          const [showInfo, setShowInfo] = useState(false);
+          const [showMission, setShowMission] = useState(false);
+          const [showAbout, setShowAbout] = useState(false);
+          const [usersOnline] = useState(Math.floor(Math.random() * 50) + 20);
+          const [isLoading, setIsLoading] = useState(true);
           
-          // Refs for Tone.js
-          const playerRef = React.useRef(null);
-          const pitchShiftRef = React.useRef(null);
-          const volumeNodeRef = React.useRef(null);
-          const isInitializedRef = React.useRef(false);
+          const playerRef = useRef(null);
+          const pitchShiftRef = useRef(null);
+          const volumeNodeRef = useRef(null);
+          const isInitializedRef = useRef(false);
 
-          // Constants
           const AUDIO_URL = "https://tunein.b-cdn.net/Soaring.wav";
           const STANDARD_FREQ = 440;
           const t = TRANSLATIONS[lang];
           const frequencies = PRESET_FREQUENCIES[lang];
 
-          // ========================================
-          // EFFECTS
-          // ========================================
-          
           // Initialize Tone.js Audio
-          React.useEffect(() => {
+          useEffect(() => {
             const initAudio = async () => {
               try {
                 setIsLoading(true);
                 
-                // Create Tone.js Player
                 playerRef.current = new Tone.Player({
                   url: AUDIO_URL,
                   loop: true,
@@ -227,18 +218,15 @@
                   }
                 });
 
-                // Create PitchShift (preserves tempo)
                 pitchShiftRef.current = new Tone.PitchShift({
-                  pitch: 0, // semitones
-                  windowSize: 0.1, // quality
+                  pitch: 0,
+                  windowSize: 0.1,
                   delayTime: 0,
                   feedback: 0
                 });
 
-                // Create Volume node
-                volumeNodeRef.current = new Tone.Volume(-4); // ~70% volume
+                volumeNodeRef.current = new Tone.Volume(-4);
 
-                // Connect audio chain: Player -> PitchShift -> Volume -> Output
                 playerRef.current.chain(
                   pitchShiftRef.current,
                   volumeNodeRef.current,
@@ -247,7 +235,6 @@
 
                 isInitializedRef.current = true;
 
-                // Update time periodically
                 const interval = setInterval(() => {
                   if (playerRef.current && playerRef.current.state === 'started') {
                     const progress = Tone.Transport.seconds % playerRef.current.buffer.duration;
@@ -264,7 +251,6 @@
 
             initAudio();
 
-            // Cleanup
             return () => {
               if (playerRef.current) {
                 playerRef.current.stop();
@@ -279,40 +265,29 @@
             };
           }, []);
 
-          // Update Volume
-          React.useEffect(() => {
+          useEffect(() => {
             if (volumeNodeRef.current) {
-              // Convert 0-1 range to decibels
               const db = volume === 0 ? -Infinity : 20 * Math.log10(volume);
               volumeNodeRef.current.volume.value = db;
             }
           }, [volume]);
 
-          // Update Frequency (pitch-shift without time-stretch)
-          React.useEffect(() => {
+          useEffect(() => {
             if (!pitchShiftRef.current || !isInitializedRef.current) return;
 
             const targetFreq = isCustomMode ? customFreq : selectedFreq;
-            
-            // Convert frequency ratio to semitones
-            // semitones = 12 * log2(targetFreq / STANDARD_FREQ)
             const semitones = 12 * Math.log2(targetFreq / STANDARD_FREQ);
             
-            // Smooth transition over 1 second (instead of instant jump)
+            // Smooth transition with rampTo
             pitchShiftRef.current.pitch.rampTo(semitones, 1);
             
             console.log(`Frequency: ${targetFreq}Hz, Semitones: ${semitones.toFixed(2)}`);
           }, [selectedFreq, customFreq, isCustomMode]);
 
-          // ========================================
-          // HANDLERS
-          // ========================================
-          
           const handlePlayPause = async () => {
             if (!isInitializedRef.current || isLoading) return;
 
             try {
-              // Start Tone.js audio context
               await Tone.start();
               
               if (isPlaying) {
@@ -337,10 +312,6 @@
             setCurrentTime(seekTime);
           };
 
-          // ========================================
-          // UTILITIES
-          // ========================================
-          
           const formatTime = (seconds) => {
             const h = Math.floor(seconds / 3600);
             const m = Math.floor((seconds % 3600) / 60);
@@ -357,21 +328,15 @@
 
           const currentPreset = frequencies.find(p => p.hz === selectedFreq);
 
-          // ========================================
-          // RENDER
-          // ========================================
-          
           return (
             <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950 relative overflow-hidden">
               
-              {/* Background Blur Circles */}
               <div className="absolute inset-0 opacity-20">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500 rounded-full blur-3xl"></div>
                 <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-cyan-500 rounded-full blur-3xl"></div>
               </div>
 
-              {/* Language Selector & Users Online */}
               <div className="absolute top-4 right-4 z-20 flex items-center gap-4">
                 <div className="glass px-4 py-2 rounded-lg flex items-center gap-2">
                   <Users className="w-5 h-5 text-green-400" />
@@ -392,10 +357,8 @@
                 </button>
               </div>
 
-              {/* Main Content */}
               <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
                 
-                {/* Header */}
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center gap-3 mb-4">
                     <Heart className="w-12 h-12 text-pink-400 animate-pulse" />
@@ -406,7 +369,6 @@
                   <p className="text-purple-300 text-sm uppercase tracking-widest font-light">{t.subtitle}</p>
                 </div>
 
-                {/* Mission & About Buttons */}
                 <div className="flex justify-center gap-3 mb-8">
                   <button 
                     onClick={() => { setShowMission(!showMission); setShowAbout(false); setShowInfo(false); }}
@@ -424,7 +386,6 @@
                   </button>
                 </div>
 
-                {/* Mission Panel */}
                 {showMission && (
                   <div className="fade-in glass rounded-3xl p-8 mb-8 border-2 border-pink-500/30">
                     <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
@@ -435,7 +396,6 @@
                   </div>
                 )}
 
-                {/* About Panel */}
                 {showAbout && (
                   <div className="fade-in glass rounded-3xl p-8 mb-8 border-2 border-cyan-500/30">
                     <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
@@ -446,10 +406,8 @@
                   </div>
                 )}
 
-                {/* Main Player Card */}
                 <div className="glass rounded-3xl p-8 md:p-12">
                   
-                  {/* Loading Indicator */}
                   {isLoading && (
                     <div className="text-center py-12 mb-8">
                       <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500 mb-4"></div>
@@ -459,7 +417,6 @@
 
                   {!isLoading && (
                     <>
-                  {/* Frequency Display */}
                   <div 
                     className="frequency-pulse relative mb-10 text-center py-12 rounded-3xl border-2 transition-all duration-300" 
                     style={{ 
@@ -484,7 +441,6 @@
                     )}
                   </div>
 
-                  {/* Mode Toggle */}
                   <div className="flex gap-3 mb-8 justify-center">
                     <button 
                       onClick={() => setIsCustomMode(false)} 
@@ -500,7 +456,6 @@
                     </button>
                   </div>
 
-                  {/* Frequency Selection */}
                   {!isCustomMode ? (
                     <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-10">
                       {frequencies.map(freq => (
@@ -547,7 +502,6 @@
                     </div>
                   )}
 
-                  {/* Player Controls */}
                   <div className="flex items-center gap-6 mb-8">
                     <button 
                       onClick={handlePlayPause} 
@@ -575,7 +529,6 @@
                     </div>
                   </div>
 
-                  {/* Progress Bar */}
                   <div className="glass rounded-full p-2 mb-6">
                     <input 
                       type="range" 
@@ -591,7 +544,6 @@
                     </div>
                   </div>
 
-                  {/* Info Toggle */}
                   <button 
                     onClick={() => { setShowInfo(!showInfo); setShowMission(false); setShowAbout(false); }}
                     className="w-full glass px-6 py-3 rounded-xl text-purple-300 hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2"
@@ -600,7 +552,6 @@
                     {showInfo ? '▼' : '▶'} {t.howItWorks}
                   </button>
 
-                  {/* Info Panel */}
                   {showInfo && (
                     <div className="fade-in mt-4 p-6 glass rounded-xl">
                       <div className="text-purple-200 text-sm leading-relaxed">{t.description}</div>
@@ -610,14 +561,12 @@
                   )}
                 </div>
 
-                {/* Footer */}
                 <div className="text-center mt-8 space-y-2">
                   <div className="text-purple-300/80 text-sm font-light">{t.footer}</div>
                   <div className="text-purple-300/60 text-xs">{t.copyright}</div>
                 </div>
               </div>
 
-              {/* Custom Slider Styles */}
               <style>{`
                 input[type="range"]::-webkit-slider-thumb { 
                   appearance: none; 
@@ -647,9 +596,6 @@
           );
         }
         
-        // ========================================
-        // RENDER APP
-        // ========================================
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<TuneIn />);
     </script>
