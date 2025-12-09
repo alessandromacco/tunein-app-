@@ -121,11 +121,14 @@
             howItWorks: "Come Funziona",
             mission: "Vision",
             about: "Chi Siamo",
+            track: "Traccia",
+            selectTrack: "Seleziona traccia audio",
             description: "La fisica delle vibrazioni è alla base delle pratiche di guarigione sonora. Specifiche frequenze influenzano l'attività delle onde cerebrali attraverso l'entrainment neurale, sincronizzando i ritmi biologici. Gli effetti misurabili includono riduzione di frequenza cardiaca, pressione sanguigna e cortisolo. Le frequenze Solfeggio sono toni della scala usata nella musica sacra medievale, riscoperta negli anni '70. Nella tradizione yogica, queste frequenze corrispondono ai sette chakra principali, centri energetici lungo la colonna vertebrale che regolano aspetti fisici, emotivi e spirituali dell'essere.",
             missionText: "La connessione simultanea di molteplici coscienze su specifiche frequenze crea fenomeni di risonanza collettiva. Quando gruppi di persone sincronizzano le proprie onde cerebrali attraverso stimoli sonori identici, si osserva un allineamento dei campi bioelettrici individuali. Questo fenomeno, studiato nelle neuroscienze sociali, suggerisce che la sincronizzazione di frequenze possa facilitare stati di coerenza collettiva e influenzare il campo energetico condiviso.",
             aboutText: "Questo player web-based genera frequenze in tempo reale usando la Web Audio API. A differenza dello streaming compresso (YouTube, Twitch, Spotify), il processamento avviene localmente nel browser, preservando l'integrità matematica delle frequenze. Ogni frequenza Solfeggio corrisponde a specifiche lunghezze d'onda che, secondo la tradizione e alcune ricerche preliminari, interagiscono con i centri energetici del corpo umano.",
             usersOnline: "ascoltatori connessi",
             footer: "🎵 Pure Frequencies · Local Processing · No Compression 🎵",
+            musicCredit: "Music: Kevin MacLeod (CC BY 4.0)",
             copyright: "© 2025 Tune In · Frequency Healing"
           },
           en: {
@@ -136,11 +139,14 @@
             howItWorks: "How It Works",
             mission: "Vision",
             about: "About",
+            track: "Track",
+            selectTrack: "Select audio track",
             description: "The physics of vibrations is the foundation of sound healing practices. Specific frequencies influence brainwave activity through neural entrainment, synchronizing biological rhythms. Measurable effects include reduced heart rate, blood pressure, and cortisol levels. Solfeggio frequencies are tones from the scale used in medieval sacred music, rediscovered in the 1970s. In yogic tradition, these frequencies correspond to the seven main chakras, energy centers along the spine that regulate physical, emotional, and spiritual aspects of being.",
             missionText: "The simultaneous connection of multiple consciousnesses on specific frequencies creates collective resonance phenomena. When groups of people synchronize their brainwaves through identical sound stimuli, an alignment of individual bioelectric fields is observed. This phenomenon, studied in social neuroscience, suggests that frequency synchronization may facilitate states of collective coherence and influence the shared energetic field.",
             aboutText: "This web-based player generates frequencies in real-time using the Web Audio API. Unlike compressed streaming (YouTube, Twitch, Spotify), processing occurs locally in the browser, preserving the mathematical integrity of frequencies. Each Solfeggio frequency corresponds to specific wavelengths that, according to tradition and some preliminary research, interact with the human body's energy centers.",
             usersOnline: "listeners connected",
             footer: "🎵 Pure Frequencies · Local Processing · No Compression 🎵",
+            musicCredit: "Music: Kevin MacLeod (CC BY 4.0)",
             copyright: "© 2025 Tune In · Frequency Healing"
           }
         };
@@ -170,6 +176,78 @@
           ]
         };
 
+        // Audio tracks library - MP3 files for mobile compatibility
+        const AUDIO_TRACKS = {
+          it: [
+            { 
+              id: 'soaring', 
+              file: 'soaring.mp3', 
+              name: 'Soaring', 
+              duration: '6 min',
+              description: 'Synth ambient leggero e ascendente',
+              artist: 'Kevin MacLeod'
+            },
+            { 
+              id: 'ancient-winds', 
+              file: 'ancient-winds.mp3', 
+              name: 'Ancient Winds', 
+              duration: '58 min',
+              description: 'Atmosfera eterea e contemplativa',
+              artist: 'Kevin MacLeod'
+            },
+            { 
+              id: 'ethereal', 
+              file: 'ethereal-relaxation.mp3', 
+              name: 'Ethereal Relaxation', 
+              duration: '28 min',
+              description: 'Rilassamento profondo e meditativo',
+              artist: 'Kevin MacLeod'
+            },
+            { 
+              id: 'fluidscape', 
+              file: 'fluidscape.mp3', 
+              name: 'Fluidscape', 
+              duration: '30 min',
+              description: 'Paesaggio sonoro fluido e cosmico',
+              artist: 'Kevin MacLeod'
+            }
+          ],
+          en: [
+            { 
+              id: 'soaring', 
+              file: 'soaring.mp3', 
+              name: 'Soaring', 
+              duration: '6 min',
+              description: 'Light ascending synth ambient',
+              artist: 'Kevin MacLeod'
+            },
+            { 
+              id: 'ancient-winds', 
+              file: 'ancient-winds.mp3', 
+              name: 'Ancient Winds', 
+              duration: '58 min',
+              description: 'Ethereal contemplative atmosphere',
+              artist: 'Kevin MacLeod'
+            },
+            { 
+              id: 'ethereal', 
+              file: 'ethereal-relaxation.mp3', 
+              name: 'Ethereal Relaxation', 
+              duration: '28 min',
+              description: 'Deep meditative relaxation',
+              artist: 'Kevin MacLeod'
+            },
+            { 
+              id: 'fluidscape', 
+              file: 'fluidscape.mp3', 
+              name: 'Fluidscape', 
+              duration: '30 min',
+              description: 'Fluid cosmic soundscape',
+              artist: 'Kevin MacLeod'
+            }
+          ]
+        };
+
         // ========================================
         // MAIN COMPONENT
         // ========================================
@@ -187,16 +265,21 @@
           const [showAbout, setShowAbout] = useState(false);
           const [usersOnline] = useState(Math.floor(Math.random() * 50) + 20);
           const [isLoading, setIsLoading] = useState(true);
+          const [selectedTrack, setSelectedTrack] = useState('soaring');
+          const [showTrackInfo, setShowTrackInfo] = useState(false);
           
           const playerRef = useRef(null);
           const pitchShiftRef = useRef(null);
           const volumeNodeRef = useRef(null);
           const isInitializedRef = useRef(false);
 
-          const AUDIO_URL = "https://tunein.b-cdn.net/Soaring.wav";
           const STANDARD_FREQ = 440;
           const t = TRANSLATIONS[lang];
           const frequencies = PRESET_FREQUENCIES[lang];
+          const tracks = AUDIO_TRACKS[lang];
+          const currentTrack = tracks.find(track => track.id === selectedTrack);
+          // URL encode spaces and special characters
+          const AUDIO_URL = `https://tunein.b-cdn.net/${encodeURIComponent(currentTrack.file)}`;
 
           // Initialize Tone.js Audio
           useEffect(() => {
@@ -210,11 +293,14 @@
                   onload: () => {
                     setDuration(playerRef.current.buffer.duration);
                     setIsLoading(false);
-                    console.log('Audio loaded:', playerRef.current.buffer.duration, 'seconds');
+                    console.log('✅ Audio loaded successfully:', AUDIO_URL);
+                    console.log('Duration:', playerRef.current.buffer.duration, 'seconds');
                   },
                   onerror: (error) => {
-                    console.error('Error loading audio:', error);
+                    console.error('❌ Error loading audio:', AUDIO_URL);
+                    console.error('Error details:', error);
                     setIsLoading(false);
+                    alert(`Errore caricamento audio: ${currentTrack.name}\nVerifica che il file esista su BunnyCDN`);
                   }
                 });
 
@@ -263,7 +349,7 @@
                 volumeNodeRef.current.dispose();
               }
             };
-          }, []);
+          }, [selectedTrack, AUDIO_URL]);
 
           useEffect(() => {
             if (volumeNodeRef.current) {
@@ -278,8 +364,8 @@
             const targetFreq = isCustomMode ? customFreq : selectedFreq;
             const semitones = 12 * Math.log2(targetFreq / STANDARD_FREQ);
             
-            // Smooth transition with rampTo
-            pitchShiftRef.current.pitch.rampTo(semitones, 1);
+            // Direct assignment (works reliably)
+            pitchShiftRef.current.pitch = semitones;
             
             console.log(`Frequency: ${targetFreq}Hz, Semitones: ${semitones.toFixed(2)}`);
           }, [selectedFreq, customFreq, isCustomMode]);
@@ -441,6 +527,91 @@
                     )}
                   </div>
 
+                  {/* Track Selector - Modern Design */}
+                  <div className="mb-10">
+                    <h2 className="text-3xl md:text-4xl font-black text-center mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      Select Your Track
+                    </h2>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                      {tracks.map((track, index) => {
+                        const colors = [
+                          { from: 'from-cyan-500', to: 'to-blue-500', glow: 'shadow-cyan-500/50' },
+                          { from: 'from-purple-500', to: 'to-pink-500', glow: 'shadow-purple-500/50' },
+                          { from: 'from-amber-500', to: 'to-orange-500', glow: 'shadow-amber-500/50' },
+                          { from: 'from-emerald-500', to: 'to-teal-500', glow: 'shadow-emerald-500/50' }
+                        ];
+                        const colorScheme = colors[index % 4];
+                        const isPremium = false; // All tracks free
+                        const isSelected = selectedTrack === track.id;
+                        
+                        return (
+                          <button
+                            key={track.id}
+                            onClick={() => {
+                              if (!isPremium) {
+                                setIsPlaying(false);
+                                setSelectedTrack(track.id);
+                                setShowTrackInfo(false);
+                              }
+                            }}
+                            disabled={isPremium}
+                            className={`relative p-6 rounded-2xl transition-all duration-300 transform ${
+                              isSelected 
+                                ? `bg-gradient-to-br ${colorScheme.from} ${colorScheme.to} scale-105 shadow-2xl ${colorScheme.glow}` 
+                                : isPremium
+                                  ? 'bg-gray-800/50 cursor-not-allowed opacity-60'
+                                  : `glass hover:scale-105 hover:shadow-xl hover:${colorScheme.glow}`
+                            }`}
+                          >
+                            {isPremium && (
+                              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-xs font-black px-3 py-1 rounded-full shadow-lg">
+                                PREMIUM
+                              </div>
+                            )}
+                            
+                            <div className={`text-2xl mb-2 ${isSelected ? 'text-white' : isPremium ? 'text-gray-500' : 'text-purple-300'}`}>
+                              {index === 0 ? '🎵' : index === 1 ? '🌌' : index === 2 ? '☁️' : '🌊'}
+                            </div>
+                            
+                            <div className={`font-bold text-lg ${isSelected ? 'text-white' : isPremium ? 'text-gray-500' : 'text-white'}`}>
+                              {track.name}
+                            </div>
+                            
+                            {isSelected && (
+                              <div className="absolute inset-0 rounded-2xl animate-pulse" style={{
+                                boxShadow: `0 0 30px ${colorScheme.glow}`
+                              }}></div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Track Info Button */}
+                    <div className="text-center mt-4">
+                      <button
+                        onClick={() => setShowTrackInfo(!showTrackInfo)}
+                        className="glass px-4 py-2 rounded-lg text-purple-300 hover:text-white transition-all text-sm flex items-center gap-2 mx-auto"
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                        Track Info
+                      </button>
+                    </div>
+                    
+                    {showTrackInfo && currentTrack && (
+                      <div className="fade-in mt-4 p-4 glass rounded-xl max-w-md mx-auto">
+                        <div className="text-white font-semibold mb-2">{currentTrack.name}</div>
+                        <div className="text-purple-200 text-sm mb-2">{currentTrack.description}</div>
+                        <div className="text-purple-300 text-xs">
+                          {currentTrack.artist} · {currentTrack.duration}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex gap-3 mb-8 justify-center">
                     <button 
                       onClick={() => setIsCustomMode(false)} 
@@ -456,22 +627,92 @@
                     </button>
                   </div>
 
+                  {/* Frequency Selector Title */}
+                  <h2 className="text-3xl md:text-4xl font-black text-center mb-8 bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                    Select Your Frequency
+                  </h2>
+
                   {!isCustomMode ? (
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-10">
-                      {frequencies.map(freq => (
-                        <button 
-                          key={freq.hz} 
-                          onClick={() => setSelectedFreq(freq.hz)}
-                          className={`p-3 rounded-xl transition-all transform hover:scale-105 ${selectedFreq === freq.hz ? 'ring-2 ring-white scale-105' : 'hover:bg-white/10'}`}
-                          style={{ 
-                            background: selectedFreq === freq.hz ? `${freq.color}40` : 'rgba(255,255,255,0.05)',
-                            borderLeft: `4px solid ${freq.color}`
-                          }}
-                        >
-                          <div className="text-xl font-bold text-white">{freq.hz}</div>
-                          <div className="text-xs text-purple-300 mt-1">{freq.title}</div>
-                        </button>
-                      ))}
+                    <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mb-10">
+                      {frequencies.map(freq => {
+                        const isSelected = selectedFreq === freq.hz;
+                        return (
+                          <button 
+                            key={freq.hz} 
+                            onClick={() => setSelectedFreq(freq.hz)}
+                            className={`relative p-4 rounded-2xl transition-all duration-300 transform overflow-hidden group ${
+                              isSelected 
+                                ? 'scale-110 shadow-2xl' 
+                                : 'hover:scale-105 hover:shadow-xl'
+                            }`}
+                            style={{ 
+                              background: isSelected 
+                                ? `linear-gradient(135deg, ${freq.color}80, ${freq.color}40)`
+                                : 'rgba(255,255,255,0.03)',
+                              border: `3px solid ${freq.color}`,
+                              boxShadow: isSelected 
+                                ? `0 0 30px ${freq.color}80, 0 0 60px ${freq.color}40, inset 0 0 20px ${freq.color}20`
+                                : `0 0 0 ${freq.color}00`
+                            }}
+                          >
+                            {/* Animated background glow on hover */}
+                            <div 
+                              className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isSelected ? 'opacity-100' : ''}`}
+                              style={{
+                                background: `radial-gradient(circle at center, ${freq.color}30, transparent 70%)`,
+                                animation: isSelected ? 'pulse 2s ease-in-out infinite' : 'none'
+                              }}
+                            ></div>
+                            
+                            {/* 3D shine effect */}
+                            <div 
+                              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                              style={{
+                                background: `linear-gradient(135deg, ${freq.color}20 0%, transparent 50%)`,
+                              }}
+                            ></div>
+                            
+                            {/* Content */}
+                            <div className="relative z-10">
+                              <div 
+                                className={`text-2xl md:text-3xl font-black mb-1 transition-all duration-300 ${
+                                  isSelected ? 'text-white' : 'text-white/90 group-hover:text-white'
+                                }`}
+                                style={{ 
+                                  textShadow: isSelected 
+                                    ? `0 0 20px ${freq.color}, 0 0 40px ${freq.color}80`
+                                    : 'none'
+                                }}
+                              >
+                                {freq.hz}
+                              </div>
+                              <div className={`text-xs font-semibold transition-all duration-300 ${
+                                isSelected ? 'text-white' : 'text-purple-300 group-hover:text-white'
+                              }`}>
+                                {freq.title}
+                              </div>
+                            </div>
+                            
+                            {/* Selected indicator */}
+                            {isSelected && (
+                              <div 
+                                className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-ping"
+                                style={{ backgroundColor: freq.color }}
+                              ></div>
+                            )}
+                            
+                            {/* Border glow animation */}
+                            {isSelected && (
+                              <div 
+                                className="absolute inset-0 rounded-2xl animate-pulse"
+                                style={{
+                                  boxShadow: `0 0 20px ${freq.color}, inset 0 0 20px ${freq.color}40`
+                                }}
+                              ></div>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="mb-10">
@@ -529,21 +770,6 @@
                     </div>
                   </div>
 
-                  <div className="glass rounded-full p-2 mb-6">
-                    <input 
-                      type="range" 
-                      min="0" 
-                      max={duration} 
-                      value={currentTime} 
-                      onChange={handleSeek}
-                      className="w-full h-2 rounded-full appearance-none cursor-pointer bg-white/10" 
-                    />
-                    <div className="flex justify-between text-xs text-purple-300 mt-2 px-2 font-medium">
-                      <span>{formatTime(currentTime)}</span>
-                      <span>{formatTime(duration)}</span>
-                    </div>
-                  </div>
-
                   <button 
                     onClick={() => { setShowInfo(!showInfo); setShowMission(false); setShowAbout(false); }}
                     className="w-full glass px-6 py-3 rounded-xl text-purple-300 hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2"
@@ -563,6 +789,7 @@
 
                 <div className="text-center mt-8 space-y-2">
                   <div className="text-purple-300/80 text-sm font-light">{t.footer}</div>
+                  <div className="text-purple-300/70 text-xs">{t.musicCredit}</div>
                   <div className="text-purple-300/60 text-xs">{t.copyright}</div>
                 </div>
               </div>
