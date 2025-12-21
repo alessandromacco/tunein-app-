@@ -308,117 +308,97 @@
           const AUDIO_URL = `${R2_BASE_URL}/${currentTrack.file}`;
 
           // Initialize Tone.js Audio
-          useEffect(() => {
-            let loadTimeout;
-            let interval;
-            
-const initAudio = async () => {
-  try {
-    setIsLoading(true);
-    
-    // CRITICAL: Stop and cleanup previous player FIRST
+       useEffect(() => {
+  let loadTimeout;
+  let interval;
+  
+  const initAudio = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Stop current playback if any
+      if (playerRef.current) {
+        if (playerRef.current.state === 'started') {
+          playerRef.current.stop();
+          Tone.Transport.stop();
+        }
+        playerRef.current.disconnect();
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      loadTimeout = setTimeout(() => {
+        setIsLoading(false);
+        alert('Caricamento troppo lungo. Riprova.');
+      }, 60000);
+      
+      playerRef.current = new Tone.Player({
+        url: AUDIO_URL,
+        loop: true,
+        onload: () => {
+          clearTimeout(loadTimeout);
+          setDuration(playerRef.current.buffer.duration);
+          setIsLoading(false);
+          console.log('✅ Audio loaded:', AUDIO_URL);
+          
+          if (!pitchShiftRef.current) {
+            pitchShiftRef.current = new Tone.PitchShift({
+              pitch: 0,
+              windowSize: 0.3,
+              wet: 1.0
+            });
+          }
+          
+          if (!volumeNodeRef.current) {
+            volumeNodeRef.current = new Tone.Volume(-4);
+          }
+          
+          playerRef.current.chain(
+            pitchShiftRef.current,
+            volumeNodeRef.current,
+            Tone.Destination
+          );
+          
+          isInitializedRef.current = true;
+        },
+        onerror: (error) => {
+          clearTimeout(loadTimeout);
+          console.error('❌ Error:', error);
+          setIsLoading(false);
+          alert('Errore caricamento audio');
+        }
+      });
+      
+      interval = setInterval(() => {
+        if (playerRef.current && playerRef.current.state === 'started') {
+          const progress = Tone.Transport.seconds % playerRef.current.buffer.duration;
+          setCurrentTime(progress);
+        }
+      }, 100);
+      
+    } catch (error) {
+      console.error('Init error:', error);
+      setIsLoading(false);
+      if (loadTimeout) clearTimeout(loadTimeout);
+    }
+  };
+  
+  initAudio();
+  
+  return () => {
+    if (interval) clearInterval(interval);
+    if (loadTimeout) clearTimeout(loadTimeout);
     if (playerRef.current) {
       if (playerRef.current.state === 'started') {
-                    playerRef.current.stop();
-                    Tone.Transport.stop();
-                  }
-                  playerRef.current.disconnect();
-                  playerRef.current.dispose();
-                  playerRef.current = null;
-                }
-                if (pitchShiftRef.current) {
-                  pitchShiftRef.current.disconnect();
-                  pitchShiftRef.current.dispose();
-                  pitchShiftRef.current = null;
-                }
-                if (volumeNodeRef.current) {
-                  volumeNodeRef.current.disconnect();
-                  volumeNodeRef.current.dispose();
-                  volumeNodeRef.current = null;
-                }
-                
-                // Wait longer for cleanup to complete (especially for large files)
-                await new Promise(resolve => setTimeout(resolve, 300));
-                
-                // Add timeout for large files (increased to 60s for 280MB files)
-                loadTimeout = setTimeout(() => {
-                  console.error('Audio loading timeout - file too large or network slow');
-                  setIsLoading(false);
-                  alert('Caricamento audio troppo lungo. Riprova o seleziona una traccia più breve.');
-                }, 60000); // 60 second timeout for large files
-                
-                playerRef.current = new Tone.Player({
-                  url: AUDIO_URL,
-                  loop: true,
-                  onload: () => {
-                    clearTimeout(loadTimeout);
-                    setDuration(playerRef.current.buffer.duration);
-                    setIsLoading(false);
-                    isInitializedRef.current = true;
-                    console.log('✅ Audio loaded successfully:', AUDIO_URL);
-                    console.log('Duration:', playerRef.current.buffer.duration, 'seconds');
-                  },
-                  onerror: (error) => {
-                    clearTimeout(loadTimeout);
-                    console.error('❌ Error loading audio:', AUDIO_URL);
-                    console.error('Error details:', error);
-                    setIsLoading(false);
-                    alert(`Errore caricamento audio: ${currentTrack.name}\nVerifica la connessione e riprova.`);
-                  }
-                });
-
-                pitchShiftRef.current = new Tone.PitchShift({
-                  pitch: 0,
-                  windowSize: 0.3,
-                  delayTime: 0,
-                  feedback: 0,
-                  wet: 1.0
-                });
-
-                volumeNodeRef.current = new Tone.Volume(-4);
-
-                playerRef.current.chain(
-                  pitchShiftRef.current,
-                  volumeNodeRef.current,
-                  Tone.Destination
-                );
-
-                interval = setInterval(() => {
-                  if (playerRef.current && playerRef.current.state === 'started') {
-                    const progress = Tone.Transport.seconds % playerRef.current.buffer.duration;
-                    setCurrentTime(progress);
-                  }
-                }, 100);
-
-              } catch (error) {
-                console.error('Error initializing audio:', error);
-                setIsLoading(false);
-                if (loadTimeout) clearTimeout(loadTimeout);
-              }
-            };
-
-            initAudio();
-
-            return () => {
-              if (interval) clearInterval(interval);
-              if (loadTimeout) clearTimeout(loadTimeout);
-              if (playerRef.current) {
-                if (playerRef.current.state === 'started') {
-                  playerRef.current.stop();
-                }
-                playerRef.current.disconnect();
-                playerRef.current.dispose();
-              }
-              if (pitchShiftRef.current) {
-                pitchShiftRef.current.disconnect();
-                pitchShiftRef.current.dispose();
-              }
-              if (volumeNodeRef.current) {
-                volumeNodeRef.current.disconnect();
-                volumeNodeRef.current.dispose();
-              }
-            };
-          }, [selectedTrack, AUDIO_URL]);
+        playerRef.current.stop();
+      }
+      playerRef.current.disconnect();
+      playerRef.current.dispose();
+    }
+  };
+}, [selectedTrack, AUDIO_URL]);
 
           useEffect(() => {
             if (volumeNodeRef.current) {
