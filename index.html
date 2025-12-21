@@ -312,7 +312,7 @@
             let loadTimeout;
             let interval;
             
-    const initAudio = async () => {
+const initAudio = async () => {
   try {
     setIsLoading(true);
     
@@ -322,7 +322,7 @@
     
     // CRITICAL: Stop and cleanup previous player FIRST
     if (playerRef.current) {
-        
+      if (playerRef.current.state === 'started') {
                   if (playerRef.current.state === 'started') {
                     playerRef.current.stop();
                     Tone.Transport.stop();
