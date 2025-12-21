@@ -316,10 +316,6 @@ const initAudio = async () => {
   try {
     setIsLoading(true);
     
-    // Start Tone.js context FIRST (critical for browser autoplay policies)
-    await Tone.start();
-    console.log('Tone.js context started');
-    
     // CRITICAL: Stop and cleanup previous player FIRST
     if (playerRef.current) {
       if (playerRef.current.state === 'started') {
