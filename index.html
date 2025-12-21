@@ -316,6 +316,10 @@
               try {
                 setIsLoading(true);
                 
+                // Start Tone.js context FIRST (critical for browser autoplay policies)
+                await Tone.start();
+                console.log('Tone.js context started');
+                
                 // CRITICAL: Stop and cleanup previous player FIRST
                 if (playerRef.current) {
                   if (playerRef.current.state === 'started') {
@@ -337,15 +341,15 @@
                   volumeNodeRef.current = null;
                 }
                 
-                // Wait a moment for cleanup to complete
-                await new Promise(resolve => setTimeout(resolve, 100));
+                // Wait longer for cleanup to complete (especially for large files)
+                await new Promise(resolve => setTimeout(resolve, 300));
                 
-                // Add timeout for large files
+                // Add timeout for large files (increased to 60s for 280MB files)
                 loadTimeout = setTimeout(() => {
                   console.error('Audio loading timeout - file too large or network slow');
                   setIsLoading(false);
                   alert('Caricamento audio troppo lungo. Riprova o seleziona una traccia più breve.');
-                }, 30000); // 30 second timeout
+                }, 60000); // 60 second timeout for large files
                 
                 playerRef.current = new Tone.Player({
                   url: AUDIO_URL,
