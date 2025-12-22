@@ -358,8 +358,8 @@
 
     <script>
         const STANDARD_FREQ = 440;
-        const GOOGLE_DRIVE_FILE_ID = '1hSs32zxOP8DnuP_HupvSuZTiKbiGHLb5';
-        const AUDIO_URL = `https://drive.google.com/uc?export=download&id=${GOOGLE_DRIVE_FILE_ID}`;
+        // Audio hostato su Cloudflare R2 via Worker
+        const AUDIO_URL = 'https://tunein-audio.paradigmaolistico.workers.dev/soaring.mp3';
 
         let player = null;
         let pitchShift = null;
