@@ -361,7 +361,10 @@
         // Audio hostato su Cloudflare R2 via Worker
         const AUDIO_URL = 'https://tunein-audio.paradigmaolistico.workers.dev/soaring.mp3';
 
-        let player = null;
+        let audioElement = null;
+        let audioContext = null;
+        let sourceNode = null;
+        let gainNode = null;
         let pitchShift = null;
         let isPlaying = false;
         let selectedFreq = 440;
@@ -383,98 +386,109 @@
         const loading = document.getElementById('loading');
         const playerControls = document.getElementById('playerControls');
 
+        // Audio Element e Web Audio API
+        let audioElement = null;
+        let audioContext = null;
+        let sourceNode = null;
+        let gainNode = null;
+        
         // Funzione per convertire Hz in semitoni
         function hzToSemitones(targetHz, baseHz = STANDARD_FREQ) {
             return 12 * Math.log2(targetHz / baseHz);
         }
 
-        // Inizializza Tone.js e carica l'audio
+        // Inizializza audio
         async function initAudio() {
             loading.style.display = 'block';
             
             try {
-                await Tone.start();
-                console.log('Tone.js inizializzato');
-
-                // Crea il player
-                player = new Tone.Player({
-                    url: AUDIO_URL,
-                    loop: false,
-                    onload: () => {
-                        console.log('Audio caricato con successo');
-                        loading.style.display = 'none';
-                        playerControls.style.display = 'block';
-                        audioLoaded = true;
-                        updateDuration();
-                        
-                        // Auto-play dopo caricamento
-                        setTimeout(() => {
-                            playAudio();
-                        }, 100);
-                    }
+                // Crea elemento audio HTML5
+                audioElement = new Audio(AUDIO_URL);
+                audioElement.crossOrigin = 'anonymous';
+                
+                // Evento quando l'audio è pronto
+                audioElement.addEventListener('canplaythrough', async () => {
+                    console.log('Audio pronto');
+                    loading.style.display = 'none';
+                    playerControls.style.display = 'block';
+                    audioLoaded = true;
+                    updateDuration();
                 });
-
-                // Crea il PitchShift effect (NOVITÀ!)
+                
+                // Evento errore
+                audioElement.addEventListener('error', (e) => {
+                    console.error('Errore caricamento:', e);
+                    loading.textContent = 'Errore. Riprova.';
+                });
+                
+                // Setup Web Audio API per PitchShift
+                await Tone.start();
+                audioContext = Tone.context;
+                
+                // Crea nodi audio
+                sourceNode = audioContext.createMediaElementSource(audioElement);
+                gainNode = audioContext.createGain();
+                
+                // Crea PitchShift
                 pitchShift = new Tone.PitchShift({
-                    pitch: 0, // Inizia a 440Hz (0 semitoni di differenza)
-                    windowSize: 0.1, // Qualità audio (più basso = migliore ma più CPU)
+                    pitch: 0,
+                    windowSize: 0.1,
                     delayTime: 0,
                     feedback: 0
                 }).toDestination();
-
-                // Connetti player → pitchShift → output
-                player.connect(pitchShift);
-
-                // Update progress bar
-                setInterval(() => {
-                    if (player && audioLoaded && isPlaying) {
-                        const progress = (Tone.Transport.seconds / player.buffer.duration) * 100;
+                
+                // Connetti: source → pitchShift → output
+                sourceNode.connect(pitchShift);
+                
+                // Update progress
+                audioElement.addEventListener('timeupdate', () => {
+                    if (audioElement.duration) {
+                        const progress = (audioElement.currentTime / audioElement.duration) * 100;
                         progressBar.style.width = `${progress}%`;
                         updateCurrentTime();
-                        
-                        if (progress >= 100) {
-                            isPlaying = false;
-                            Tone.Transport.stop();
-                            Tone.Transport.seconds = 0;
-                        }
                     }
-                }, 100);
-
+                });
+                
+                // Fine audio
+                audioElement.addEventListener('ended', () => {
+                    isPlaying = false;
+                });
+                
+                // Carica
+                audioElement.load();
+                
             } catch (error) {
-                console.error('Errore caricamento audio:', error);
-                loading.textContent = 'Errore nel caricamento. Riprova.';
+                console.error('Errore:', error);
+                loading.textContent = 'Errore. Riprova.';
             }
         }
 
-        // Applica la conversione di frequenza
+        // Applica conversione frequenza
         function applyFrequencyConversion() {
-            if (!player || !pitchShift) return;
+            if (!pitchShift) return;
 
             const targetFreq = isCustomMode ? customFreq : selectedFreq;
             const semitones = hzToSemitones(targetFreq);
             
-            // Aggiorna il pitch shift (SENZA cambiare velocità!)
             pitchShift.pitch = semitones;
             
             console.log(`Frequenza: ${targetFreq}Hz | Semitoni: ${semitones.toFixed(2)}`);
         }
 
-        // Play audio
+        // Play
         async function playAudio() {
-            if (!audioLoaded) return;
+            if (!audioLoaded || !audioElement) return;
             
             await Tone.start();
-            player.start();
-            Tone.Transport.start();
+            audioElement.play();
             isPlaying = true;
         }
 
-        // Pause audio
+        // Pause
         function pauseAudio() {
-            if (!audioLoaded) return;
+            if (!audioLoaded || !audioElement) return;
             
-            player.stop();
-            Tone.Transport.pause();
+            audioElement.pause();
             isPlaying = false;
         }
 
@@ -487,14 +501,16 @@
 
         // Update duration
         function updateDuration() {
-            if (player && player.buffer) {
-                durationEl.textContent = formatTime(player.buffer.duration);
+            if (audioElement && audioElement.duration) {
+                durationEl.textContent = formatTime(audioElement.duration);
             }
         }
 
         // Update current time
         function updateCurrentTime() {
-            currentTimeEl.textContent = formatTime(Tone.Transport.seconds);
+            if (audioElement) {
+                currentTimeEl.textContent = formatTime(audioElement.currentTime);
+            }
         }
 
         // Event listeners per i preset
