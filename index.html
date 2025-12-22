@@ -3,943 +3,542 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tune In - Healing Frequencies</title>
-    
-    <!-- React & Dependencies -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tone.js for professional pitch-shifting -->
-    <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
-    
-    <!-- Custom Styles -->
+    <title>Tune In - Frequency Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
-        
-        * { 
-            font-family: 'Inter', sans-serif; 
-        }
-        
-        .glass { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-        }
-        
-        .glow { 
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.4), 0 0 80px rgba(236, 72, 153, 0.2); 
-        }
-        
-        .frequency-pulse { 
-            animation: pulse 2s ease-in-out infinite; 
-        }
-        
-        @keyframes pulse { 
-            0%, 100% { 
-                transform: scale(1); 
-                opacity: 0.9; 
-            } 
-            50% { 
-                transform: scale(1.02); 
-                opacity: 1; 
-            } 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .quality-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .preset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .preset-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 0 20px rgba(245, 87, 108, 0.5);
+        }
+
+        .preset-btn .freq-label {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .preset-btn .freq-name {
+            display: block;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .custom-mode {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .custom-mode h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .frequency-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+        }
+
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pause-btn {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+        }
+
+        .pause-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.4);
+        }
+
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 18px;
+            padding: 20px;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .algorithm-info {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
-        // ========================================
-        // SVG ICONS
-        // ========================================
-        const Play = (props) => (
-            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-        );
+    <div class="container">
+        <h1>🎵 Tune In</h1>
+        <div class="subtitle">Convertitore di Frequenze Audio Professionale</div>
         
-        const Pause = (props) => (
-            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="6" y="4" width="4" height="16"></rect>
-                <rect x="14" y="4" width="4" height="16"></rect>
-            </svg>
-        );
-        
-        const Volume2 = (props) => (
-            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-            </svg>
-        );
-        
-        const Music = (props) => (
-            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 18V5l12-2v13"></path>
-                <circle cx="6" cy="18" r="3"></circle>
-                <circle cx="18" cy="16" r="3"></circle>
-            </svg>
-        );
+        <div class="algorithm-info">
+            ✨ Qualità Audio Migliorata - Algoritmo PitchShift Professionale
+        </div>
 
-        const Heart = (props) => (
-            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-        );
+        <div class="preset-buttons">
+            <button class="preset-btn" data-freq="432">
+                <span class="freq-label">432</span>
+                <span class="freq-name">Hz - Armonia</span>
+            </button>
+            <button class="preset-btn active" data-freq="440">
+                <span class="freq-label">440</span>
+                <span class="freq-name">Hz - Standard</span>
+            </button>
+            <button class="preset-btn" data-freq="528">
+                <span class="freq-label">528</span>
+                <span class="freq-name">Hz - Amore</span>
+            </button>
+            <button class="preset-btn" data-freq="396">
+                <span class="freq-label">396</span>
+                <span class="freq-name">Hz - Liberazione</span>
+            </button>
+            <button class="preset-btn" data-freq="639">
+                <span class="freq-label">639</span>
+                <span class="freq-name">Hz - Connessione</span>
+            </button>
+            <button class="preset-btn" data-freq="741">
+                <span class="freq-label">741</span>
+                <span class="freq-name">Hz - Risveglio</span>
+            </button>
+        </div>
 
-        const Users = (props) => (
-            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-        );
+        <div class="custom-mode">
+            <h3>🎛️ Modalità Personalizzata</h3>
+            <div class="slider-container">
+                <label>
+                    <input type="checkbox" id="customToggle"> Attiva modalità custom
+                </label>
+            </div>
+            <div id="customControls" style="display: none;">
+                <div class="frequency-display" id="customFreqDisplay">440 Hz</div>
+                <div class="slider-container">
+                    <input type="range" id="freqSlider" min="200" max="1000" value="440" step="1">
+                </div>
+            </div>
+        </div>
 
-        // ========================================
-        // TRANSLATIONS & DATA
-        // ========================================
-        const TRANSLATIONS = {
-          it: {
-            title: "Tune In",
-            subtitle: "PURE FREQUENZE",
-            preset: "Preset",
-            custom: "Personalizzato",
-            howItWorks: "Come Funziona",
-            mission: "Vision",
-            about: "Chi Siamo",
-            track: "Traccia",
-            selectTrack: "Seleziona traccia audio",
-            description: "La fisica delle vibrazioni è alla base delle pratiche di guarigione sonora. Specifiche frequenze influenzano l'attività delle onde cerebrali attraverso l'entrainment neurale, sincronizzando i ritmi biologici. Gli effetti misurabili includono riduzione di frequenza cardiaca, pressione sanguigna e cortisolo. Le frequenze Solfeggio sono toni della scala usata nella musica sacra medievale, riscoperta negli anni '70. Nella tradizione yogica, queste frequenze corrispondono ai sette chakra principali, centri energetici lungo la colonna vertebrale che regolano aspetti fisici, emotivi e spirituali dell'essere. La scienza conferma come le onde sonore organizzano la materia in forme geometriche armoniche. Come evidenziato dagli studi di Hans Jenny e Ernst Chladni, ogni frequenza induce specifici pattern vibrazionali. Il nostro corpo, composto per il 70% di acqua, risponde a queste vibrazioni: ogni cellula emette una frequenza caratteristica che può essere armonizzata. Le frequenze Solfeggio interagiscono con i centri energetici favorendo il ripristino della biocomunicazione cellulare. Attraverso onde sonore matematicamente pure, Tune In offre uno strumento per la sincronizzazione con le frequenze della natura e del benessere.",
-            missionText: "Con le frequenze giuste, riequilibri il tuo stato energetico, potenzi le tue capacità innate e sblocchi il tuo potenziale naturale. L'ascolto consapevole diventa uno strumento di trasformazione accessibile a tutti: basta dedicare pochi minuti al giorno per sperimentare i benefici su te stesso. Questo lavoro personale crea le basi per qualcosa di più grande. Quando gruppi di persone si sintonizzano sulle stesse frequenze, la connessione simultanea di molteplici coscienze crea fenomeni di risonanza collettiva. Si genera spontaneamente un allineamento dei campi bioelettrici individuali che amplifica l'energia condivisa, creando un campo di risonanza positiva che beneficia tutti i partecipanti. Il miglioramento personale si espande naturalmente in connessione globale.",
-            joinChannel: "Unisciti al canale YouTube",
-            channelUrl: "https://www.youtube.com/@paradigmaolistico-h3j",
-            aboutText: "Tune In nasce per avviare un nuovo paradigma orientato alla libertà dell'uomo attraverso il miglioramento della salute e della risonanza collettiva. Questo player genera frequenze in tempo reale usando la Web Audio API. A differenza dello streaming compresso (YouTube, Spotify), il processamento avviene localmente preservando l'integrità matematica delle frequenze.",
-            usersOnline: "ascoltatori connessi",
-            footer: "Pure Frequencies · Local Processing · No Compression",
-            musicCredit: "Music: Kevin MacLeod (CC BY 4.0)",
-            copyright: "© 2025 Tune In · Frequency Healing"
-          },
-          en: {
-            title: "Tune In",
-            subtitle: "PURE FREQUENCIES",
-            preset: "Preset",
-            custom: "Custom",
-            howItWorks: "How It Works",
-            mission: "Vision",
-            about: "About",
-            track: "Track",
-            selectTrack: "Select audio track",
-            description: "The physics of vibrations is the foundation of sound healing practices. Specific frequencies influence brainwave activity through neural entrainment, synchronizing biological rhythms. Measurable effects include reduced heart rate, blood pressure, and cortisol levels. Solfeggio frequencies are tones from the scale used in medieval sacred music, rediscovered in the 1970s. In yogic tradition, these frequencies correspond to the seven main chakras, energy centers along the spine that regulate physical, emotional, and spiritual aspects of being. Science confirms how sound waves organize matter into harmonic geometric forms. As evidenced by studies from Hans Jenny and Ernst Chladni, each frequency induces specific vibrational patterns. Our body, composed of 70% water, responds to these vibrations: every cell emits a characteristic frequency that can be harmonized. Solfeggio frequencies interact with energy centers, promoting cellular biocommunication restoration. Through mathematically pure sound waves, Tune In offers a tool for synchronization with nature's frequencies and wellbeing.",
-            missionText: "With the right frequencies, you rebalance your energetic state, enhance your innate abilities, and unlock your natural potential. Conscious listening becomes an accessible transformation tool for everyone: just a few minutes a day to experience the benefits for yourself. This personal work creates the foundation for something greater. When groups of people tune into the same frequencies, the simultaneous connection of multiple consciousnesses creates collective resonance phenomena. An alignment of individual bioelectric fields occurs spontaneously, amplifying shared energy and creating a field of positive resonance that benefits all participants. Personal improvement naturally expands into global connection.",
-            joinChannel: "Join the YouTube channel",
-            channelUrl: "https://www.youtube.com/@paradigmaolistico-h3j",
-            aboutText: "Tune In was born to initiate a new paradigm oriented toward human freedom through health improvement and collective resonance. This player generates frequencies in real-time using the Web Audio API. Unlike compressed streaming (YouTube, Spotify), processing occurs locally, preserving the mathematical integrity of frequencies.",
-            usersOnline: "listeners connected",
-            footer: "Pure Frequencies · Local Processing · No Compression",
-            musicCredit: "Music: Kevin MacLeod (CC BY 4.0)",
-            copyright: "© 2025 Tune In · Frequency Healing"
-          }
-        };
+        <div id="loading" class="loading" style="display: none;">Caricamento audio in corso</div>
 
-        const PRESET_FREQUENCIES = {
-          it: [
-            { hz: 396, name: "396 Hz", title: "Radicamento", chakra: "Muladhara", description: "Riduce ansia e paura, stabilizza lo stato emotivo. Scioglie senso di colpa e tensioni profonde. Favorisce radicamento e sicurezza interiore.", color: "#dc2626" },  // RED - Root Chakra
-            { hz: 417, name: "417 Hz", title: "Cambiamento", chakra: "Svadhisthana", description: "Rimuove energia negativa e schemi comportamentali dannosi. Centro della creatività. Facilita trasformazione e nuovi inizi.", color: "#ea580c" },  // ORANGE - Sacral Chakra
-            { hz: 432, name: "432 Hz", title: "Armonia universale", chakra: "", description: "Riduce frequenza cardiaca e pressione sanguigna. Risuona con le vibrazioni naturali dell'universo. Rilassamento profondo e allineamento.", color: "#eab308" },  // YELLOW - Solar Plexus area
-            { hz: 440, name: "440 Hz", title: "Standard occidentale", chakra: "", description: "Frequenza di riferimento internazionale dal 1950. Ottimale per concentrazione e attività ad alta intensità. Focus mentale e produttività.", color: "#71717a" },  // GRAY - Standard (non-chakra)
-            { hz: 528, name: "528 Hz", title: "Frequenza dell'amore", chakra: "Anahata", description: "Riduzione degli ormoni dello stress in 5 minuti. Centro della trasformazione e dell'amore. Chiarezza mentale e riparazione energetica.", color: "#10b981" },  // GREEN - Heart Chakra!
-            { hz: 639, name: "639 Hz", title: "Connessione", chakra: "Anahata", description: "Bilancia emozioni, guarisce ferite da relazioni tossiche. Centro della compassione. Migliora comunicazione e relazioni interpersonali.", color: "#06b6d4" },  // AZURE/CYAN - Throat-ish
-            { hz: 741, name: "741 Hz", title: "Espressione", chakra: "Vishuddha", description: "Purificazione e risveglio intuitivo. Centro dell'espressione. Favorisce problem-solving e autoespressione autentica.", color: "#0ea5e9" },  // SKY BLUE - Throat Chakra
-            { hz: 852, name: "852 Hz", title: "Intuizione", chakra: "Ajna", description: "Riduzione del 40% dei livelli di cortisolo. Risveglia saggezza interiore e connessione con coscienza superiore. Intuizione profonda.", color: "#6366f1" },  // INDIGO - Third Eye
-            { hz: 963, name: "963 Hz", title: "Unità", chakra: "Sahasrara", description: "Attiva la ghiandola pineale, connessione con il divino e coscienza universale. Esperienza di unità con il Tutto.", color: "#a855f7" }  // VIOLET - Crown Chakra
-          ],
-          en: [
-            { hz: 396, name: "396 Hz", title: "Grounding", chakra: "Muladhara", description: "Reduces anxiety and fear, stabilizes emotional state. Dissolves guilt and deep tensions. Promotes grounding and inner security.", color: "#dc2626" },  // RED
-            { hz: 417, name: "417 Hz", title: "Change", chakra: "Svadhisthana", description: "Removes negative energy and harmful behavioral patterns. Creativity center. Facilitates transformation and new beginnings.", color: "#ea580c" },  // ORANGE
-            { hz: 432, name: "432 Hz", title: "Universal harmony", chakra: "", description: "Reduces heart rate and blood pressure. Resonates with natural vibrations of the universe. Deep relaxation and alignment.", color: "#eab308" },  // YELLOW
-            { hz: 440, name: "440 Hz", title: "Western standard", chakra: "", description: "International reference frequency since 1950. Optimal for concentration and high-intensity activities. Mental focus and productivity.", color: "#71717a" },  // GRAY
-            { hz: 528, name: "528 Hz", title: "Love frequency", chakra: "Anahata", description: "Stress hormone reduction in 5 minutes. Center of transformation and love. Mental clarity and energetic repair.", color: "#10b981" },  // GREEN - Heart!
-            { hz: 639, name: "639 Hz", title: "Connection", chakra: "Anahata", description: "Balances emotions, heals wounds from toxic relationships. Compassion center. Improves communication and interpersonal relationships.", color: "#06b6d4" },  // AZURE
-            { hz: 741, name: "741 Hz", title: "Expression", chakra: "Vishuddha", description: "Purification and intuitive awakening. Expression center. Promotes problem-solving and authentic self-expression.", color: "#0ea5e9" },  // SKY BLUE
-            { hz: 852, name: "852 Hz", title: "Intuition", chakra: "Ajna", description: "40% reduction in cortisol levels. Awakens inner wisdom and connection with higher consciousness. Deep intuition.", color: "#6366f1" },  // INDIGO
-            { hz: 963, name: "963 Hz", title: "Unity", chakra: "Sahasrara", description: "Activates pineal gland, connection with the divine and universal consciousness. Experience of unity with the All.", color: "#a855f7" }  // VIOLET
-          ]
-        };
+        <div id="playerControls" style="display: none;">
+            <div class="controls">
+                <button class="control-btn play-btn" id="playBtn">▶️ Play</button>
+                <button class="control-btn pause-btn" id="pauseBtn">⏸️ Pause</button>
+            </div>
 
-        // Audio tracks library - 5 TRACKS (3 FREE + 2 PREMIUM)
-const R2_BASE_URL = 'https://pub-a8b8e92131354b6587fb7d02d880f3e5.r2.dev';
-        
-        const AUDIO_TRACKS = {
-          it: [
-            { 
-              id: 'soaring', 
-              file: 'soaring.mp3', 
-              name: 'Soaring', 
-              duration: '3 min',
-              description: 'Synth ambient leggero e ascendente',
-              artist: 'Kevin MacLeod'
-            },
-            { 
-              id: 'relaxing-piano', 
-              file: 'relaxing-piano.mp3', 
-              name: 'Relaxing Piano', 
-              duration: '13 min',
-              description: 'Pianoforte rilassante e contemplativo',
-              artist: 'Kevin MacLeod'
-            },
-            { 
-              id: 'ancient-winds', 
-              file: 'ancient-winds.mp3', 
-              name: 'Ancient Winds', 
-              duration: '14 min',
-              description: 'Atmosfera eterea e contemplativa di antiche tradizioni',
-              artist: 'Kevin MacLeod'
-            },
-            { 
-              id: 'ethereal', 
-              file: 'ethereal-relaxation.mp3', 
-              name: 'Ethereal Relaxation', 
-              duration: '15 min',
-              description: 'Rilassamento profondo e meditativo',
-              artist: 'Kevin MacLeod',
-              comingSoon: true
-            },
-            { 
-              id: 'fluidscape', 
-              file: 'fluidscape.mp3', 
-              name: 'Fluidscape', 
-              duration: '14 min',
-              description: 'Paesaggio sonoro fluido e cosmico',
-              artist: 'Kevin MacLeod',
-              comingSoon: true
-            }
-          ],
-          en: [
-            { 
-              id: 'soaring', 
-              file: 'soaring.mp3', 
-              name: 'Soaring', 
-              duration: '3 min',
-              description: 'Light ascending synth ambient',
-              artist: 'Kevin MacLeod'
-            },
-            { 
-              id: 'relaxing-piano', 
-              file: 'relaxing-piano.mp3', 
-              name: 'Relaxing Piano', 
-              duration: '13 min',
-              description: 'Relaxing contemplative piano',
-              artist: 'Kevin MacLeod'
-            },
-            { 
-              id: 'ancient-winds', 
-              file: 'ancient-winds.mp3', 
-              name: 'Ancient Winds', 
-              duration: '14 min',
-              description: 'Ethereal contemplative atmosphere from ancient traditions',
-              artist: 'Kevin MacLeod'
-            },
-            { 
-              id: 'ethereal', 
-              file: 'ethereal-relaxation.mp3', 
-              name: 'Ethereal Relaxation', 
-              duration: '15 min',
-              description: 'Deep meditative relaxation',
-              artist: 'Kevin MacLeod',
-              comingSoon: true
-            },
-            { 
-              id: 'fluidscape', 
-              file: 'fluidscape.mp3', 
-              name: 'Fluidscape', 
-              duration: '14 min',
-              description: 'Fluid cosmic soundscape',
-              artist: 'Kevin MacLeod',
-              comingSoon: true
-            }
-          ]
-        };
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
 
-        // ========================================
-        // MAIN COMPONENT
-        // ========================================
-        function TuneIn() {
-          const [lang, setLang] = useState('it');
-          const [selectedFreq, setSelectedFreq] = useState(432);
-          const [customFreq, setCustomFreq] = useState(432);
-          const [isPlaying, setIsPlaying] = useState(false);
-          const [currentTime, setCurrentTime] = useState(0);
-          const [duration, setDuration] = useState(0);
-          const [volume, setVolume] = useState(0.7);
-          const [isCustomMode, setIsCustomMode] = useState(false);
-          const [showInfo, setShowInfo] = useState(false);
-          const [showMission, setShowMission] = useState(false);
-          const [showAbout, setShowAbout] = useState(false);
-          const [usersOnline] = useState(Math.floor(Math.random() * 50) + 20);
-          const [isLoading, setIsLoading] = useState(true);
-          const [selectedTrack, setSelectedTrack] = useState('soaring');
-          const [showTrackInfo, setShowTrackInfo] = useState(false);
-          
-          const playerRef = useRef(null);
-          const pitchShiftRef = useRef(null);
-          const volumeNodeRef = useRef(null);
-          const isInitializedRef = useRef(false);
+            <div class="time-display">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
 
-          const STANDARD_FREQ = 440;
-          const t = TRANSLATIONS[lang];
-          const frequencies = PRESET_FREQUENCIES[lang];
-          const tracks = AUDIO_TRACKS[lang];
-          const currentTrack = tracks.find(track => track.id === selectedTrack);
-          // URL using Cloudflare R2 for reliable streaming
-          const AUDIO_URL = `${R2_BASE_URL}/${currentTrack.file}`;
+        <div class="info-box">
+            <p><strong>🎼 Cosa fa Tune In:</strong></p>
+            <p>Converte la frequenza musicale del tuo audio mantenendo qualità professionale grazie all'algoritmo di pitch-shifting avanzato.</p>
+            <p><strong>✨ Novità:</strong> Nessun effetto robotico! La nuova tecnologia separa pitch e velocità per un audio naturale.</p>
+            <p><strong>💡 Suggerimento:</strong> Usa cuffie di qualità per apprezzare al meglio le frequenze di guarigione.</p>
+        </div>
+    </div>
 
-          // Initialize Tone.js Audio
-       useEffect(() => {
-  let loadTimeout;
-  let interval;
-  
-  const initAudio = async () => {
-    try {
-      setIsLoading(true);
-      
-      // Stop current playback if any
-      if (playerRef.current) {
-        if (playerRef.current.state === 'started') {
-          playerRef.current.stop();
-          Tone.Transport.stop();
+    <script>
+        const STANDARD_FREQ = 440;
+        const GOOGLE_DRIVE_FILE_ID = '1hSs32zxOP8DnuP_HupvSuZTiKbiGHLb5';
+        const AUDIO_URL = `https://drive.google.com/uc?export=download&id=${GOOGLE_DRIVE_FILE_ID}`;
+
+        let player = null;
+        let pitchShift = null;
+        let isPlaying = false;
+        let selectedFreq = 440;
+        let customFreq = 440;
+        let isCustomMode = false;
+        let audioLoaded = false;
+
+        // Elementi DOM
+        const presetButtons = document.querySelectorAll('.preset-btn');
+        const customToggle = document.getElementById('customToggle');
+        const customControls = document.getElementById('customControls');
+        const freqSlider = document.getElementById('freqSlider');
+        const customFreqDisplay = document.getElementById('customFreqDisplay');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const loading = document.getElementById('loading');
+        const playerControls = document.getElementById('playerControls');
+
+        // Funzione per convertire Hz in semitoni
+        function hzToSemitones(targetHz, baseHz = STANDARD_FREQ) {
+            return 12 * Math.log2(targetHz / baseHz);
         }
-        playerRef.current.disconnect();
-        playerRef.current.dispose();
-        playerRef.current = null;
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      loadTimeout = setTimeout(() => {
-        setIsLoading(false);
-        alert('Caricamento troppo lungo. Riprova.');
-      }, 60000);
-      
-      playerRef.current = new Tone.Player({
-        url: AUDIO_URL,
-        loop: true,
-        onload: () => {
-          clearTimeout(loadTimeout);
-          setDuration(playerRef.current.buffer.duration);
-          setIsLoading(false);
-          console.log('✅ Audio loaded:', AUDIO_URL);
-          
-          if (!pitchShiftRef.current) {
-            pitchShiftRef.current = new Tone.PitchShift({
-              pitch: 0,
-              windowSize: 0.3,
-              wet: 1.0
-            });
-          }
-          
-          if (!volumeNodeRef.current) {
-            volumeNodeRef.current = new Tone.Volume(-4);
-          }
-          
-          playerRef.current.chain(
-            pitchShiftRef.current,
-            volumeNodeRef.current,
-            Tone.Destination
-          );
-          
-          isInitializedRef.current = true;
-        },
-        onerror: (error) => {
-          clearTimeout(loadTimeout);
-          console.error('❌ Error:', error);
-          setIsLoading(false);
-          alert('Errore caricamento audio');
-        }
-      });
-      
-      interval = setInterval(() => {
-        if (playerRef.current && playerRef.current.state === 'started') {
-          const progress = Tone.Transport.seconds % playerRef.current.buffer.duration;
-          setCurrentTime(progress);
-        }
-      }, 100);
-      
-    } catch (error) {
-      console.error('Init error:', error);
-      setIsLoading(false);
-      if (loadTimeout) clearTimeout(loadTimeout);
-    }
-  };
-  
-  initAudio();
-  
-  return () => {
-    if (interval) clearInterval(interval);
-    if (loadTimeout) clearTimeout(loadTimeout);
-    if (playerRef.current) {
-      if (playerRef.current.state === 'started') {
-        playerRef.current.stop();
-      }
-      playerRef.current.disconnect();
-      playerRef.current.dispose();
-    }
-  };
-}, [selectedTrack, AUDIO_URL]);
 
-          useEffect(() => {
-            if (volumeNodeRef.current) {
-              const db = volume === 0 ? -Infinity : 20 * Math.log10(volume);
-              volumeNodeRef.current.volume.value = db;
+        // Inizializza Tone.js e carica l'audio
+        async function initAudio() {
+            loading.style.display = 'block';
+            
+            try {
+                await Tone.start();
+                console.log('Tone.js inizializzato');
+
+                // Crea il player
+                player = new Tone.Player({
+                    url: AUDIO_URL,
+                    loop: false,
+                    onload: () => {
+                        console.log('Audio caricato con successo');
+                        loading.style.display = 'none';
+                        playerControls.style.display = 'block';
+                        audioLoaded = true;
+                        updateDuration();
+                        
+                        // Auto-play dopo caricamento
+                        setTimeout(() => {
+                            playAudio();
+                        }, 100);
+                    }
+                });
+
+                // Crea il PitchShift effect (NOVITÀ!)
+                pitchShift = new Tone.PitchShift({
+                    pitch: 0, // Inizia a 440Hz (0 semitoni di differenza)
+                    windowSize: 0.1, // Qualità audio (più basso = migliore ma più CPU)
+                    delayTime: 0,
+                    feedback: 0
+                }).toDestination();
+
+                // Connetti player → pitchShift → output
+                player.connect(pitchShift);
+
+                // Update progress bar
+                setInterval(() => {
+                    if (player && audioLoaded && isPlaying) {
+                        const progress = (Tone.Transport.seconds / player.buffer.duration) * 100;
+                        progressBar.style.width = `${progress}%`;
+                        updateCurrentTime();
+                        
+                        if (progress >= 100) {
+                            isPlaying = false;
+                            Tone.Transport.stop();
+                            Tone.Transport.seconds = 0;
+                        }
+                    }
+                }, 100);
+
+            } catch (error) {
+                console.error('Errore caricamento audio:', error);
+                loading.textContent = 'Errore nel caricamento. Riprova.';
             }
-          }, [volume]);
+        }
 
-          useEffect(() => {
-            if (!pitchShiftRef.current || !isInitializedRef.current) return;
+        // Applica la conversione di frequenza
+        function applyFrequencyConversion() {
+            if (!player || !pitchShift) return;
 
             const targetFreq = isCustomMode ? customFreq : selectedFreq;
-            const semitones = 12 * Math.log2(targetFreq / STANDARD_FREQ);
+            const semitones = hzToSemitones(targetFreq);
             
-            // Direct assignment (works reliably)
-            pitchShiftRef.current.pitch = semitones;
+            // Aggiorna il pitch shift (SENZA cambiare velocità!)
+            pitchShift.pitch = semitones;
             
-            console.log(`Frequency: ${targetFreq}Hz, Semitones: ${semitones.toFixed(2)}`);
-          }, [selectedFreq, customFreq, isCustomMode]);
-
-          const handlePlayPause = async () => {
-            if (!isInitializedRef.current || isLoading) return;
-
-            try {
-              await Tone.start();
-              
-              if (isPlaying) {
-                playerRef.current.stop();
-                Tone.Transport.stop();
-                setIsPlaying(false);
-              } else {
-                Tone.Transport.start();
-                playerRef.current.start();
-                setIsPlaying(true);
-              }
-            } catch (error) {
-              console.error('Error toggling playback:', error);
-            }
-          };
-
-          const handleSeek = (e) => {
-            if (!playerRef.current || !duration) return;
-            
-            const seekTime = parseFloat(e.target.value);
-            playerRef.current.seek(seekTime);
-            setCurrentTime(seekTime);
-          };
-
-          const formatTime = (seconds) => {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = Math.floor(seconds % 60);
-            if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            return `${m}:${s.toString().padStart(2, '0')}`;
-          };
-
-          const getFrequencyColor = () => {
-            const freq = isCustomMode ? customFreq : selectedFreq;
-            const preset = frequencies.find(p => p.hz === freq);
-            return preset ? preset.color : '#8b5cf6';
-          };
-
-          const currentPreset = frequencies.find(p => p.hz === selectedFreq);
-
-          return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950 relative overflow-hidden">
-              
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500 rounded-full blur-3xl"></div>
-                <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-cyan-500 rounded-full blur-3xl"></div>
-              </div>
-
-              <div className="absolute top-4 right-4 z-20 flex items-center gap-4">
-                <div className="glass px-4 py-2 rounded-lg flex items-center gap-2">
-                  <Users className="w-5 h-5 text-green-400" />
-                  <span className="text-white font-semibold">{usersOnline}</span>
-                  <span className="text-purple-300 text-sm">{t.usersOnline}</span>
-                </div>
-                <button 
-                  onClick={() => setLang('it')} 
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${lang === 'it' ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}
-                >
-                  🇮🇹
-                </button>
-                <button 
-                  onClick={() => setLang('en')} 
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${lang === 'en' ? 'bg-purple-500 text-white' : 'glass text-purple-300 hover:bg-white/10'}`}
-                >
-                  🇬🇧
-                </button>
-              </div>
-
-              <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
-                
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-3 mb-4">
-                    <Heart className="w-12 h-12 text-pink-400 animate-pulse" />
-                    <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight">
-                      {t.title}
-                    </h1>
-                  </div>
-                  <p className="text-purple-200 text-3xl md:text-4xl uppercase tracking-wider font-bold mt-2">{t.subtitle}</p>
-                </div>
-
-                <div className="flex justify-center gap-3 mb-8">
-                  <button 
-                    onClick={() => { setShowMission(!showMission); setShowAbout(false); setShowInfo(false); }}
-                    className="glass px-6 py-3 rounded-xl text-purple-300 hover:bg-white/10 transition-all font-semibold"
-                  >
-                    {t.mission}
-                  </button>
-                  <button 
-                    onClick={() => { setShowAbout(!showAbout); setShowMission(false); setShowInfo(false); }}
-                    className="glass px-6 py-3 rounded-xl text-purple-300 hover:bg-white/10 transition-all font-semibold"
-                  >
-                    {t.about}
-                  </button>
-                </div>
-
-                {showMission && (
-                  <div className="fade-in glass rounded-3xl p-8 mb-8 border-2 border-pink-500/30">
-                    <h3 className="text-2xl font-bold text-white mb-4">
-                      {t.mission}
-                    </h3>
-                    <p className="text-purple-200 leading-relaxed mb-6">{t.missionText}</p>
-                    <a 
-                      href={t.channelUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-300 hover:text-white underline transition-colors duration-300"
-                    >
-                      {t.joinChannel}
-                    </a>
-                  </div>
-                )}
-
-                {showAbout && (
-                  <div className="fade-in glass rounded-3xl p-8 mb-8 border-2 border-cyan-500/30">
-                    <h3 className="text-2xl font-bold text-white mb-4">
-                      {t.about}
-                    </h3>
-                    <p className="text-purple-200 leading-relaxed">{t.aboutText}</p>
-                  </div>
-                )}
-
-                <div className="glass rounded-3xl p-8 md:p-12">
-                  
-                  {isLoading && (
-                    <div className="text-center py-12 mb-8">
-                      <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500 mb-4"></div>
-                      <p className="text-purple-300 text-lg font-semibold">Caricamento {currentTrack?.name}...</p>
-                      <p className="text-purple-400 text-sm mt-2">File grandi richiedono più tempo (fino a 30 secondi)</p>
-                    </div>
-                  )}
-
-                  {!isLoading && (
-                    <>
-                  <div 
-                    className="frequency-pulse relative mb-10 text-center py-12 rounded-3xl border-2 transition-all duration-300" 
-                    style={{ 
-                      borderColor: getFrequencyColor(),
-                      background: `linear-gradient(135deg, ${getFrequencyColor()}15, ${getFrequencyColor()}25)`
-                    }}
-                  >
-                    <div 
-                      className="text-8xl md:text-9xl font-black text-white mb-2 tracking-tighter" 
-                      style={{ textShadow: `0 0 40px ${getFrequencyColor()}` }}
-                    >
-                      {isCustomMode ? customFreq : selectedFreq}
-                    </div>
-                    <div className="text-3xl font-light text-purple-200 tracking-wider">Hz</div>
-                    
-                    {!isCustomMode && currentPreset && (
-                      <div className="mt-4">
-                        <div className="text-2xl text-white font-semibold">{currentPreset.title}</div>
-                        {currentPreset.chakra && <div className="text-purple-300 text-sm mt-1">{currentPreset.chakra}</div>}
-                        <div className="text-purple-200 text-sm mt-3 max-w-2xl mx-auto leading-relaxed">{currentPreset.description}</div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Track Selector - Modern Design */}
-                  <div className="mb-10">
-                    <h2 className="text-3xl md:text-4xl font-black text-center mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      Select Your Track
-                    </h2>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto">
-                      {tracks.map((track, index) => {
-                        // Chakra-inspired colors for 5 tracks
-                        const colors = [
-                          { from: 'from-blue-400', to: 'to-indigo-500', glow: 'shadow-blue-400/50', dot: '#60A5FA' },      // Soaring - Vishuddha (Throat)
-                          { from: 'from-green-400', to: 'to-emerald-500', glow: 'shadow-green-400/50', dot: '#34D399' },   // Relaxing Piano - Anahata (Heart)
-                          { from: 'from-yellow-400', to: 'to-amber-500', glow: 'shadow-yellow-400/50', dot: '#FBBF24' },   // Ancient Winds - Manipura (Solar Plexus)
-                          { from: 'from-purple-400', to: 'to-violet-500', glow: 'shadow-purple-400/50', dot: '#A78BFA' },  // Ethereal - Ajna (Third Eye)
-                          { from: 'from-orange-400', to: 'to-red-500', glow: 'shadow-orange-400/50', dot: '#FB923C' }      // Fluidscape - Svadhisthana (Sacral)
-                        ];
-                        const colorScheme = colors[index];
-                        const isComingSoon = track.comingSoon === true;
-                        const isSelected = selectedTrack === track.id;
-                        
-                        return (
-                          <button
-                            key={track.id}
-                            onClick={async () => {
-                              if (!isComingSoon) {
-                                // Stop current playback
-                                if (playerRef.current && playerRef.current.state === 'started') {
-                                  playerRef.current.stop();
-                                  Tone.Transport.stop();
-                                }
-                                setIsPlaying(false);
-                                setSelectedTrack(track.id);
-                                setShowTrackInfo(false);
-                              }
-                            }}
-                            disabled={isComingSoon}
-                            className={`relative p-6 rounded-2xl transition-all duration-300 transform ${
-                              isSelected 
-                                ? `bg-gradient-to-br ${colorScheme.from} ${colorScheme.to} scale-105 shadow-2xl ${colorScheme.glow}` 
-                                : isComingSoon
-                                  ? 'bg-gray-800/50 cursor-not-allowed opacity-60'
-                                  : `glass hover:scale-105 hover:shadow-xl hover:${colorScheme.glow}`
-                            }`}
-                          >
-                            {isComingSoon && (
-                              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-purple-500 to-pink-500 text-xs font-black px-3 py-1 rounded-full shadow-lg">
-                                COMING SOON
-                              </div>
-                            )}
-                            
-                            <div className="flex justify-center mb-3">
-                              <div 
-                                className={`w-8 h-8 rounded-full transition-all duration-300 ${
-                                  isSelected 
-                                    ? 'shadow-2xl scale-125' 
-                                    : isComingSoon 
-                                      ? 'opacity-40' 
-                                      : 'shadow-lg'
-                                }`}
-                                style={{
-                                  backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.9)' : colorScheme.dot,
-                                  boxShadow: isSelected 
-                                    ? `0 0 20px ${colorScheme.dot}, 0 0 40px ${colorScheme.dot}40` 
-                                    : `0 2px 10px ${colorScheme.dot}60`
-                                }}
-                              ></div>
-                            </div>
-                            
-                            <div className={`font-bold text-lg ${isSelected ? 'text-white' : isComingSoon ? 'text-gray-500' : 'text-white'}`}>
-                              {track.name}
-                            </div>
-                            
-                            {isSelected && !isComingSoon && (
-                              <div className="absolute inset-0 rounded-2xl animate-pulse" style={{
-                                boxShadow: `0 0 30px ${colorScheme.glow}`
-                              }}></div>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    
-                    {/* Track Info Button */}
-                    <div className="text-center mt-4">
-                      <button
-                        onClick={() => setShowTrackInfo(!showTrackInfo)}
-                        className="glass px-4 py-2 rounded-lg text-purple-300 hover:text-white transition-all text-sm flex items-center gap-2 mx-auto"
-                      >
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                        </svg>
-                        Track Info
-                      </button>
-                    </div>
-                    
-                    {showTrackInfo && currentTrack && (
-                      <div className="fade-in mt-4 p-4 glass rounded-xl max-w-md mx-auto">
-                        <div className="text-white font-semibold mb-2">{currentTrack.name}</div>
-                        <div className="text-purple-200 text-sm mb-2">{currentTrack.description}</div>
-                        <div className="text-purple-300 text-xs">
-                          {currentTrack.artist} · {currentTrack.duration}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex gap-3 mb-8 justify-center">
-                    <button 
-                      onClick={() => setIsCustomMode(false)} 
-                      className={`px-6 py-3 rounded-xl font-semibold transition-all ${!isCustomMode ? 'bg-purple-500 text-white glow' : 'glass text-purple-300 hover:bg-white/10'}`}
-                    >
-                      {t.preset}
-                    </button>
-                    <button 
-                      onClick={() => setIsCustomMode(true)} 
-                      className={`px-6 py-3 rounded-xl font-semibold transition-all ${isCustomMode ? 'bg-purple-500 text-white glow' : 'glass text-purple-300 hover:bg-white/10'}`}
-                    >
-                      {t.custom}
-                    </button>
-                  </div>
-
-                  {/* Frequency Selector Title */}
-                  <h2 className="text-3xl md:text-4xl font-black text-center mb-8 bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                    Select Your Frequency
-                  </h2>
-
-                  {!isCustomMode ? (
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mb-10">
-                      {frequencies.map(freq => {
-                        const isSelected = selectedFreq === freq.hz;
-                        return (
-                          <button 
-                            key={freq.hz} 
-                            onClick={() => setSelectedFreq(freq.hz)}
-                            className={`relative p-4 rounded-2xl transition-all duration-300 transform overflow-hidden group ${
-                              isSelected 
-                                ? 'scale-110 shadow-2xl' 
-                                : 'hover:scale-105 hover:shadow-xl'
-                            }`}
-                            style={{ 
-                              background: isSelected 
-                                ? `linear-gradient(135deg, ${freq.color}80, ${freq.color}40)`
-                                : 'rgba(255,255,255,0.03)',
-                              border: `3px solid ${freq.color}`,
-                              boxShadow: isSelected 
-                                ? `0 0 30px ${freq.color}80, 0 0 60px ${freq.color}40, inset 0 0 20px ${freq.color}20`
-                                : `0 0 0 ${freq.color}00`
-                            }}
-                          >
-                            {/* Animated background glow on hover */}
-                            <div 
-                              className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isSelected ? 'opacity-100' : ''}`}
-                              style={{
-                                background: `radial-gradient(circle at center, ${freq.color}30, transparent 70%)`,
-                                animation: isSelected ? 'pulse 2s ease-in-out infinite' : 'none'
-                              }}
-                            ></div>
-                            
-                            {/* 3D shine effect */}
-                            <div 
-                              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                              style={{
-                                background: `linear-gradient(135deg, ${freq.color}20 0%, transparent 50%)`,
-                              }}
-                            ></div>
-                            
-                            {/* Content */}
-                            <div className="relative z-10">
-                              <div 
-                                className={`text-2xl md:text-3xl font-black mb-1 transition-all duration-300 ${
-                                  isSelected ? 'text-white' : 'text-white/90 group-hover:text-white'
-                                }`}
-                                style={{ 
-                                  textShadow: isSelected 
-                                    ? `0 0 20px ${freq.color}, 0 0 40px ${freq.color}80`
-                                    : 'none'
-                                }}
-                              >
-                                {freq.hz} <span className="text-lg">Hz</span>
-                              </div>
-                              <div className={`text-xs font-semibold transition-all duration-300 ${
-                                isSelected ? 'text-white' : 'text-purple-300 group-hover:text-white'
-                              }`}>
-                                {freq.title}
-                              </div>
-                            </div>
-                            
-                            {/* Selected indicator */}
-                            {isSelected && (
-                              <div 
-                                className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-ping"
-                                style={{ backgroundColor: freq.color }}
-                              ></div>
-                            )}
-                            
-                            {/* Border glow animation */}
-                            {isSelected && (
-                              <div 
-                                className="absolute inset-0 rounded-2xl animate-pulse"
-                                style={{
-                                  boxShadow: `0 0 20px ${freq.color}, inset 0 0 20px ${freq.color}40`
-                                }}
-                              ></div>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="mb-10">
-                      <div className="flex items-center gap-4 mb-4">
-                        <input 
-                          type="range" 
-                          min="200" 
-                          max="1000" 
-                          step="1" 
-                          value={customFreq} 
-                          onChange={(e) => setCustomFreq(parseInt(e.target.value))}
-                          className="flex-1 h-3 rounded-full appearance-none cursor-pointer"
-                          style={{ background: `linear-gradient(to right, ${getFrequencyColor()}, #ec4899)` }} 
-                        />
-                        <input 
-                          type="number" 
-                          min="200" 
-                          max="1000" 
-                          value={customFreq} 
-                          onChange={(e) => setCustomFreq(parseInt(e.target.value))}
-                          className="w-24 px-4 py-2 glass text-white text-center rounded-lg font-semibold" 
-                        />
-                      </div>
-                      <div className="flex justify-between text-xs text-purple-300">
-                        <span>200 Hz</span>
-                        <span>1000 Hz</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Enhanced Play/Pause Button - Centered and Prominent */}
-                  <div className="flex flex-col items-center gap-8 mb-8">
-                    <button 
-                      onClick={handlePlayPause} 
-                      disabled={isLoading}
-                      className="relative group flex-shrink-0 w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 flex items-center justify-center transition-all duration-300 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-purple-500/50 active:scale-95"
-                      style={{
-                        boxShadow: isPlaying 
-                          ? '0 0 60px rgba(168, 85, 247, 0.8), 0 0 100px rgba(236, 72, 153, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.2)' 
-                          : '0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(168, 85, 247, 0.3)',
-                        animation: isPlaying ? 'pulse 2s ease-in-out infinite' : 'none',
-                        transform: isLoading ? 'scale(0.95)' : 'scale(1)'
-                      }}
-                    >
-                      {/* Rotating ring when playing */}
-                      {isPlaying && (
-                        <div className="absolute inset-0 rounded-full border-4 border-white/30 animate-spin" style={{animationDuration: '3s'}}></div>
-                      )}
-                      
-                      {/* Glow effect */}
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 to-transparent opacity-50"></div>
-                      
-                      {/* Icon */}
-                      <div className="relative z-10">
-                        {isLoading ? (
-                          <div className="w-14 h-14 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                        ) : isPlaying ? (
-                          <Pause className="w-14 h-14 text-white drop-shadow-lg" fill="white" />
-                        ) : (
-                          <Play className="w-14 h-14 text-white ml-2 drop-shadow-lg" fill="white" />
-                        )}
-                      </div>
-                      
-                      {/* Hover glow */}
-                      <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/10 transition-all duration-300"></div>
-                    </button>
-                    
-                    {/* Volume Control Below Play Button */}
-                    <div className="w-full max-w-md flex items-center gap-4 px-4">
-                      <Volume2 className="w-6 h-6 text-purple-300 flex-shrink-0" />
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="1" 
-                        step="0.01" 
-                        value={volume} 
-                        onChange={(e) => setVolume(parseFloat(e.target.value))}
-                        className="flex-1 h-2 rounded-full appearance-none cursor-pointer bg-white/20" 
-                      />
-                      <span className="text-white text-sm font-medium w-10">{Math.round(volume * 100)}%</span>
-                    </div>
-                  </div>
-
-                  {/* Pitch Adaptation Disclaimer */}
-                  <div className="mb-6 p-4 glass rounded-xl border border-purple-400/30">
-                    <div>
-                      <div className="text-purple-200 font-semibold text-sm mb-2">
-                        {lang === 'it' ? 'Nota sull\'adattamento sonoro' : 'Note on Sound Adaptation'}
-                      </div>
-                      <div className="text-purple-300 text-xs leading-relaxed">
-                        {lang === 'it' 
-                          ? 'Il pitch-shifting digitale crea inizialmente una leggera alterazione timbrica. Questo effetto di "grana sonora" è parte del processo di risintonizzazione delle frequenze. L\'orecchio umano si adatta naturalmente dopo pochi secondi di ascolto, permettendo al corpo di entrare in risonanza con la nuova frequenza. Questo adattamento neurologico è parte integrante del processo di riallineamento energetico.'
-                          : 'Digital pitch-shifting initially creates a slight timbral alteration. This "grainy sound" effect is part of the frequency retuning process. The human ear naturally adapts after a few seconds of listening, allowing the body to resonate with the new frequency. This neurological adaptation is an integral part of the energetic realignment process.'
-                        }
-                      </div>
-                    </div>
-                  </div>
-
-                  <button 
-                    onClick={() => { setShowInfo(!showInfo); setShowMission(false); setShowAbout(false); }}
-                    className="w-full glass px-6 py-3 rounded-xl text-purple-300 hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2"
-                  >
-                    {showInfo ? '▼' : '▶'} {t.howItWorks}
-                  </button>
-
-                  {showInfo && (
-                    <div className="fade-in mt-4 p-6 glass rounded-xl">
-                      <div className="text-purple-200 text-sm leading-relaxed">{t.description}</div>
-                    </div>
-                  )}
-                  </>
-                  )}
-                </div>
-
-                <div className="text-center mt-8 space-y-2">
-                  <div className="text-purple-300/80 text-sm font-light">{t.footer}</div>
-                  <div className="text-purple-300/70 text-xs">{t.musicCredit}</div>
-                  <div className="text-purple-300/60 text-xs">{t.copyright}</div>
-                </div>
-              </div>
-
-              <style>{`
-                input[type="range"]::-webkit-slider-thumb { 
-                  appearance: none; 
-                  width: 24px; 
-                  height: 24px; 
-                  border-radius: 50%; 
-                  background: white; 
-                  cursor: pointer; 
-                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 255, 255, 0.2); 
-                }
-                input[type="range"]::-moz-range-thumb { 
-                  width: 24px; 
-                  height: 24px; 
-                  border-radius: 50%; 
-                  background: white; 
-                  cursor: pointer; 
-                  border: none; 
-                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 255, 255, 0.2); 
-                }
-                input[type="number"]::-webkit-inner-spin-button,
-                input[type="number"]::-webkit-outer-spin-button { 
-                  -webkit-appearance: none; 
-                  margin: 0; 
-                }
-              `}</style>
-            </div>
-          );
+            console.log(`Frequenza: ${targetFreq}Hz | Semitoni: ${semitones.toFixed(2)}`);
         }
-        
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<TuneIn />);
+
+        // Play audio
+        async function playAudio() {
+            if (!audioLoaded) return;
+            
+            await Tone.start();
+            player.start();
+            Tone.Transport.start();
+            isPlaying = true;
+        }
+
+        // Pause audio
+        function pauseAudio() {
+            if (!audioLoaded) return;
+            
+            player.stop();
+            Tone.Transport.pause();
+            isPlaying = false;
+        }
+
+        // Format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update duration
+        function updateDuration() {
+            if (player && player.buffer) {
+                durationEl.textContent = formatTime(player.buffer.duration);
+            }
+        }
+
+        // Update current time
+        function updateCurrentTime() {
+            currentTimeEl.textContent = formatTime(Tone.Transport.seconds);
+        }
+
+        // Event listeners per i preset
+        presetButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (isCustomMode) return;
+                
+                presetButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                selectedFreq = parseInt(btn.dataset.freq);
+                applyFrequencyConversion();
+            });
+        });
+
+        // Custom mode toggle
+        customToggle.addEventListener('change', (e) => {
+            isCustomMode = e.target.checked;
+            customControls.style.display = isCustomMode ? 'block' : 'none';
+            
+            if (isCustomMode) {
+                presetButtons.forEach(b => b.classList.remove('active'));
+            } else {
+                presetButtons[1].classList.add('active');
+            }
+            
+            applyFrequencyConversion();
+        });
+
+        // Slider frequenza custom
+        freqSlider.addEventListener('input', (e) => {
+            customFreq = parseInt(e.target.value);
+            customFreqDisplay.textContent = `${customFreq} Hz`;
+            if (isCustomMode) {
+                applyFrequencyConversion();
+            }
+        });
+
+        // Play/Pause buttons
+        playBtn.addEventListener('click', playAudio);
+        pauseBtn.addEventListener('click', pauseAudio);
+
+        // Inizializza l'app
+        initAudio();
     </script>
 </body>
 </html>
