@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tune In - Frequency Converter</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
         * {
             margin: 0;
@@ -53,6 +52,59 @@
             font-size: 0.8em;
             display: inline-block;
             margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .track-selector {
+            margin-bottom: 30px;
+        }
+
+        .track-selector h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .track-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .track-btn {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #667eea;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .track-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .track-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .frequency-selector {
+            margin-bottom: 30px;
+        }
+
+        .frequency-selector h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
 
         .preset-buttons {
@@ -69,7 +121,7 @@
             padding: 15px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             transition: all 0.3s;
             position: relative;
@@ -88,80 +140,14 @@
 
         .preset-btn .freq-label {
             display: block;
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 20px;
+            margin-bottom: 3px;
         }
 
         .preset-btn .freq-name {
             display: block;
-            font-size: 11px;
+            font-size: 10px;
             opacity: 0.9;
-        }
-
-        .custom-mode {
-            background: white;
-            border: 2px solid #667eea;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .custom-mode h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .slider-container {
-            margin-bottom: 15px;
-        }
-
-        .slider-container label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .frequency-display {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: #ddd;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .controls {
@@ -186,7 +172,7 @@
             color: white;
         }
 
-        .play-btn:hover {
+        .play-btn:hover:not(:disabled) {
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
         }
@@ -194,7 +180,6 @@
         .play-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
 
         .pause-btn {
@@ -268,71 +253,80 @@
             60%, 100% { content: '...'; }
         }
 
-        .algorithm-info {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            text-align: center;
+        #playerControls {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎵 Tune In</h1>
-        <div class="subtitle">Convertitore di Frequenze Audio Professionale</div>
+        <div class="subtitle">Frequenze di Guarigione</div>
         
-        <div class="algorithm-info">
-            ✨ Qualità Audio Migliorata - Algoritmo PitchShift Professionale
+        <div class="quality-badge">
+            ✨ Audio Pre-Convertito - Qualità Perfetta
         </div>
 
-        <div class="preset-buttons">
-            <button class="preset-btn" data-freq="432">
-                <span class="freq-label">432</span>
-                <span class="freq-name">Hz - Armonia</span>
-            </button>
-            <button class="preset-btn active" data-freq="440">
-                <span class="freq-label">440</span>
-                <span class="freq-name">Hz - Standard</span>
-            </button>
-            <button class="preset-btn" data-freq="528">
-                <span class="freq-label">528</span>
-                <span class="freq-name">Hz - Amore</span>
-            </button>
-            <button class="preset-btn" data-freq="396">
-                <span class="freq-label">396</span>
-                <span class="freq-name">Hz - Liberazione</span>
-            </button>
-            <button class="preset-btn" data-freq="639">
-                <span class="freq-label">639</span>
-                <span class="freq-name">Hz - Connessione</span>
-            </button>
-            <button class="preset-btn" data-freq="741">
-                <span class="freq-label">741</span>
-                <span class="freq-name">Hz - Risveglio</span>
-            </button>
-        </div>
-
-        <div class="custom-mode">
-            <h3>🎛️ Modalità Personalizzata</h3>
-            <div class="slider-container">
-                <label>
-                    <input type="checkbox" id="customToggle"> Attiva modalità custom
-                </label>
-            </div>
-            <div id="customControls" style="display: none;">
-                <div class="frequency-display" id="customFreqDisplay">440 Hz</div>
-                <div class="slider-container">
-                    <input type="range" id="freqSlider" min="200" max="1000" value="440" step="1">
-                </div>
+        <div class="track-selector">
+            <h3>🎼 Seleziona Brano</h3>
+            <div class="track-buttons">
+                <button class="track-btn active" data-track="soaring">
+                    🎵 Soaring
+                </button>
+                <button class="track-btn" data-track="ancient-winds">
+                    🌊 Ancient Winds
+                </button>
+                <button class="track-btn" data-track="relaxing-piano">
+                    🎹 Relaxing Piano
+                </button>
             </div>
         </div>
 
-        <div id="loading" class="loading" style="display: none;">Caricamento audio in corso</div>
+        <div class="frequency-selector">
+            <h3>🎛️ Seleziona Frequenza</h3>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-freq="396">
+                    <span class="freq-label">396</span>
+                    <span class="freq-name">Hz - Radicamento</span>
+                </button>
+                <button class="preset-btn" data-freq="417">
+                    <span class="freq-label">417</span>
+                    <span class="freq-name">Hz - Cambiamento</span>
+                </button>
+                <button class="preset-btn" data-freq="432">
+                    <span class="freq-label">432</span>
+                    <span class="freq-name">Hz - Armonia</span>
+                </button>
+                <button class="preset-btn active" data-freq="440">
+                    <span class="freq-label">440</span>
+                    <span class="freq-name">Hz - Standard</span>
+                </button>
+                <button class="preset-btn" data-freq="528">
+                    <span class="freq-label">528</span>
+                    <span class="freq-name">Hz - Amore</span>
+                </button>
+                <button class="preset-btn" data-freq="639">
+                    <span class="freq-label">639</span>
+                    <span class="freq-name">Hz - Connessione</span>
+                </button>
+                <button class="preset-btn" data-freq="741">
+                    <span class="freq-label">741</span>
+                    <span class="freq-name">Hz - Espressione</span>
+                </button>
+                <button class="preset-btn" data-freq="852">
+                    <span class="freq-label">852</span>
+                    <span class="freq-name">Hz - Intuizione</span>
+                </button>
+                <button class="preset-btn" data-freq="963">
+                    <span class="freq-label">963</span>
+                    <span class="freq-name">Hz - Unità</span>
+                </button>
+            </div>
+        </div>
 
-        <div id="playerControls" style="display: none;">
+        <div id="loading" class="loading" style="display: none;">Caricamento audio</div>
+
+        <div id="playerControls">
             <div class="controls">
                 <button class="control-btn play-btn" id="playBtn">▶️ Play</button>
                 <button class="control-btn pause-btn" id="pauseBtn">⏸️ Pause</button>
@@ -349,147 +343,109 @@
         </div>
 
         <div class="info-box">
-            <p><strong>🎼 Cosa fa Tune In:</strong></p>
-            <p>Converte la frequenza musicale del tuo audio mantenendo qualità professionale grazie all'algoritmo di pitch-shifting avanzato.</p>
-            <p><strong>✨ Novità:</strong> Nessun effetto robotico! La nuova tecnologia separa pitch e velocità per un audio naturale.</p>
-            <p><strong>💡 Suggerimento:</strong> Usa cuffie di qualità per apprezzare al meglio le frequenze di guarigione.</p>
+            <p><strong>🎼 Tune In:</strong></p>
+            <p>Ascolta la tua musica preferita convertita alle frequenze di guarigione. Ogni frequenza ha proprietà uniche per il benessere.</p>
+            <p><strong>✨ Qualità Perfetta:</strong> File audio pre-convertiti professionalmente - nessuna elaborazione in tempo reale, nessun compromesso sulla qualità.</p>
+            <p><strong>💡 Suggerimento:</strong> Usa cuffie di qualità per apprezzare al meglio le frequenze.</p>
         </div>
     </div>
 
     <script>
-        const STANDARD_FREQ = 440;
-        // Audio hostato su Cloudflare R2 via Worker
-        const AUDIO_URL = 'https://tunein-audio.paradigmaolistico.workers.dev/soaring.mp3';
+        const CLOUDFLARE_WORKER = 'https://tunein-audio.paradigmaolistico.workers.dev';
+        
+        // Mappatura frequenze a nomi file
+        const FREQ_NAMES = {
+            '396': 'radicamento',
+            '417': 'cambiamento',
+            '432': 'armonia',
+            '440': 'standard',
+            '528': 'amore',
+            '639': 'connessione',
+            '741': 'espressione',
+            '852': 'intuizione',
+            '963': 'unita'
+        };
 
+        let currentTrack = 'soaring';
+        let currentFreq = '440';
         let audioElement = null;
-        let audioContext = null;
-        let sourceNode = null;
-        let gainNode = null;
-        let pitchShift = null;
         let isPlaying = false;
-        let selectedFreq = 440;
-        let customFreq = 440;
-        let isCustomMode = false;
-        let audioLoaded = false;
 
         // Elementi DOM
-        const presetButtons = document.querySelectorAll('.preset-btn');
-        const customToggle = document.getElementById('customToggle');
-        const customControls = document.getElementById('customControls');
-        const freqSlider = document.getElementById('freqSlider');
-        const customFreqDisplay = document.getElementById('customFreqDisplay');
+        const trackButtons = document.querySelectorAll('.track-btn');
+        const freqButtons = document.querySelectorAll('.preset-btn');
         const playBtn = document.getElementById('playBtn');
         const pauseBtn = document.getElementById('pauseBtn');
         const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
         const currentTimeEl = document.getElementById('currentTime');
         const durationEl = document.getElementById('duration');
         const loading = document.getElementById('loading');
         const playerControls = document.getElementById('playerControls');
 
-        // Audio Element e Web Audio API
-        let audioElement = null;
-        let audioContext = null;
-        let sourceNode = null;
-        let gainNode = null;
-        
-        // Funzione per convertire Hz in semitoni
-        function hzToSemitones(targetHz, baseHz = STANDARD_FREQ) {
-            return 12 * Math.log2(targetHz / baseHz);
+        // Costruisci URL del file
+        function getAudioURL(track, freq) {
+            const freqName = FREQ_NAMES[freq];
+            return `${CLOUDFLARE_WORKER}/${track}-${freq}hz-${freqName}.mp3`;
         }
 
-        // Inizializza audio
-        async function initAudio() {
+        // Carica audio
+        function loadAudio() {
             loading.style.display = 'block';
-            
-            try {
-                // Crea elemento audio HTML5
-                audioElement = new Audio(AUDIO_URL);
-                audioElement.crossOrigin = 'anonymous';
-                
-                // Evento quando l'audio è pronto
-                audioElement.addEventListener('canplaythrough', async () => {
-                    console.log('Audio pronto');
-                    loading.style.display = 'none';
-                    playerControls.style.display = 'block';
-                    audioLoaded = true;
-                    updateDuration();
-                });
-                
-                // Evento errore
-                audioElement.addEventListener('error', (e) => {
-                    console.error('Errore caricamento:', e);
-                    loading.textContent = 'Errore. Riprova.';
-                });
-                
-                // Setup Web Audio API per PitchShift
-                await Tone.start();
-                audioContext = Tone.context;
-                
-                // Crea nodi audio
-                sourceNode = audioContext.createMediaElementSource(audioElement);
-                gainNode = audioContext.createGain();
-                
-                // Crea PitchShift
-                pitchShift = new Tone.PitchShift({
-                    pitch: 0,
-                    windowSize: 0.1,
-                    delayTime: 0,
-                    feedback: 0
-                }).toDestination();
-                
-                // Connetti: source → pitchShift → output
-                sourceNode.connect(pitchShift);
-                
-                // Update progress
-                audioElement.addEventListener('timeupdate', () => {
-                    if (audioElement.duration) {
-                        const progress = (audioElement.currentTime / audioElement.duration) * 100;
-                        progressBar.style.width = `${progress}%`;
-                        updateCurrentTime();
-                    }
-                });
-                
-                // Fine audio
-                audioElement.addEventListener('ended', () => {
-                    isPlaying = false;
-                });
-                
-                // Carica
-                audioElement.load();
-                
-            } catch (error) {
-                console.error('Errore:', error);
-                loading.textContent = 'Errore. Riprova.';
+            playerControls.style.display = 'none';
+
+            const url = getAudioURL(currentTrack, currentFreq);
+            console.log('Caricamento:', url);
+
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.src = '';
             }
-        }
 
-        // Applica conversione frequenza
-        function applyFrequencyConversion() {
-            if (!pitchShift) return;
+            audioElement = new Audio(url);
+            audioElement.crossOrigin = 'anonymous';
 
-            const targetFreq = isCustomMode ? customFreq : selectedFreq;
-            const semitones = hzToSemitones(targetFreq);
-            
-            pitchShift.pitch = semitones;
-            
-            console.log(`Frequenza: ${targetFreq}Hz | Semitoni: ${semitones.toFixed(2)}`);
+            audioElement.addEventListener('canplaythrough', () => {
+                console.log('Audio pronto');
+                loading.style.display = 'none';
+                playerControls.style.display = 'block';
+                updateDuration();
+            });
+
+            audioElement.addEventListener('error', (e) => {
+                console.error('Errore:', e);
+                loading.textContent = 'Errore nel caricamento';
+            });
+
+            audioElement.addEventListener('timeupdate', () => {
+                if (audioElement.duration) {
+                    const progress = (audioElement.currentTime / audioElement.duration) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    updateCurrentTime();
+                }
+            });
+
+            audioElement.addEventListener('ended', () => {
+                isPlaying = false;
+            });
+
+            audioElement.load();
         }
 
         // Play
-        async function playAudio() {
-            if (!audioLoaded || !audioElement) return;
-            
-            await Tone.start();
-            audioElement.play();
-            isPlaying = true;
+        function play() {
+            if (audioElement) {
+                audioElement.play();
+                isPlaying = true;
+            }
         }
 
         // Pause
-        function pauseAudio() {
-            if (!audioLoaded || !audioElement) return;
-            
-            audioElement.pause();
-            isPlaying = false;
+        function pause() {
+            if (audioElement) {
+                audioElement.pause();
+                isPlaying = false;
+            }
         }
 
         // Format time
@@ -513,48 +469,41 @@
             }
         }
 
-        // Event listeners per i preset
-        presetButtons.forEach(btn => {
+        // Event: Selezione brano
+        trackButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                if (isCustomMode) return;
-                
-                presetButtons.forEach(b => b.classList.remove('active'));
+                trackButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
-                selectedFreq = parseInt(btn.dataset.freq);
-                applyFrequencyConversion();
+                currentTrack = btn.dataset.track;
+                loadAudio();
             });
         });
 
-        // Custom mode toggle
-        customToggle.addEventListener('change', (e) => {
-            isCustomMode = e.target.checked;
-            customControls.style.display = isCustomMode ? 'block' : 'none';
-            
-            if (isCustomMode) {
-                presetButtons.forEach(b => b.classList.remove('active'));
-            } else {
-                presetButtons[1].classList.add('active');
-            }
-            
-            applyFrequencyConversion();
+        // Event: Selezione frequenza
+        freqButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                freqButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFreq = btn.dataset.freq;
+                loadAudio();
+            });
         });
 
-        // Slider frequenza custom
-        freqSlider.addEventListener('input', (e) => {
-            customFreq = parseInt(e.target.value);
-            customFreqDisplay.textContent = `${customFreq} Hz`;
-            if (isCustomMode) {
-                applyFrequencyConversion();
+        // Event: Play/Pause
+        playBtn.addEventListener('click', play);
+        pauseBtn.addEventListener('click', pause);
+
+        // Event: Seek
+        progressContainer.addEventListener('click', (e) => {
+            if (audioElement && audioElement.duration) {
+                const rect = progressContainer.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                audioElement.currentTime = audioElement.duration * percent;
             }
         });
 
-        // Play/Pause buttons
-        playBtn.addEventListener('click', playAudio);
-        pauseBtn.addEventListener('click', pauseAudio);
-
-        // Inizializza l'app
-        initAudio();
+        // Carica audio iniziale
+        loadAudio();
     </script>
 </body>
 </html>
