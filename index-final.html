@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tune In - Frequency Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .quality-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .track-selector {
+            margin-bottom: 30px;
+        }
+
+        .track-selector h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .track-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .track-btn {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #667eea;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .track-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .track-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .frequency-selector {
+            margin-bottom: 30px;
+        }
+
+        .frequency-selector h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .preset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .preset-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 0 20px rgba(245, 87, 108, 0.5);
+        }
+
+        .preset-btn .freq-label {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .preset-btn .freq-name {
+            display: block;
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .play-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+        }
+
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pause-btn {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+        }
+
+        .pause-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.4);
+        }
+
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 18px;
+            padding: 20px;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        #playerControls {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Tune In</h1>
+        <div class="subtitle">Frequenze di Guarigione</div>
+        
+        <div class="quality-badge">
+            ✨ Audio Pre-Convertito - Qualità Perfetta
+        </div>
+
+        <div class="track-selector">
+            <h3>🎼 Seleziona Brano</h3>
+            <div class="track-buttons">
+                <button class="track-btn active" data-track="soaring">
+                    🎵 Soaring
+                </button>
+                <button class="track-btn" data-track="ancient-winds">
+                    🌊 Ancient Winds
+                </button>
+                <button class="track-btn" data-track="relaxing-piano">
+                    🎹 Relaxing Piano
+                </button>
+            </div>
+        </div>
+
+        <div class="frequency-selector">
+            <h3>🎛️ Seleziona Frequenza</h3>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-freq="396">
+                    <span class="freq-label">396</span>
+                    <span class="freq-name">Hz - Radicamento</span>
+                </button>
+                <button class="preset-btn" data-freq="417">
+                    <span class="freq-label">417</span>
+                    <span class="freq-name">Hz - Cambiamento</span>
+                </button>
+                <button class="preset-btn" data-freq="432">
+                    <span class="freq-label">432</span>
+                    <span class="freq-name">Hz - Armonia</span>
+                </button>
+                <button class="preset-btn active" data-freq="440">
+                    <span class="freq-label">440</span>
+                    <span class="freq-name">Hz - Standard</span>
+                </button>
+                <button class="preset-btn" data-freq="528">
+                    <span class="freq-label">528</span>
+                    <span class="freq-name">Hz - Amore</span>
+                </button>
+                <button class="preset-btn" data-freq="639">
+                    <span class="freq-label">639</span>
+                    <span class="freq-name">Hz - Connessione</span>
+                </button>
+                <button class="preset-btn" data-freq="741">
+                    <span class="freq-label">741</span>
+                    <span class="freq-name">Hz - Espressione</span>
+                </button>
+                <button class="preset-btn" data-freq="852">
+                    <span class="freq-label">852</span>
+                    <span class="freq-name">Hz - Intuizione</span>
+                </button>
+                <button class="preset-btn" data-freq="963">
+                    <span class="freq-label">963</span>
+                    <span class="freq-name">Hz - Unità</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">Caricamento audio</div>
+
+        <div id="playerControls">
+            <div class="controls">
+                <button class="control-btn play-btn" id="playBtn">▶️ Play</button>
+                <button class="control-btn pause-btn" id="pauseBtn">⏸️ Pause</button>
+            </div>
+
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="time-display">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <p><strong>🎼 Tune In:</strong></p>
+            <p>Ascolta la tua musica preferita convertita alle frequenze di guarigione. Ogni frequenza ha proprietà uniche per il benessere.</p>
+            <p><strong>✨ Qualità Perfetta:</strong> File audio pre-convertiti professionalmente - nessuna elaborazione in tempo reale, nessun compromesso sulla qualità.</p>
+            <p><strong>💡 Suggerimento:</strong> Usa cuffie di qualità per apprezzare al meglio le frequenze.</p>
+        </div>
+    </div>
+
+    <script>
+        const CLOUDFLARE_WORKER = 'https://tunein-audio.paradigmaolistico.workers.dev';
+        
+        // Mappatura frequenze a nomi file
+        const FREQ_NAMES = {
+            '396': 'radicamento',
+            '417': 'cambiamento',
+            '432': 'armonia',
+            '440': 'standard',
+            '528': 'amore',
+            '639': 'connessione',
+            '741': 'espressione',
+            '852': 'intuizione',
+            '963': 'unita'
+        };
+
+        let currentTrack = 'soaring';
+        let currentFreq = '440';
+        let audioElement = null;
+        let isPlaying = false;
+
+        // Elementi DOM
+        const trackButtons = document.querySelectorAll('.track-btn');
+        const freqButtons = document.querySelectorAll('.preset-btn');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const loading = document.getElementById('loading');
+        const playerControls = document.getElementById('playerControls');
+
+        // Costruisci URL del file
+        function getAudioURL(track, freq) {
+            const freqName = FREQ_NAMES[freq];
+            return `${CLOUDFLARE_WORKER}/${track}-${freq}hz-${freqName}.mp3`;
+        }
+
+        // Carica audio
+        function loadAudio() {
+            loading.style.display = 'block';
+            playerControls.style.display = 'none';
+
+            const url = getAudioURL(currentTrack, currentFreq);
+            console.log('Caricamento:', url);
+
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.src = '';
+            }
+
+            audioElement = new Audio(url);
+            audioElement.crossOrigin = 'anonymous';
+
+            audioElement.addEventListener('canplaythrough', () => {
+                console.log('Audio pronto');
+                loading.style.display = 'none';
+                playerControls.style.display = 'block';
+                updateDuration();
+            });
+
+            audioElement.addEventListener('error', (e) => {
+                console.error('Errore:', e);
+                loading.textContent = 'Errore nel caricamento';
+            });
+
+            audioElement.addEventListener('timeupdate', () => {
+                if (audioElement.duration) {
+                    const progress = (audioElement.currentTime / audioElement.duration) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    updateCurrentTime();
+                }
+            });
+
+            audioElement.addEventListener('ended', () => {
+                isPlaying = false;
+            });
+
+            audioElement.load();
+        }
+
+        // Play
+        function play() {
+            if (audioElement) {
+                audioElement.play();
+                isPlaying = true;
+            }
+        }
+
+        // Pause
+        function pause() {
+            if (audioElement) {
+                audioElement.pause();
+                isPlaying = false;
+            }
+        }
+
+        // Format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update duration
+        function updateDuration() {
+            if (audioElement && audioElement.duration) {
+                durationEl.textContent = formatTime(audioElement.duration);
+            }
+        }
+
+        // Update current time
+        function updateCurrentTime() {
+            if (audioElement) {
+                currentTimeEl.textContent = formatTime(audioElement.currentTime);
+            }
+        }
+
+        // Event: Selezione brano
+        trackButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                trackButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTrack = btn.dataset.track;
+                loadAudio();
+            });
+        });
+
+        // Event: Selezione frequenza
+        freqButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                freqButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFreq = btn.dataset.freq;
+                loadAudio();
+            });
+        });
+
+        // Event: Play/Pause
+        playBtn.addEventListener('click', play);
+        pauseBtn.addEventListener('click', pause);
+
+        // Event: Seek
+        progressContainer.addEventListener('click', (e) => {
+            if (audioElement && audioElement.duration) {
+                const rect = progressContainer.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                audioElement.currentTime = audioElement.duration * percent;
+            }
+        });
+
+        // Carica audio iniziale
+        loadAudio();
+    </script>
+</body>
+</html>
