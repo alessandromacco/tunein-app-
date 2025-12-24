@@ -3,507 +3,518 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tune In - Frequency Converter</title>
+    <title>Tune In - Pure Frequenze</title>
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
-        * {
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600;700;900&display=swap');
+        
+        * { 
+            font-family: 'Inter', sans-serif; 
+        }
+        
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a0f2e 50%, #2d1b4e 100%);
         }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            width: 100%;
+        
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
         }
-
-        h1 {
-            text-align: center;
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 2.5em;
+        
+        .logo-glow {
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.6), 
+                         0 0 80px rgba(255, 255, 255, 0.3);
         }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 0.9em;
-        }
-
-        .quality-badge {
-            background: #4CAF50;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            display: inline-block;
-            margin-bottom: 20px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .track-selector {
-            margin-bottom: 30px;
-        }
-
-        .track-selector h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .track-buttons {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
-        .track-btn {
-            background: white;
-            border: 2px solid #667eea;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            color: #667eea;
-            transition: all 0.3s;
-            text-align: left;
-        }
-
-        .track-btn:hover {
-            background: #667eea;
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .track-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #764ba2;
-        }
-
-        .frequency-selector {
-            margin-bottom: 30px;
-        }
-
-        .frequency-selector h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .preset-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .preset-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s;
+        
+        /* Frequency Buttons */
+        .freq-btn {
             position: relative;
+            transition: all 0.3s ease;
+            border-width: 3px;
+            border-style: solid;
             overflow: hidden;
         }
-
-        .preset-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        
+        .freq-btn:hover {
+            transform: translateY(-3px);
         }
-
-        .preset-btn.active {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            box-shadow: 0 0 20px rgba(245, 87, 108, 0.5);
+        
+        .freq-btn.active {
+            animation: pulse-border 2s ease-in-out infinite;
         }
-
-        .preset-btn .freq-label {
-            display: block;
-            font-size: 20px;
-            margin-bottom: 3px;
+        
+        /* Lampo di luce che parte dal bordo */
+        .freq-btn.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: sweep 2s ease-in-out infinite;
         }
-
-        .preset-btn .freq-name {
-            display: block;
-            font-size: 10px;
-            opacity: 0.9;
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 200%; }
         }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+        
+        @keyframes pulse-border {
+            0%, 100% {
+                box-shadow: 0 0 20px currentColor,
+                            0 0 40px currentColor;
+            }
+            50% {
+                box-shadow: 0 0 30px currentColor,
+                            0 0 60px currentColor,
+                            0 0 80px currentColor;
+            }
         }
-
-        .control-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
+        
+        /* Track Circles */
+        .track-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
             transition: all 0.3s;
         }
-
-        .play-btn {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        
+        .track-btn:hover .track-circle {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px currentColor;
+        }
+        
+        .track-btn.active .track-circle {
+            box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
+        }
+        
+        /* Premium Badge */
+        .premium-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+        
+        /* Language Buttons - Semi Hidden */
+        .lang-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        
+        .lang-buttons:hover {
+            opacity: 1;
+        }
+        
+        /* Play Button Tech Style */
+        .play-btn-tech {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
         }
-
-        .play-btn:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+        
+        .play-btn-tech:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
-
-        .play-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .pause-btn {
-            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
-            color: white;
-        }
-
-        .pause-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.4);
-        }
-
-        .progress-container {
-            background: #e0e0e0;
-            border-radius: 10px;
-            height: 8px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .progress-bar {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            height: 100%;
-            width: 0%;
-            transition: width 0.1s;
-        }
-
-        .time-display {
-            display: flex;
-            justify-content: space-between;
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .info-box {
-            background: #f0f4ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        .info-box p {
-            color: #555;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .info-box p:last-child {
-            margin-bottom: 0;
-        }
-
-        .loading {
-            text-align: center;
-            color: #667eea;
-            font-size: 18px;
-            padding: 20px;
-        }
-
-        .loading::after {
-            content: '...';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-
-        #playerControls {
-            display: none;
+        
+        .play-btn-tech.playing {
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎵 Tune In</h1>
-        <div class="subtitle">Frequenze di Guarigione</div>
-        
-        <div class="quality-badge">
-            ✨ Audio Pre-Convertito - Qualità Perfetta
-        </div>
+    <div id="root"></div>
 
-        <div class="track-selector">
-            <h3>🎼 Seleziona Brano</h3>
-            <div class="track-buttons">
-                <button class="track-btn active" data-track="soaring">
-                    🎵 Soaring
-                </button>
-                <button class="track-btn" data-track="ancient-winds">
-                    🌊 Ancient Winds
-                </button>
-                <button class="track-btn" data-track="relaxing-piano">
-                    🎹 Relaxing Piano
-                </button>
-            </div>
-        </div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-        <div class="frequency-selector">
-            <h3>🎛️ Seleziona Frequenza</h3>
-            <div class="preset-buttons">
-                <button class="preset-btn" data-freq="396">
-                    <span class="freq-label">396</span>
-                    <span class="freq-name">Hz - Radicamento</span>
-                </button>
-                <button class="preset-btn" data-freq="417">
-                    <span class="freq-label">417</span>
-                    <span class="freq-name">Hz - Cambiamento</span>
-                </button>
-                <button class="preset-btn" data-freq="432">
-                    <span class="freq-label">432</span>
-                    <span class="freq-name">Hz - Armonia</span>
-                </button>
-                <button class="preset-btn active" data-freq="440">
-                    <span class="freq-label">440</span>
-                    <span class="freq-name">Hz - Standard</span>
-                </button>
-                <button class="preset-btn" data-freq="528">
-                    <span class="freq-label">528</span>
-                    <span class="freq-name">Hz - Amore</span>
-                </button>
-                <button class="preset-btn" data-freq="639">
-                    <span class="freq-label">639</span>
-                    <span class="freq-name">Hz - Connessione</span>
-                </button>
-                <button class="preset-btn" data-freq="741">
-                    <span class="freq-label">741</span>
-                    <span class="freq-name">Hz - Espressione</span>
-                </button>
-                <button class="preset-btn" data-freq="852">
-                    <span class="freq-label">852</span>
-                    <span class="freq-name">Hz - Intuizione</span>
-                </button>
-                <button class="preset-btn" data-freq="963">
-                    <span class="freq-label">963</span>
-                    <span class="freq-name">Hz - Unità</span>
-                </button>
-            </div>
-        </div>
-
-        <div id="loading" class="loading" style="display: none;">Caricamento audio</div>
-
-        <div id="playerControls">
-            <div class="controls">
-                <button class="control-btn play-btn" id="playBtn">▶️ Play</button>
-                <button class="control-btn pause-btn" id="pauseBtn">⏸️ Pause</button>
-            </div>
-
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-
-            <div class="time-display">
-                <span id="currentTime">0:00</span>
-                <span id="duration">0:00</span>
-            </div>
-        </div>
-
-        <div class="info-box">
-            <p><strong>🎼 Tune In:</strong></p>
-            <p>Ascolta la tua musica preferita convertita alle frequenze di guarigione. Ogni frequenza ha proprietà uniche per il benessere.</p>
-            <p><strong>✨ Qualità Perfetta:</strong> File audio pre-convertiti professionalmente - nessuna elaborazione in tempo reale, nessun compromesso sulla qualità.</p>
-            <p><strong>💡 Suggerimento:</strong> Usa cuffie di qualità per apprezzare al meglio le frequenze.</p>
-        </div>
-    </div>
-
-    <script>
         const CLOUDFLARE_WORKER = 'https://tunein-audio.paradigmaolistico.workers.dev';
         
-        // Mappatura frequenze a nomi file
         const FREQ_NAMES = {
-            '396': 'radicamento',
-            '417': 'cambiamento',
-            '432': 'armonia',
-            '440': 'standard',
-            '528': 'amore',
-            '639': 'connessione',
-            '741': 'espressione',
-            '852': 'intuizione',
-            '963': 'unita'
+            '396': 'radicamento', '417': 'cambiamento', '432': 'armonia', '440': 'standard',
+            '528': 'amore', '639': 'connessione', '741': 'espressione', '852': 'intuizione', '963': 'unita'
         };
 
-        let currentTrack = 'soaring';
-        let currentFreq = '440';
-        let audioElement = null;
-        let isPlaying = false;
-
-        // Elementi DOM
-        const trackButtons = document.querySelectorAll('.track-btn');
-        const freqButtons = document.querySelectorAll('.preset-btn');
-        const playBtn = document.getElementById('playBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const progressBar = document.getElementById('progressBar');
-        const progressContainer = document.getElementById('progressContainer');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationEl = document.getElementById('duration');
-        const loading = document.getElementById('loading');
-        const playerControls = document.getElementById('playerControls');
-
-        // Costruisci URL del file
-        function getAudioURL(track, freq) {
-            const freqName = FREQ_NAMES[freq];
-            return `${CLOUDFLARE_WORKER}/${track}-${freq}hz-${freqName}.mp3`;
-        }
-
-        // Carica audio
-        function loadAudio() {
-            loading.style.display = 'block';
-            playerControls.style.display = 'none';
-
-            const url = getAudioURL(currentTrack, currentFreq);
-            console.log('Caricamento:', url);
-
-            if (audioElement) {
-                audioElement.pause();
-                audioElement.src = '';
+        const TRACKS = {
+            'soaring': { 
+                it: { name: 'Soaring', desc: 'Toni elevanti' },
+                en: { name: 'Soaring', desc: 'Uplifting tones' },
+                fr: { name: 'Soaring', desc: 'Tons élevants' },
+                color: '#3b82f6',
+                free: true
+            },
+            'ancient-winds': { 
+                it: { name: 'Ancient Winds', desc: 'Respiro ancestrale' },
+                en: { name: 'Ancient Winds', desc: 'Ancestral breath' },
+                fr: { name: 'Ancient Winds', desc: 'Souffle ancestral' },
+                color: '#10b981',
+                free: true
+            },
+            'relaxing-piano': { 
+                it: { name: 'Relaxing Piano', desc: 'Armonia del cuore' },
+                en: { name: 'Relaxing Piano', desc: 'Heart harmony' },
+                fr: { name: 'Relaxing Piano', desc: 'Harmonie du cœur' },
+                color: '#8b5cf6',
+                free: true
+            },
+            'river-flute': { 
+                it: { name: 'River Flute', desc: 'Melodie fluide' },
+                en: { name: 'River Flute', desc: 'Flowing melodies' },
+                fr: { name: 'River Flute', desc: 'Mélodies fluides' },
+                color: '#14b8a6',
+                premium: true
+            },
+            'drone-in-d': { 
+                it: { name: 'Drone in D', desc: 'Meditazione tonale' },
+                en: { name: 'Drone in D', desc: 'Tonal meditation' },
+                fr: { name: 'Drone in D', desc: 'Méditation tonale' },
+                color: '#f59e0b',
+                premium: true
             }
+        };
 
-            audioElement = new Audio(url);
-            audioElement.crossOrigin = 'anonymous';
+        const FREQUENCIES = {
+            396: {
+                it: { title: 'Radicamento', chakra: 'Chakra Radice', description: 'Libera dalla paura e dai sensi di colpa.' },
+                en: { title: 'Grounding', chakra: 'Root Chakra', description: 'Releases fear and guilt.' },
+                fr: { title: 'Ancrage', chakra: 'Chakra Racine', description: 'Libère de la peur et de la culpabilité.' },
+                color: '#ef4444'
+            },
+            417: {
+                it: { title: 'Cambiamento', chakra: 'Chakra Sacrale', description: 'Facilita il cambiamento e la trasformazione.' },
+                en: { title: 'Change', chakra: 'Sacral Chakra', description: 'Facilitates change and transformation.' },
+                fr: { title: 'Changement', chakra: 'Chakra Sacré', description: 'Facilite le changement et la transformation.' },
+                color: '#f97316'
+            },
+            432: {
+                it: { title: 'Armonia universale', chakra: 'Frequenza della Natura', description: 'Risuona con la vibrazione naturale dell\'universo.' },
+                en: { title: 'Universal Harmony', chakra: 'Nature Frequency', description: 'Resonates with the natural vibration of the universe.' },
+                fr: { title: 'Harmonie universelle', chakra: 'Fréquence de la Nature', description: 'Résonne avec la vibration naturelle de l\'univers.' },
+                color: '#eab308'
+            },
+            440: {
+                it: { title: 'Standard occidentale', chakra: 'Frequenza Standard', description: 'Standard musicale moderno.' },
+                en: { title: 'Western Standard', chakra: 'Standard Frequency', description: 'Modern musical standard.' },
+                fr: { title: 'Standard occidental', chakra: 'Fréquence Standard', description: 'Standard musical moderne.' },
+                color: '#a855f7'
+            },
+            528: {
+                it: { title: "Frequenza dell'amore", chakra: 'Chakra del Cuore', description: 'Frequenza di riparazione del DNA.' },
+                en: { title: 'Love Frequency', chakra: 'Heart Chakra', description: 'DNA repair frequency.' },
+                fr: { title: "Fréquence de l'amour", chakra: 'Chakra du Cœur', description: 'Fréquence de réparation de l\'ADN.' },
+                color: '#22c55e'
+            },
+            639: {
+                it: { title: 'Connessione', chakra: 'Chakra del Cuore', description: 'Armonizza le relazioni.' },
+                en: { title: 'Connection', chakra: 'Heart Chakra', description: 'Harmonizes relationships.' },
+                fr: { title: 'Connexion', chakra: 'Chakra du Cœur', description: 'Harmonise les relations.' },
+                color: '#06b6d4'
+            },
+            741: {
+                it: { title: 'Espressione', chakra: 'Chakra della Gola', description: 'Purifica e libera l\'espressione.' },
+                en: { title: 'Expression', chakra: 'Throat Chakra', description: 'Purifies and liberates expression.' },
+                fr: { title: 'Expression', chakra: 'Chakra de la Gorge', description: 'Purifie et libère l\'expression.' },
+                color: '#3b82f6'
+            },
+            852: {
+                it: { title: 'Intuizione', chakra: 'Terzo Occhio', description: 'Risveglia l\'intuizione.' },
+                en: { title: 'Intuition', chakra: 'Third Eye', description: 'Awakens intuition.' },
+                fr: { title: 'Intuition', chakra: 'Troisième Œil', description: 'Éveille l\'intuition.' },
+                color: '#8b5cf6'
+            },
+            963: {
+                it: { title: 'Unità', chakra: 'Chakra della Corona', description: 'Frequenza dell\'unità con il cosmo.' },
+                en: { title: 'Unity', chakra: 'Crown Chakra', description: 'Frequency of unity with the cosmos.' },
+                fr: { title: 'Unité', chakra: 'Chakra Couronne', description: 'Fréquence de l\'unité avec le cosmos.' },
+                color: '#a855f7'
+            }
+        };
 
-            audioElement.addEventListener('canplaythrough', () => {
-                console.log('Audio pronto');
-                loading.style.display = 'none';
-                playerControls.style.display = 'block';
-                updateDuration();
-            });
+        const TRANSLATIONS = {
+            it: {
+                selectTrack: "Seleziona Brano",
+                selectFrequency: "Select Your Frequency",
+                howItWorks: "Come Funziona",
+                mission: "Vision",
+                about: "Chi Siamo",
+                play: "ASCOLTA",
+                pause: "PAUSA",
+                trackInfo: "Track Info",
+                preset: "Preset",
+                personalizzato: "Personalizzato",
+                
+                howItWorksText: `Le frequenze Solfeggio sono toni specifici usati nella guarigione sonora da millenni. Ogni frequenza risuona con un chakra specifico e promuove benefici unici attraverso la biorisonanza cellulare.`,
 
-            audioElement.addEventListener('error', (e) => {
-                console.error('Errore:', e);
-                loading.textContent = 'Errore nel caricamento';
-            });
+                missionText: `Tune In nasce per avviare un nuovo paradigma orientato alla libertà dell'essere umano attraverso il miglioramento della salute individuale e della risonanza collettiva. Anche meditazioni attente di un minuto, ripetute più volte al giorno, contribuiscono al campo: troverai sempre qualcuno connesso come te.`,
 
-            audioElement.addEventListener('timeupdate', () => {
-                if (audioElement.duration) {
-                    const progress = (audioElement.currentTime / audioElement.duration) * 100;
-                    progressBar.style.width = `${progress}%`;
-                    updateCurrentTime();
+                aboutText: `Questo player web-based genera frequenze in tempo reale usando la Web Audio API, preservando l'integrità matematica delle frequenze secondo i principi della cimatica e della biorisonanza cellulare.`
+            },
+            en: {
+                selectTrack: "Select Track",
+                selectFrequency: "Select Your Frequency",
+                howItWorks: "How It Works",
+                mission: "Vision",
+                about: "About",
+                play: "PLAY",
+                pause: "PAUSE",
+                trackInfo: "Track Info",
+                preset: "Preset",
+                personalizzato: "Custom",
+                
+                howItWorksText: `Solfeggio frequencies are specific tones used in sound healing for millennia. Each frequency resonates with a specific chakra and promotes unique benefits through cellular bioresonance.`,
+
+                missionText: `Tune In was born to initiate a new paradigm oriented towards human freedom through the improvement of individual health and collective resonance. Even mindful meditations of one minute, repeated several times a day, contribute to the field.`,
+
+                aboutText: `This web-based player generates frequencies in real-time using the Web Audio API, preserving the mathematical integrity of frequencies according to the principles of cymatics and cellular bioresonance.`
+            },
+            fr: {
+                selectTrack: "Sélectionner Morceau",
+                selectFrequency: "Sélectionnez Votre Fréquence",
+                howItWorks: "Comment Ça Marche",
+                mission: "Vision",
+                about: "À Propos",
+                play: "ÉCOUTER",
+                pause: "PAUSE",
+                trackInfo: "Info Piste",
+                preset: "Préréglage",
+                personalizzato: "Personnalisé",
+                
+                howItWorksText: `Les fréquences Solfège sont des tons spécifiques utilisés dans la guérison sonore depuis des millénaires. Chaque fréquence résonne avec un chakra spécifique et favorise des bienfaits uniques par la biorésonance cellulaire.`,
+
+                missionText: `Tune In est né pour initier un nouveau paradigme orienté vers la liberté humaine à travers l'amélioration de la santé individuelle et de la résonance collective. Même des méditations attentives d'une minute, répétées plusieurs fois par jour, contribuent au champ.`,
+
+                aboutText: `Ce lecteur web génère des fréquences en temps réel en utilisant l'API Web Audio, préservant l'intégrité mathématique des fréquences selon les principes de la cymatique et de la biorésonance cellulaire.`
+            }
+        };
+
+        function App() {
+            const [lang, setLang] = useState('it');
+            const [currentTrack, setCurrentTrack] = useState('soaring');
+            const [selectedFreq, setSelectedFreq] = useState('432');
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [showInfo, setShowInfo] = useState(false);
+            const [showMission, setShowMission] = useState(false);
+            const [showAbout, setShowAbout] = useState(false);
+            const [currentTime, setCurrentTime] = useState(0);
+            const [duration, setDuration] = useState(0);
+            const [isLoading, setIsLoading] = useState(false);
+            
+            const audioRef = useRef(null);
+            const t = TRANSLATIONS[lang];
+            const currentFreqData = FREQUENCIES[selectedFreq][lang];
+            const currentTrackData = TRACKS[currentTrack];
+
+            const getAudioURL = (track, freq) => `${CLOUDFLARE_WORKER}/${track}-${freq}hz-${FREQ_NAMES[freq]}.mp3`;
+
+            const loadAudio = () => {
+                const wasPlaying = isPlaying;
+                setIsLoading(true);
+                
+                if (audioRef.current) {
+                    audioRef.current.pause();
+                    audioRef.current.src = '';
                 }
-            });
 
-            audioElement.addEventListener('ended', () => {
-                isPlaying = false;
-            });
+                const url = getAudioURL(currentTrack, selectedFreq);
+                const audio = new Audio(url);
+                audio.crossOrigin = 'anonymous';
+                audio.loop = true;
 
-            audioElement.load();
+                audio.addEventListener('canplaythrough', () => {
+                    setIsLoading(false);
+                    setDuration(audio.duration);
+                    if (wasPlaying) {
+                        audio.play();
+                        setIsPlaying(true);
+                    }
+                });
+
+                audio.addEventListener('timeupdate', () => setCurrentTime(audio.currentTime));
+                audio.addEventListener('error', () => setIsLoading(false));
+
+                audioRef.current = audio;
+                audio.load();
+            };
+
+            useEffect(() => { 
+                if (!currentTrackData.premium) {
+                    loadAudio(); 
+                }
+            }, [currentTrack, selectedFreq]);
+
+            const togglePlay = () => {
+                if (!audioRef.current || currentTrackData.premium) return;
+                if (isPlaying) {
+                    audioRef.current.pause();
+                    setIsPlaying(false);
+                } else {
+                    audioRef.current.play();
+                    setIsPlaying(true);
+                }
+            };
+
+            const formatTime = (s) => `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+
+            return (
+                <div className="min-h-screen p-4 md:p-8">
+                    {/* Language Selector - Semi Hidden */}
+                    <div className="lang-buttons">
+                        <div className="flex gap-2">
+                            <button onClick={() => setLang('it')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='it' ? 'bg-purple-500 text-white' : 'glass text-purple-300'}`}>
+                                IT
+                            </button>
+                            <button onClick={() => setLang('en')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='en' ? 'bg-purple-500 text-white' : 'glass text-purple-300'}`}>
+                                EN
+                            </button>
+                            <button onClick={() => setLang('fr')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='fr' ? 'bg-purple-500 text-white' : 'glass text-purple-300'}`}>
+                                FR
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto">
+                        
+                        {/* Header */}
+                        <header className="text-center mb-16">
+                            <h1 className="text-8xl md:text-9xl font-black text-white logo-glow mb-2" style={{letterSpacing: '0.05em'}}>
+                                TUNE IN
+                            </h1>
+                            <p className="text-xl md:text-2xl text-purple-200 font-thin tracking-widest" style={{fontWeight: 100}}>
+                                PURE FREQUENZE
+                            </p>
+                        </header>
+
+                        {/* Info Buttons */}
+                        <div className="flex flex-wrap justify-center gap-3 mb-8">
+                            <button onClick={() => setShowInfo(!showInfo)} className="glass px-6 py-3 rounded-xl text-purple-200 hover:bg-white/10 transition font-medium">
+                                {t.trackInfo}
+                            </button>
+                            <button onClick={() => setShowAbout(!showAbout)} className="glass px-6 py-3 rounded-xl text-purple-200 hover:bg-white/10 transition font-medium">
+                                {t.about}
+                            </button>
+                            <button onClick={() => setShowMission(!showMission)} className="glass px-6 py-3 rounded-xl text-purple-200 hover:bg-white/10 transition font-medium">
+                                {t.mission}
+                            </button>
+                        </div>
+
+                        {/* Info Sections */}
+                        {showInfo && <div className="glass rounded-2xl p-6 mb-8 border-2 border-cyan-500/30"><p className="text-purple-200 leading-relaxed">{t.howItWorksText}</p></div>}
+                        {showMission && <div className="glass rounded-2xl p-6 mb-8 border-2 border-purple-500/30"><p className="text-purple-200 leading-relaxed">{t.missionText}</p></div>}
+                        {showAbout && <div className="glass rounded-2xl p-6 mb-8 border-2 border-pink-500/30"><p className="text-purple-200 leading-relaxed">{t.aboutText}</p></div>}
+
+                        {/* Main Container */}
+                        <div className="glass rounded-3xl p-6 md:p-10 mb-8">
+                            
+                            {/* Track Selector */}
+                            <div className="mb-12">
+                                <h3 className="text-lg font-bold text-white mb-6 text-center">{t.selectTrack}</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                    {Object.keys(TRACKS).map(k => (
+                                        <button 
+                                            key={k} 
+                                            onClick={() => !TRACKS[k].premium && setCurrentTrack(k)} 
+                                            disabled={TRACKS[k].premium}
+                                            className={`track-btn relative p-4 rounded-xl font-semibold transition text-center ${currentTrack===k && !TRACKS[k].premium ? 'glass border-2' : 'glass hover:bg-white/5'} ${TRACKS[k].premium ? 'opacity-60 cursor-not-allowed' : ''}`}
+                                            style={{borderColor: currentTrack===k ? TRACKS[k].color : 'transparent'}}
+                                        >
+                                            {TRACKS[k].premium && <div className="premium-badge">PREMIUM</div>}
+                                            <div className="track-circle" style={{backgroundColor: TRACKS[k].color}}></div>
+                                            <div className="text-white font-bold text-sm mb-1">{TRACKS[k][lang].name}</div>
+                                            <div className="text-purple-300 text-xs">{TRACKS[k][lang].desc}</div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Mode Toggle */}
+                            <div className="flex justify-center gap-4 mb-10">
+                                <button className="px-8 py-3 rounded-xl bg-purple-500 text-white font-bold">
+                                    {t.preset}
+                                </button>
+                                <button className="px-8 py-3 rounded-xl glass text-purple-300 font-bold">
+                                    {t.personalizzato}
+                                </button>
+                            </div>
+
+                            {/* Frequency Title */}
+                            <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-200 mb-8" style={{letterSpacing: '0.1em'}}>
+                                {t.selectFrequency}
+                            </h2>
+
+                            {/* Frequency Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
+                                {Object.keys(FREQUENCIES).map(f => (
+                                    <button 
+                                        key={f} 
+                                        onClick={() => setSelectedFreq(f)} 
+                                        className={`freq-btn p-6 rounded-2xl transition ${selectedFreq===f ? 'active' : ''}`}
+                                        style={{
+                                            borderColor: FREQUENCIES[f].color,
+                                            backgroundColor: selectedFreq===f ? FREQUENCIES[f].color : 'rgba(0,0,0,0.3)',
+                                            color: 'white'
+                                        }}
+                                    >
+                                        <div className="relative z-10">
+                                            <div className="text-4xl md:text-5xl font-black mb-1">{f}</div>
+                                            <div className="text-sm font-bold mb-1">Hz</div>
+                                            <div className="text-xs opacity-90">{FREQUENCIES[f][lang].title}</div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Play Button - Tech Style */}
+                            <button 
+                                onClick={togglePlay} 
+                                disabled={isLoading || currentTrackData.premium} 
+                                className={`play-btn-tech w-full py-10 rounded-3xl font-bold text-2xl mb-6 ${isPlaying ? 'playing' : ''}`}
+                            >
+                                {currentTrackData.premium ? '🔒 PREMIUM' : isLoading ? 'LOADING...' : isPlaying ? t.pause : t.play}
+                            </button>
+
+                            {/* Time Display */}
+                            {!currentTrackData.premium && (
+                                <div className="flex justify-between text-purple-300 text-sm font-medium">
+                                    <span>{formatTime(currentTime)}</span>
+                                    <span>{duration ? formatTime(duration) : '--:--'}</span>
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+                </div>
+            );
         }
 
-        // Play
-        function play() {
-            if (audioElement) {
-                audioElement.play();
-                isPlaying = true;
-            }
-        }
-
-        // Pause
-        function pause() {
-            if (audioElement) {
-                audioElement.pause();
-                isPlaying = false;
-            }
-        }
-
-        // Format time
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // Update duration
-        function updateDuration() {
-            if (audioElement && audioElement.duration) {
-                durationEl.textContent = formatTime(audioElement.duration);
-            }
-        }
-
-        // Update current time
-        function updateCurrentTime() {
-            if (audioElement) {
-                currentTimeEl.textContent = formatTime(audioElement.currentTime);
-            }
-        }
-
-        // Event: Selezione brano
-        trackButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                trackButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentTrack = btn.dataset.track;
-                loadAudio();
-            });
-        });
-
-        // Event: Selezione frequenza
-        freqButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                freqButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFreq = btn.dataset.freq;
-                loadAudio();
-            });
-        });
-
-        // Event: Play/Pause
-        playBtn.addEventListener('click', play);
-        pauseBtn.addEventListener('click', pause);
-
-        // Event: Seek
-        progressContainer.addEventListener('click', (e) => {
-            if (audioElement && audioElement.duration) {
-                const rect = progressContainer.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                audioElement.currentTime = audioElement.duration * percent;
-            }
-        });
-
-        // Carica audio iniziale
-        loadAudio();
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
