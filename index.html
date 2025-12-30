@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tune In - Pure Frequenze</title>
+    <title>Pure Frequenze</title>
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -21,7 +21,7 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background: linear-gradient(135deg, #2d1b4e 0%, #1a0f2e 50%, #2d1b4e 100%);
+            background: linear-gradient(135deg, #0a1412 0%, #1a3a2e 50%, #0a1412 100%);
         }
         
         .glass { 
@@ -31,8 +31,8 @@
         }
         
         .logo-glow {
-            text-shadow: 0 0 40px rgba(255, 255, 255, 0.6), 
-                         0 0 80px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 40px rgba(127, 200, 169, 0.6), 
+                         0 0 80px rgba(127, 200, 169, 0.3);
         }
         
         /* Frequency Buttons */
@@ -99,19 +99,19 @@
             box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
         }
         
-        /* Premium Badge */
-        .premium-badge {
+        /* Coming Soon Badge */
+        .coming-soon-badge {
             position: absolute;
             top: 8px;
             right: 8px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background: linear-gradient(135deg, #7fc8a9, #2d5f4f);
             color: #000;
             font-size: 10px;
             font-weight: 900;
             padding: 4px 10px;
             border-radius: 20px;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+            box-shadow: 0 0 10px rgba(127, 200, 169, 0.5);
         }
         
         /* Language Buttons - Semi Hidden */
@@ -190,14 +190,14 @@
                 en: { name: 'River Flute', desc: 'Flowing melodies' },
                 fr: { name: 'River Flute', desc: 'Mélodies fluides' },
                 color: '#14b8a6',
-                premium: true
+                comingSoon: true
             },
             'drone-in-d': { 
                 it: { name: 'Drone in D', desc: 'Meditazione tonale' },
                 en: { name: 'Drone in D', desc: 'Tonal meditation' },
                 fr: { name: 'Drone in D', desc: 'Méditation tonale' },
                 color: '#f59e0b',
-                premium: true
+                comingSoon: true
             }
         };
 
@@ -263,55 +263,67 @@
                 selectTrack: "Seleziona Brano",
                 selectFrequency: "Select Your Frequency",
                 howItWorks: "Come Funziona",
-                mission: "Vision",
-                about: "Chi Siamo",
                 play: "ASCOLTA",
                 pause: "PAUSA",
                 trackInfo: "Track Info",
-                preset: "Preset",
-                personalizzato: "Personalizzato",
                 
-                howItWorksText: `Le frequenze Solfeggio sono toni specifici usati nella guarigione sonora da millenni. Ogni frequenza risuona con un chakra specifico e promuove benefici unici attraverso la biorisonanza cellulare.`,
+                trackInfoText: `Tre tracce selezionate per iniziare il tuo viaggio:
 
-                missionText: `Tune In nasce per avviare un nuovo paradigma orientato alla libertà dell'essere umano attraverso il miglioramento della salute individuale e della risonanza collettiva. Anche meditazioni attente di un minuto, ripetute più volte al giorno, contribuiscono al campo: troverai sempre qualcuno connesso come te.`,
+• Soaring - Toni elevanti per apertura e ispirazione
+• Ancient Winds - Respiro ancestrale per radicamento
+• Relaxing Piano - Armonia del cuore per pace interiore
 
-                aboutText: `Questo player web-based genera frequenze in tempo reale usando la Web Audio API, preservando l'integrità matematica delle frequenze secondo i principi della cimatica e della biorisonanza cellulare.`
+Altre tracce sono in arrivo. Stiamo lavorando per offrirti una gamma completa di esperienze sonore.`,
+
+                howItWorksText: `Pure Frequenze genera frequenze Solfeggio in tempo reale usando la Web Audio API, preservando l'integrità matematica delle onde sonore.
+
+Questo approccio nasce per avviare un nuovo paradigma orientato alla libertà dell'essere umano attraverso il miglioramento della salute individuale e della risonanza collettiva.
+
+Per approfondimenti scientifici e filosofici, visita la pagina Hub dove troverai le sezioni Scienza e Visione.`
             },
             en: {
                 selectTrack: "Select Track",
                 selectFrequency: "Select Your Frequency",
                 howItWorks: "How It Works",
-                mission: "Vision",
-                about: "About",
                 play: "PLAY",
                 pause: "PAUSE",
                 trackInfo: "Track Info",
-                preset: "Preset",
-                personalizzato: "Custom",
                 
-                howItWorksText: `Solfeggio frequencies are specific tones used in sound healing for millennia. Each frequency resonates with a specific chakra and promotes unique benefits through cellular bioresonance.`,
+                trackInfoText: `Three tracks selected to begin your journey:
 
-                missionText: `Tune In was born to initiate a new paradigm oriented towards human freedom through the improvement of individual health and collective resonance. Even mindful meditations of one minute, repeated several times a day, contribute to the field.`,
+• Soaring - Uplifting tones for openness and inspiration
+• Ancient Winds - Ancestral breath for grounding
+• Relaxing Piano - Heart harmony for inner peace
 
-                aboutText: `This web-based player generates frequencies in real-time using the Web Audio API, preserving the mathematical integrity of frequencies according to the principles of cymatics and cellular bioresonance.`
+More tracks are coming. We're working to offer you a complete range of sound experiences.`,
+
+                howItWorksText: `Pure Frequenze generates Solfeggio frequencies in real-time using the Web Audio API, preserving the mathematical integrity of sound waves.
+
+This approach was born to initiate a new paradigm oriented towards human freedom through the improvement of individual health and collective resonance.
+
+For scientific and philosophical insights, visit the Hub page where you'll find the Science and Vision sections.`
             },
             fr: {
                 selectTrack: "Sélectionner Morceau",
                 selectFrequency: "Sélectionnez Votre Fréquence",
                 howItWorks: "Comment Ça Marche",
-                mission: "Vision",
-                about: "À Propos",
                 play: "ÉCOUTER",
                 pause: "PAUSE",
                 trackInfo: "Info Piste",
-                preset: "Préréglage",
-                personalizzato: "Personnalisé",
                 
-                howItWorksText: `Les fréquences Solfège sont des tons spécifiques utilisés dans la guérison sonore depuis des millénaires. Chaque fréquence résonne avec un chakra spécifique et favorise des bienfaits uniques par la biorésonance cellulaire.`,
+                trackInfoText: `Trois morceaux sélectionnés pour commencer votre voyage:
 
-                missionText: `Tune In est né pour initier un nouveau paradigme orienté vers la liberté humaine à travers l'amélioration de la santé individuelle et de la résonance collective. Même des méditations attentives d'une minute, répétées plusieurs fois par jour, contribuent au champ.`,
+• Soaring - Tons élevants pour l'ouverture et l'inspiration
+• Ancient Winds - Souffle ancestral pour l'ancrage
+• Relaxing Piano - Harmonie du cœur pour la paix intérieure
 
-                aboutText: `Ce lecteur web génère des fréquences en temps réel en utilisant l'API Web Audio, préservant l'intégrité mathématique des fréquences selon les principes de la cymatique et de la biorésonance cellulaire.`
+D'autres morceaux arrivent. Nous travaillons pour vous offrir une gamme complète d'expériences sonores.`,
+
+                howItWorksText: `Pure Frequenze génère des fréquences Solfège en temps réel en utilisant l'API Web Audio, préservant l'intégrité mathématique des ondes sonores.
+
+Cette approche est née pour initier un nouveau paradigme orienté vers la liberté humaine à travers l'amélioration de la santé individuelle et de la résonance collective.
+
+Pour des aperçus scientifiques et philosophiques, visitez la page Hub où vous trouverez les sections Science et Vision.`
             }
         };
 
@@ -321,8 +333,7 @@
             const [selectedFreq, setSelectedFreq] = useState('432');
             const [isPlaying, setIsPlaying] = useState(false);
             const [showInfo, setShowInfo] = useState(false);
-            const [showMission, setShowMission] = useState(false);
-            const [showAbout, setShowAbout] = useState(false);
+            const [showHowItWorks, setShowHowItWorks] = useState(false);
             const [currentTime, setCurrentTime] = useState(0);
             const [duration, setDuration] = useState(0);
             const [isLoading, setIsLoading] = useState(false);
@@ -365,13 +376,13 @@
             };
 
             useEffect(() => { 
-                if (!currentTrackData.premium) {
+                if (!currentTrackData.comingSoon) {
                     loadAudio(); 
                 }
             }, [currentTrack, selectedFreq]);
 
             const togglePlay = () => {
-                if (!audioRef.current || currentTrackData.premium) return;
+                if (!audioRef.current || currentTrackData.comingSoon) return;
                 if (isPlaying) {
                     audioRef.current.pause();
                     setIsPlaying(false);
@@ -388,13 +399,13 @@
                     {/* Language Selector - Semi Hidden */}
                     <div className="lang-buttons">
                         <div className="flex gap-2">
-                            <button onClick={() => setLang('it')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='it' ? 'bg-purple-500 text-white' : 'glass text-purple-300'}`}>
+                            <button onClick={() => setLang('it')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='it' ? 'bg-[#7fc8a9] text-white' : 'glass text-[#7fc8a9]'}`}>
                                 IT
                             </button>
-                            <button onClick={() => setLang('en')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='en' ? 'bg-purple-500 text-white' : 'glass text-purple-300'}`}>
+                            <button onClick={() => setLang('en')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='en' ? 'bg-[#7fc8a9] text-white' : 'glass text-[#7fc8a9]'}`}>
                                 EN
                             </button>
-                            <button onClick={() => setLang('fr')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='fr' ? 'bg-purple-500 text-white' : 'glass text-purple-300'}`}>
+                            <button onClick={() => setLang('fr')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='fr' ? 'bg-[#7fc8a9] text-white' : 'glass text-[#7fc8a9]'}`}>
                                 FR
                             </button>
                         </div>
@@ -405,30 +416,26 @@
                         {/* Header */}
                         <header className="text-center mb-16">
                             <h1 className="text-8xl md:text-9xl font-black text-white logo-glow mb-2" style={{letterSpacing: '0.05em'}}>
-                                TUNE IN
-                            </h1>
-                            <p className="text-xl md:text-2xl text-purple-200 font-thin tracking-widest" style={{fontWeight: 100}}>
                                 PURE FREQUENZE
+                            </h1>
+                            <p className="text-xl md:text-2xl text-[#7fc8a9] font-thin tracking-widest" style={{fontWeight: 100}}>
+                                solfeggio frequencies
                             </p>
                         </header>
 
                         {/* Info Buttons */}
                         <div className="flex flex-wrap justify-center gap-3 mb-8">
-                            <button onClick={() => setShowInfo(!showInfo)} className="glass px-6 py-3 rounded-xl text-purple-200 hover:bg-white/10 transition font-medium">
+                            <button onClick={() => setShowInfo(!showInfo)} className="glass px-6 py-3 rounded-xl text-[#7fc8a9] hover:bg-white/10 transition font-medium">
                                 {t.trackInfo}
                             </button>
-                            <button onClick={() => setShowAbout(!showAbout)} className="glass px-6 py-3 rounded-xl text-purple-200 hover:bg-white/10 transition font-medium">
-                                {t.about}
-                            </button>
-                            <button onClick={() => setShowMission(!showMission)} className="glass px-6 py-3 rounded-xl text-purple-200 hover:bg-white/10 transition font-medium">
-                                {t.mission}
+                            <button onClick={() => setShowHowItWorks(!showHowItWorks)} className="glass px-6 py-3 rounded-xl text-[#7fc8a9] hover:bg-white/10 transition font-medium">
+                                {t.howItWorks}
                             </button>
                         </div>
 
                         {/* Info Sections */}
-                        {showInfo && <div className="glass rounded-2xl p-6 mb-8 border-2 border-cyan-500/30"><p className="text-purple-200 leading-relaxed">{t.howItWorksText}</p></div>}
-                        {showMission && <div className="glass rounded-2xl p-6 mb-8 border-2 border-purple-500/30"><p className="text-purple-200 leading-relaxed">{t.missionText}</p></div>}
-                        {showAbout && <div className="glass rounded-2xl p-6 mb-8 border-2 border-pink-500/30"><p className="text-purple-200 leading-relaxed">{t.aboutText}</p></div>}
+                        {showInfo && <div className="glass rounded-2xl p-6 mb-8 border-2 border-[#7fc8a9]/30" style={{whiteSpace: 'pre-line'}}><p className="text-[#7fc8a9] leading-relaxed">{t.trackInfoText}</p></div>}
+                        {showHowItWorks && <div className="glass rounded-2xl p-6 mb-8 border-2 border-[#7fc8a9]/30" style={{whiteSpace: 'pre-line'}}><p className="text-[#7fc8a9] leading-relaxed">{t.howItWorksText}</p></div>}
 
                         {/* Main Container */}
                         <div className="glass rounded-3xl p-6 md:p-10 mb-8">
@@ -440,32 +447,22 @@
                                     {Object.keys(TRACKS).map(k => (
                                         <button 
                                             key={k} 
-                                            onClick={() => !TRACKS[k].premium && setCurrentTrack(k)} 
-                                            disabled={TRACKS[k].premium}
-                                            className={`track-btn relative p-4 rounded-xl font-semibold transition text-center ${currentTrack===k && !TRACKS[k].premium ? 'glass border-2' : 'glass hover:bg-white/5'} ${TRACKS[k].premium ? 'opacity-60 cursor-not-allowed' : ''}`}
+                                            onClick={() => !TRACKS[k].comingSoon && setCurrentTrack(k)} 
+                                            disabled={TRACKS[k].comingSoon}
+                                            className={`track-btn relative p-4 rounded-xl font-semibold transition text-center ${currentTrack===k && !TRACKS[k].comingSoon ? 'glass border-2' : 'glass hover:bg-white/5'} ${TRACKS[k].comingSoon ? 'opacity-60 cursor-not-allowed' : ''}`}
                                             style={{borderColor: currentTrack===k ? TRACKS[k].color : 'transparent'}}
                                         >
-                                            {TRACKS[k].premium && <div className="premium-badge">PREMIUM</div>}
+                                            {TRACKS[k].comingSoon && <div className="coming-soon-badge">COMING SOON</div>}
                                             <div className="track-circle" style={{backgroundColor: TRACKS[k].color}}></div>
                                             <div className="text-white font-bold text-sm mb-1">{TRACKS[k][lang].name}</div>
-                                            <div className="text-purple-300 text-xs">{TRACKS[k][lang].desc}</div>
+                                            <div className="text-[#7fc8a9] text-xs">{TRACKS[k][lang].desc}</div>
                                         </button>
                                     ))}
                                 </div>
                             </div>
 
-                            {/* Mode Toggle */}
-                            <div className="flex justify-center gap-4 mb-10">
-                                <button className="px-8 py-3 rounded-xl bg-purple-500 text-white font-bold">
-                                    {t.preset}
-                                </button>
-                                <button className="px-8 py-3 rounded-xl glass text-purple-300 font-bold">
-                                    {t.personalizzato}
-                                </button>
-                            </div>
-
                             {/* Frequency Title */}
-                            <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-200 mb-8" style={{letterSpacing: '0.1em'}}>
+                            <h2 className="text-3xl md:text-4xl font-bold text-center text-[#7fc8a9] mb-8" style={{letterSpacing: '0.1em'}}>
                                 {t.selectFrequency}
                             </h2>
 
@@ -494,15 +491,15 @@
                             {/* Play Button - Tech Style */}
                             <button 
                                 onClick={togglePlay} 
-                                disabled={isLoading || currentTrackData.premium} 
+                                disabled={isLoading || currentTrackData.comingSoon} 
                                 className={`play-btn-tech w-full py-10 rounded-3xl font-bold text-2xl mb-6 ${isPlaying ? 'playing' : ''}`}
                             >
-                                {currentTrackData.premium ? '🔒 PREMIUM' : isLoading ? 'LOADING...' : isPlaying ? t.pause : t.play}
+                                {currentTrackData.comingSoon ? '🔒 COMING SOON' : isLoading ? 'LOADING...' : isPlaying ? t.pause : t.play}
                             </button>
 
                             {/* Time Display */}
-                            {!currentTrackData.premium && (
-                                <div className="flex justify-between text-purple-300 text-sm font-medium">
+                            {!currentTrackData.comingSoon && (
+                                <div className="flex justify-between text-[#7fc8a9] text-sm font-medium">
                                     <span>{formatTime(currentTime)}</span>
                                     <span>{duration ? formatTime(duration) : '--:--'}</span>
                                 </div>
