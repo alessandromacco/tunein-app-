@@ -3,513 +3,1464 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pure Frequenze</title>
-    
+    <title>PureFrequenze - Frequenze Solfeggio</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&display=swap');
         
-        * { 
-            font-family: 'Inter', sans-serif; 
-        }
-        
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --freq-174: #8B0000;
+            --freq-285: #FF4500;
+            --freq-396: #FFD700;
+            --freq-417: #90EE90;
+            --freq-432: #4169E1;
+            --freq-528: #00CED1;
+            --freq-639: #FF69B4;
+            --freq-741: #9370DB;
+            --freq-852: #8A2BE2;
+            --freq-963: #E6E6FA;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #000814 0%, #001d3d 50%, #000814 100%);
+            color: white;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a1412 0%, #1a3a2e 50%, #0a1412 100%);
+            overflow-x: hidden;
         }
-        
-        .glass { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
+
+        /* Background Effects */
+        .background-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
-        
-        .logo-glow {
-            text-shadow: 0 0 40px rgba(127, 200, 169, 0.6), 
-                         0 0 80px rgba(127, 200, 169, 0.3);
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            animation: float 20s infinite ease-in-out;
         }
-        
-        /* Frequency Buttons */
-        .freq-btn {
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #003566, transparent);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #0077b6, transparent);
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        .orb-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #023e8a, transparent);
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+            33% { transform: translate(60px, -100px) scale(1.15); opacity: 0.18; }
+            66% { transform: translate(-40px, 80px) scale(0.95); opacity: 0.15; }
+        }
+
+        /* Container */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
             position: relative;
-            transition: all 0.3s ease;
-            border-width: 3px;
-            border-style: solid;
-            overflow: hidden;
+            z-index: 1;
         }
-        
-        .freq-btn:hover {
-            transform: translateY(-3px);
+
+        /* Header with Hub Logo Style */
+        .header {
+            text-align: center;
+            padding: 2rem 0 2rem;
+            margin-bottom: 2rem;
         }
-        
-        .freq-btn.active {
-            animation: pulse-border 2s ease-in-out infinite;
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 80px;
+            font-weight: 900;
+            letter-spacing: 15px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: geometricPrecision;
+            filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6)) 
+                    drop-shadow(0 0 20px rgba(100, 150, 255, 0.4));
+            animation: logo-glow 4s ease-in-out infinite;
         }
-        
-        /* Lampo di luce che parte dal bordo */
-        .freq-btn.active::before {
+
+        @keyframes logo-glow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6)) 
+                        drop-shadow(0 0 20px rgba(100, 150, 255, 0.4));
+            }
+            50% { 
+                filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.8)) 
+                        drop-shadow(0 0 30px rgba(100, 150, 255, 0.5));
+            }
+        }
+
+        .tagline {
+            font-size: 18px;
+            color: #48cae4;
+            letter-spacing: 4px;
+            font-weight: 100;
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Enhanced 3D Card Style */
+        .card-3d {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.6), rgba(20, 15, 35, 0.4));
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 28px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 25px 70px rgba(0, 0, 0, 0.6),
+                0 10px 30px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-3d::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: sweep 2s ease-in-out infinite;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), transparent);
+            border-radius: 28px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
-        
-        @keyframes sweep {
-            0% { left: -100%; }
-            100% { left: 200%; }
-        }
-        
-        @keyframes pulse-border {
-            0%, 100% {
-                box-shadow: 0 0 20px currentColor,
-                            0 0 40px currentColor;
-            }
-            50% {
-                box-shadow: 0 0 30px currentColor,
-                            0 0 60px currentColor,
-                            0 0 80px currentColor;
-            }
-        }
-        
-        /* Track Circles */
-        .track-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            transition: all 0.3s;
-        }
-        
-        .track-btn:hover .track-circle {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px currentColor;
-        }
-        
-        .track-btn.active .track-circle {
-            box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
-        }
-        
-        /* Coming Soon Badge */
-        .coming-soon-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: linear-gradient(135deg, #7fc8a9, #2d5f4f);
-            color: #000;
-            font-size: 10px;
-            font-weight: 900;
-            padding: 4px 10px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 10px rgba(127, 200, 169, 0.5);
-        }
-        
-        /* Language Buttons - Semi Hidden */
-        .lang-buttons {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-            z-index: 100;
-        }
-        
-        .lang-buttons:hover {
+
+        .card-3d:hover::before {
             opacity: 1;
         }
-        
-        /* Play Button Tech Style */
-        .play-btn-tech {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+
+        .card-3d:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 35px 90px rgba(0, 0, 0, 0.7),
+                0 15px 40px rgba(139, 92, 246, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        /* Cover Art Enhanced 3D */
+        .cover-art {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--freq-528), #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 30px 70px rgba(0, 206, 209, 0.4),
+                0 10px 30px rgba(139, 92, 246, 0.3),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease;
+        }
+
+        .cover-art:hover {
+            transform: translateZ(10px) scale(1.02);
+        }
+
+        .cover-art svg {
+            width: 40%;
+            height: 40%;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+        }
+
+        .cover-art::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transform: rotate(45deg);
+            animation: shine 4s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .track-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .freq-badge {
+            display: inline-block;
+            padding: 0.6rem 1.8rem;
+            background: var(--freq-528);
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            box-shadow: 
+                0 8px 25px rgba(0, 206, 209, 0.5),
+                0 0 40px rgba(0, 206, 209, 0.3);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .track-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .track-subtitle {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.1rem;
+        }
+
+        /* Progress Bar Enhanced */
+        .progress-container {
+            margin: 2.5rem 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--freq-528), #8b5cf6);
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 20px rgba(0, 206, 209, 0.6);
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 
+                0 2px 10px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Controls Enhanced */
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            margin: 2.5rem 0;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
             color: white;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .control-btn svg {
+            width: 32px;
+            height: 32px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .control-btn:hover {
+            transform: scale(1.15) translateY(-2px);
+            filter: drop-shadow(0 8px 20px rgba(139, 92, 246, 0.6));
+        }
+
+        .control-btn.play {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 50%;
+            box-shadow: 
+                0 15px 40px rgba(139, 92, 246, 0.6),
+                0 5px 15px rgba(99, 102, 241, 0.4),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .control-btn.play svg {
+            width: 38px;
+            height: 38px;
+            fill: white;
+            stroke: none;
+            margin-left: 4px;
+        }
+
+        .control-btn.play:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 
+                0 20px 50px rgba(139, 92, 246, 0.8),
+                0 8px 25px rgba(99, 102, 241, 0.6),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .secondary-controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .secondary-controls .control-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Selector Card Enhanced 3D */
+        .selector-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .selector-tab {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 1.2rem 2.5rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            letter-spacing: 0.15em;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            font-family: inherit;
+            position: relative;
         }
-        
-        .play-btn-tech:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+
+        .selector-tab::before {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b5cf6, #6366f1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            border-radius: 3px 3px 0 0;
         }
-        
-        .play-btn-tech.playing {
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+
+        .selector-tab:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .selector-tab.active {
+            color: #c084fc;
+        }
+
+        .selector-tab.active::before {
+            transform: scaleX(1);
+        }
+
+        /* Frequency Grid Enhanced 3D */
+        .freq-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.8rem;
+        }
+
+        .freq-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .freq-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .freq-grid::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 10px;
+        }
+
+        .freq-grid::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
+        }
+
+        .freq-card {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.4), rgba(20, 15, 35, 0.3));
+            border: 2px solid transparent;
+            border-radius: 18px;
+            padding: 1.8rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .freq-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--freq-color);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .freq-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top, var(--freq-color), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .freq-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .freq-card:hover::after {
+            opacity: 0.15;
+        }
+
+        .freq-card:hover {
+            background: linear-gradient(135deg, rgba(40, 30, 60, 0.6), rgba(30, 20, 45, 0.5));
+            border-color: var(--freq-color);
+            transform: translateY(-6px) translateZ(10px);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.5),
+                0 5px 20px rgba(var(--freq-rgb), 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .freq-card.active {
+            background: linear-gradient(135deg, rgba(40, 30, 60, 0.7), rgba(30, 20, 45, 0.6));
+            border-color: var(--freq-color);
+            box-shadow: 
+                0 15px 40px rgba(var(--freq-rgb), 0.5),
+                0 5px 20px rgba(var(--freq-rgb), 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .freq-card h3 {
+            font-size: 2rem;
+            color: var(--freq-color);
+            margin-bottom: 0.6rem;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(var(--freq-rgb), 0.5);
+        }
+
+        .freq-card .description {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .info-btn {
+            margin-top: 1.2rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-btn:hover {
+            background: rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Track Grid Enhanced */
+        .track-grid {
+            display: grid;
+            gap: 1.8rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.8rem;
+        }
+
+        .track-group {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.3), rgba(20, 15, 35, 0.2));
+            border-radius: 18px;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .track-group-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .track-group-icon {
+            width: 44px;
+            height: 44px;
+            stroke: #8b5cf6;
+            fill: none;
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.4));
+        }
+
+        .track-group-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .track-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .track-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .track-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #8b5cf6, #6366f1);
+            transform: scaleY(0);
+            transition: transform 0.4s ease;
+        }
+
+        .track-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .track-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateX(8px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .track-item.active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.15));
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 
+                0 8px 25px rgba(139, 92, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .track-item-info h4 {
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .track-item-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .play-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 
+                0 4px 15px rgba(139, 92, 246, 0.5),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .track-item:hover .play-icon {
+            transform: scale(1.1);
+            box-shadow: 
+                0 6px 20px rgba(139, 92, 246, 0.7),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .play-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+            stroke: none;
+            margin-left: 2px;
+        }
+
+        /* Modal Enhanced */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.95), rgba(20, 15, 35, 0.95));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 28px;
+            padding: 2.5rem;
+            max-width: 650px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.7),
+                0 10px 30px rgba(139, 92, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.8rem;
+            right: 1.8rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: 300;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(var(--freq-rgb), 0.6);
+        }
+
+        .modal-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-section h3 {
+            color: #c084fc;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+        }
+
+        .modal-section p {
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+
+        .modal-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-section li {
+            padding: 0.7rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.7;
+        }
+
+        .modal-section li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .freq-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .logo {
+                font-size: 100px;
+                letter-spacing: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 60px;
+                letter-spacing: 10px;
+            }
+
+            .tagline {
+                font-size: 18px;
+            }
+
+            .freq-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="background-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const CLOUDFLARE_WORKER = 'https://tunein-audio.paradigmaolistico.workers.dev';
-        
-        const FREQ_NAMES = {
-            '396': 'radicamento', '417': 'cambiamento', '432': 'armonia', '440': 'standard',
-            '528': 'amore', '639': 'connessione', '741': 'espressione', '852': 'intuizione', '963': 'unita'
+        // ==================== DATA ====================
+
+        const FREQUENCIES = {
+            174: { hz: 174, color: "#8B0000", rgb: "139, 0, 0", desc: "Frequenza fondamentale per radicamento e stabilità" },
+            285: { hz: 285, color: "#FF4500", rgb: "255, 69, 0", desc: "Seconda frequenza della scala Solfeggio" },
+            396: { hz: 396, color: "#FFD700", rgb: "255, 215, 0", desc: "Frequenza di liberazione da paura e limitazioni" },
+            417: { hz: 417, color: "#90EE90", rgb: "144, 238, 144", desc: "Frequenza di facilitazione del cambiamento" },
+            432: { hz: 432, color: "#4169E1", rgb: "65, 105, 225", desc: "Accordatura naturale in armonia con l'universo" },
+            528: { hz: 528, color: "#00CED1", rgb: "0, 206, 209", desc: "Frequenza centrale della scala Solfeggio" },
+            639: { hz: 639, color: "#FF69B4", rgb: "255, 105, 180", desc: "Frequenza di connessione e relazioni" },
+            741: { hz: 741, color: "#9370DB", rgb: "147, 112, 219", desc: "Frequenza di risveglio e chiarezza" },
+            852: { hz: 852, color: "#8A2BE2", rgb: "138, 43, 226", desc: "Frequenza di ordine spirituale" },
+            963: { hz: 963, color: "#E6E6FA", rgb: "230, 230, 250", desc: "Frequenza di connessione universale" }
+        };
+
+        const FREQ_INFO = {
+            174: {
+                title: "Frequenza Fondamentale",
+                characteristics: [
+                    "Rapporto di sottomultiplo con frequenze superiori",
+                    "Presente in canti gregoriani e musica sacra antica",
+                    "Banda di frequenza associata a percezione profonda"
+                ],
+                applications: [
+                    "Meditazione per radicamento",
+                    "Pratiche di grounding",
+                    "Rilassamento profondo"
+                ]
+            },
+            285: {
+                title: "Secondo Grado",
+                characteristics: [
+                    "Intervallo di tono intero rispetto a 174 Hz",
+                    "Rapporti armonici con frequenze superiori",
+                    "Frequenza intermedia tra fondamentale e scale centrali"
+                ],
+                applications: [
+                    "Transizioni meditative",
+                    "Rigenerazione energetica",
+                    "Stati di rinnovamento"
+                ]
+            },
+            396: {
+                title: "Frequenza di Liberazione",
+                characteristics: [
+                    "Base della scala nelle tradizioni gregoriane",
+                    "Rapporto di quarta perfetta con frequenze centrali",
+                    "Intervallo stabile nelle scale modali antiche"
+                ],
+                applications: [
+                    "Liberazione da paure",
+                    "Superamento di blocchi",
+                    "Trasformazione emotiva"
+                ]
+            },
+            417: {
+                title: "Frequenza del Cambiamento",
+                characteristics: [
+                    "Semitono sopra 396 Hz nella scala temperata",
+                    "Intervallo di transizione nelle progressioni armoniche",
+                    "Frequenza di passaggio nelle modulazioni musicali"
+                ],
+                applications: [
+                    "Facilitazione cambiamenti",
+                    "Nuovi inizi",
+                    "Trasformazione situazioni"
+                ]
+            },
+            432: {
+                title: "Accordatura Naturale",
+                characteristics: [
+                    "Alternativa storica a 440 Hz (standard moderno)",
+                    "Rapporto matematico con cicli naturali (8 Hz)",
+                    "Utilizzata da alcuni compositori classici"
+                ],
+                applications: [
+                    "Armonia naturale",
+                    "Risonanza con la natura",
+                    "Equilibrio generale"
+                ]
+            },
+            528: {
+                title: "Frequenza Centrale",
+                characteristics: [
+                    "Intervallo di quinta perfetta rispetto a 396 Hz",
+                    "Rapporto armonico 4:3 con 396 Hz",
+                    "Centro geometrico della scala Solfeggio"
+                ],
+                applications: [
+                    "Meditazione profonda",
+                    "Trasformazione interiore",
+                    "Apertura del cuore"
+                ]
+            },
+            639: {
+                title: "Frequenza di Connessione",
+                characteristics: [
+                    "Intervallo di quinta perfetta nella scala armonica",
+                    "Relazione matematica con 528 Hz (terza maggiore)",
+                    "Frequenza di risonanza armonica"
+                ],
+                applications: [
+                    "Relazioni interpersonali",
+                    "Connessione emotiva",
+                    "Comunicazione armoniosa"
+                ]
+            },
+            741: {
+                title: "Frequenza di Risveglio",
+                characteristics: [
+                    "Intervallo caratteristico nelle scale modali",
+                    "Rapporti complessi con frequenze inferiori",
+                    "Sensibile nella percezione melodica"
+                ],
+                applications: [
+                    "Chiarezza mentale",
+                    "Risveglio intuizione",
+                    "Espressione autentica"
+                ]
+            },
+            852: {
+                title: "Ordine Spirituale",
+                characteristics: [
+                    "Ottava superiore parziale di frequenze base",
+                    "Range di frequenza elevato",
+                    "Presente in overtones naturali"
+                ],
+                applications: [
+                    "Ordine spirituale",
+                    "Ritorno all'armonia",
+                    "Visione superiore"
+                ]
+            },
+            963: {
+                title: "Connessione Universale",
+                characteristics: [
+                    "Rapporto armonico con 174 Hz",
+                    "Frequenza superiore della scala",
+                    "Presente in armonici naturali"
+                ],
+                applications: [
+                    "Connessione universale",
+                    "Stati contemplativi avanzati",
+                    "Espansione di coscienza"
+                ]
+            }
         };
 
         const TRACKS = {
-            'soaring': { 
-                it: { name: 'Soaring', desc: 'Toni elevanti' },
-                en: { name: 'Soaring', desc: 'Uplifting tones' },
-                fr: { name: 'Soaring', desc: 'Tons élevants' },
-                color: '#3b82f6',
-                free: true
+            peaceful_clouds: {
+                name: "Peaceful Clouds",
+                icon: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z",
+                tracks: [
+                    { id: "floating_free", name: "Floating Free", subtitle: "Soft ambient pads" },
+                    { id: "silk_sky", name: "Silk Sky", subtitle: "Gentle textures" },
+                    { id: "heavens_rest", name: "Heaven's Rest", subtitle: "Peaceful atmosphere" },
+                    { id: "breeze_dance", name: "Breeze Dance", subtitle: "Light movement" }
+                ]
             },
-            'ancient-winds': { 
-                it: { name: 'Ancient Winds', desc: 'Respiro ancestrale' },
-                en: { name: 'Ancient Winds', desc: 'Ancestral breath' },
-                fr: { name: 'Ancient Winds', desc: 'Souffle ancestral' },
-                color: '#10b981',
-                free: true
+            nature_streams: {
+                name: "Nature Streams",
+                icon: "M14.5 2v20l-4-4-4 4V2M3.05 11h14.9M3.05 7h14.9M3.05 15h14.9",
+                tracks: [
+                    { id: "river_meditation", name: "River Meditation", subtitle: "Flowing water" },
+                    { id: "rain_forest", name: "Rain Forest", subtitle: "Natural ambience" },
+                    { id: "earth_breathing", name: "Earth Breathing", subtitle: "Organic sounds" },
+                    { id: "wind_pines", name: "Wind Pines", subtitle: "Forest atmosphere" }
+                ]
             },
-            'relaxing-piano': { 
-                it: { name: 'Relaxing Piano', desc: 'Armonia del cuore' },
-                en: { name: 'Relaxing Piano', desc: 'Heart harmony' },
-                fr: { name: 'Relaxing Piano', desc: 'Harmonie du cœur' },
-                color: '#8b5cf6',
-                free: true
+            gentle_piano: {
+                name: "Gentle Piano",
+                icon: "M2 6h20M2 18h20M7 6v12M12 6v12M17 6v12",
+                tracks: [
+                    { id: "afternoon_tea", name: "Afternoon Tea", subtitle: "Contemplative piano" },
+                    { id: "memory_lane", name: "Memory Lane", subtitle: "Nostalgic melody" },
+                    { id: "hope_blooming", name: "Hope Blooming", subtitle: "Uplifting keys" },
+                    { id: "lullaby_heart", name: "Lullaby Heart", subtitle: "Tender composition" }
+                ]
             },
-            'river-flute': { 
-                it: { name: 'River Flute', desc: 'Melodie fluide' },
-                en: { name: 'River Flute', desc: 'Flowing melodies' },
-                fr: { name: 'River Flute', desc: 'Mélodies fluides' },
-                color: '#14b8a6',
-                comingSoon: true
+            sacred_flute: {
+                name: "Sacred Flute",
+                icon: "M2 12h20M5 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM13 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3z",
+                tracks: [
+                    { id: "temple_garden", name: "Temple Garden", subtitle: "Shakuhachi meditation" },
+                    { id: "mountain_breath", name: "Mountain Breath", subtitle: "Bamboo flute" },
+                    { id: "river_blessing", name: "River Blessing", subtitle: "Water and flute" },
+                    { id: "prayer_walk", name: "Prayer Walk", subtitle: "Contemplative journey" }
+                ]
             },
-            'drone-in-d': { 
-                it: { name: 'Drone in D', desc: 'Meditazione tonale' },
-                en: { name: 'Drone in D', desc: 'Tonal meditation' },
-                fr: { name: 'Drone in D', desc: 'Méditation tonale' },
-                color: '#f59e0b',
-                comingSoon: true
+            crystal_garden: {
+                name: "Crystal Garden",
+                icon: "M12 2L4 7v10l8 5 8-5V7l-8-5zM12 22v-10M12 12L4 7M12 12l8-5",
+                tracks: [
+                    { id: "sunlit_crystals", name: "Sunlit Crystals", subtitle: "Singing bowls" },
+                    { id: "healing_spring", name: "Healing Spring", subtitle: "Crystal harmonics" },
+                    { id: "light_prism", name: "Light Prism", subtitle: "Vibrational tones" },
+                    { id: "crystal_resonance", name: "Crystal Resonance", subtitle: "Tibetan bowls" }
+                ]
             }
         };
 
-        const FREQUENCIES = {
-            396: {
-                it: { title: 'Radicamento', chakra: 'Chakra Radice', description: 'Libera dalla paura e dai sensi di colpa.' },
-                en: { title: 'Grounding', chakra: 'Root Chakra', description: 'Releases fear and guilt.' },
-                fr: { title: 'Ancrage', chakra: 'Chakra Racine', description: 'Libère de la peur et de la culpabilité.' },
-                color: '#ef4444'
+        const OBJECTIVES = {
+            pacificazione: {
+                title: "Pacificazione",
+                icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z",
+                description: "Stati di rilassamento e riduzione stress",
+                objectives: [
+                    { name: "Pace Interiore", freqs: "432Hz, 528Hz" },
+                    { name: "Riduzione Stress", freqs: "396Hz, 528Hz" },
+                    { name: "Calmare Ansia", freqs: "396Hz, 417Hz" },
+                    { name: "Favorire Sonno Profondo", freqs: "174Hz, 432Hz" },
+                    { name: "Rilassamento Totale", freqs: "528Hz, 963Hz" },
+                    { name: "Serenità Quotidiana", freqs: "432Hz, 639Hz" },
+                    { name: "Meditazione Profonda", freqs: "852Hz, 963Hz" },
+                    { name: "Centratura e Presenza", freqs: "417Hz, 741Hz" }
+                ]
             },
-            417: {
-                it: { title: 'Cambiamento', chakra: 'Chakra Sacrale', description: 'Facilita il cambiamento e la trasformazione.' },
-                en: { title: 'Change', chakra: 'Sacral Chakra', description: 'Facilitates change and transformation.' },
-                fr: { title: 'Changement', chakra: 'Chakra Sacré', description: 'Facilite le changement et la transformation.' },
-                color: '#f97316'
+            performance: {
+                title: "Performance",
+                icon: "M13 10V3L4 14h7v7l9-11h-7z",
+                description: "Focus e prestazioni cognitive",
+                objectives: [
+                    { name: "Focus e Concentrazione", freqs: "741Hz, 852Hz" },
+                    { name: "Creatività e Ispirazione", freqs: "417Hz, 528Hz" },
+                    { name: "Studio e Apprendimento", freqs: "741Hz, 963Hz" },
+                    { name: "Energia Mentale", freqs: "285Hz, 417Hz" },
+                    { name: "Chiarezza Mentale", freqs: "741Hz, 852Hz" },
+                    { name: "Flow State Creativo", freqs: "528Hz, 639Hz" },
+                    { name: "Intuizione e Insight", freqs: "741Hz, 852Hz" }
+                ]
             },
-            432: {
-                it: { title: 'Armonia universale', chakra: 'Frequenza della Natura', description: 'Risuona con la vibrazione naturale dell\'universo.' },
-                en: { title: 'Universal Harmony', chakra: 'Nature Frequency', description: 'Resonates with the natural vibration of the universe.' },
-                fr: { title: 'Harmonie universelle', chakra: 'Fréquence de la Nature', description: 'Résonne avec la vibration naturelle de l\'univers.' },
-                color: '#eab308'
-            },
-            440: {
-                it: { title: 'Standard occidentale', chakra: 'Frequenza Standard', description: 'Standard musicale moderno.' },
-                en: { title: 'Western Standard', chakra: 'Standard Frequency', description: 'Modern musical standard.' },
-                fr: { title: 'Standard occidental', chakra: 'Fréquence Standard', description: 'Standard musical moderne.' },
-                color: '#a855f7'
-            },
-            528: {
-                it: { title: "Frequenza dell'amore", chakra: 'Chakra del Cuore', description: 'Frequenza di riparazione del DNA.' },
-                en: { title: 'Love Frequency', chakra: 'Heart Chakra', description: 'DNA repair frequency.' },
-                fr: { title: "Fréquence de l'amour", chakra: 'Chakra du Cœur', description: 'Fréquence de réparation de l\'ADN.' },
-                color: '#22c55e'
-            },
-            639: {
-                it: { title: 'Connessione', chakra: 'Chakra del Cuore', description: 'Armonizza le relazioni.' },
-                en: { title: 'Connection', chakra: 'Heart Chakra', description: 'Harmonizes relationships.' },
-                fr: { title: 'Connexion', chakra: 'Chakra du Cœur', description: 'Harmonise les relations.' },
-                color: '#06b6d4'
-            },
-            741: {
-                it: { title: 'Espressione', chakra: 'Chakra della Gola', description: 'Purifica e libera l\'espressione.' },
-                en: { title: 'Expression', chakra: 'Throat Chakra', description: 'Purifies and liberates expression.' },
-                fr: { title: 'Expression', chakra: 'Chakra de la Gorge', description: 'Purifie et libère l\'expression.' },
-                color: '#3b82f6'
-            },
-            852: {
-                it: { title: 'Intuizione', chakra: 'Terzo Occhio', description: 'Risveglia l\'intuizione.' },
-                en: { title: 'Intuition', chakra: 'Third Eye', description: 'Awakens intuition.' },
-                fr: { title: 'Intuition', chakra: 'Troisième Œil', description: 'Éveille l\'intuition.' },
-                color: '#8b5cf6'
-            },
-            963: {
-                it: { title: 'Unità', chakra: 'Chakra della Corona', description: 'Frequenza dell\'unità con il cosmo.' },
-                en: { title: 'Unity', chakra: 'Crown Chakra', description: 'Frequency of unity with the cosmos.' },
-                fr: { title: 'Unité', chakra: 'Chakra Couronne', description: 'Fréquence de l\'unité avec le cosmos.' },
-                color: '#a855f7'
+            guarigione: {
+                title: "Guarigione",
+                icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
+                description: "Supporto per elaborazione e benessere",
+                objectives: [
+                    { name: "Elaborare un Lutto", freqs: "396Hz, 528Hz", priority: true },
+                    { name: "Alleviare Dolore Fisico", freqs: "174Hz, 285Hz", priority: true },
+                    { name: "Rilascio Trauma", freqs: "396Hz, 417Hz", priority: true },
+                    { name: "Trasformazione Emozioni", freqs: "417Hz, 528Hz", priority: true },
+                    { name: "Supporto Quotidiano", freqs: "285Hz, 528Hz" },
+                    { name: "Apertura del Cuore", freqs: "528Hz, 639Hz" },
+                    { name: "Liberazione da Paura", freqs: "396Hz" },
+                    { name: "Nuovi Inizi", freqs: "417Hz, 528Hz" },
+                    { name: "Perdono e Accettazione", freqs: "396Hz, 639Hz" },
+                    { name: "Equilibrio Energetico", freqs: "Tutte" }
+                ]
             }
         };
 
-        const TRANSLATIONS = {
-            it: {
-                selectTrack: "Seleziona Brano",
-                selectFrequency: "Select Your Frequency",
-                howItWorks: "Come Funziona",
-                play: "ASCOLTA",
-                pause: "PAUSA",
-                trackInfo: "Track Info",
-                
-                trackInfoText: `Tre tracce selezionate per iniziare il tuo viaggio:
+        // ==================== COMPONENTS ====================
 
-• Soaring - Toni elevanti per apertura e ispirazione
-• Ancient Winds - Respiro ancestrale per radicamento
-• Relaxing Piano - Armonia del cuore per pace interiore
+        const PlayIcon = () => (
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+        );
 
-Altre tracce sono in arrivo. Stiamo lavorando per offrirti una gamma completa di esperienze sonore.`,
+        const PauseIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <rect x="6" y="4" width="4" height="16" />
+                <rect x="14" y="4" width="4" height="16" />
+            </svg>
+        );
 
-                howItWorksText: `Pure Frequenze genera frequenze Solfeggio in tempo reale usando la Web Audio API, preservando l'integrità matematica delle onde sonore.
+        const SkipBackIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polygon points="19 20 9 12 19 4 19 20" />
+                <line x1="5" y1="19" x2="5" y2="5" />
+            </svg>
+        );
 
-Questo approccio nasce per avviare un nuovo paradigma orientato alla libertà dell'essere umano attraverso il miglioramento della salute individuale e della risonanza collettiva.
+        const SkipForwardIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polygon points="5 4 15 12 5 20 5 4" />
+                <line x1="19" y1="5" x2="19" y2="19" />
+            </svg>
+        );
 
-Per approfondimenti scientifici e filosofici, visita la pagina Hub dove troverai le sezioni Scienza e Visione.`
-            },
-            en: {
-                selectTrack: "Select Track",
-                selectFrequency: "Select Your Frequency",
-                howItWorks: "How It Works",
-                play: "PLAY",
-                pause: "PAUSE",
-                trackInfo: "Track Info",
-                
-                trackInfoText: `Three tracks selected to begin your journey:
+        const ShuffleIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polyline points="16 3 21 3 21 8" />
+                <line x1="4" y1="20" x2="21" y2="3" />
+                <polyline points="21 16 21 21 16 21" />
+                <line x1="15" y1="15" x2="21" y2="21" />
+                <line x1="4" y1="4" x2="9" y2="9" />
+            </svg>
+        );
 
-• Soaring - Uplifting tones for openness and inspiration
-• Ancient Winds - Ancestral breath for grounding
-• Relaxing Piano - Heart harmony for inner peace
+        const RepeatIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polyline points="17 1 21 5 17 9" />
+                <path d="M3 11V9a4 4 0 014-4h14" />
+                <polyline points="7 23 3 19 7 15" />
+                <path d="M21 13v2a4 4 0 01-4 4H3" />
+            </svg>
+        );
 
-More tracks are coming. We're working to offer you a complete range of sound experiences.`,
+        const ClockIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+            </svg>
+        );
 
-                howItWorksText: `Pure Frequenze generates Solfeggio frequencies in real-time using the Web Audio API, preserving the mathematical integrity of sound waves.
+        const VolumeIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+            </svg>
+        );
 
-This approach was born to initiate a new paradigm oriented towards human freedom through the improvement of individual health and collective resonance.
-
-For scientific and philosophical insights, visit the Hub page where you'll find the Science and Vision sections.`
-            },
-            fr: {
-                selectTrack: "Sélectionner Morceau",
-                selectFrequency: "Sélectionnez Votre Fréquence",
-                howItWorks: "Comment Ça Marche",
-                play: "ÉCOUTER",
-                pause: "PAUSE",
-                trackInfo: "Info Piste",
-                
-                trackInfoText: `Trois morceaux sélectionnés pour commencer votre voyage:
-
-• Soaring - Tons élevants pour l'ouverture et l'inspiration
-• Ancient Winds - Souffle ancestral pour l'ancrage
-• Relaxing Piano - Harmonie du cœur pour la paix intérieure
-
-D'autres morceaux arrivent. Nous travaillons pour vous offrir une gamme complète d'expériences sonores.`,
-
-                howItWorksText: `Pure Frequenze génère des fréquences Solfège en temps réel en utilisant l'API Web Audio, préservant l'intégrité mathématique des ondes sonores.
-
-Cette approche est née pour initier un nouveau paradigme orienté vers la liberté humaine à travers l'amélioration de la santé individuelle et de la résonance collective.
-
-Pour des aperçus scientifiques et philosophiques, visitez la page Hub où vous trouverez les sections Science et Vision.`
-            }
-        };
-
-        function App() {
-            const [lang, setLang] = useState('it');
-            const [currentTrack, setCurrentTrack] = useState('soaring');
-            const [selectedFreq, setSelectedFreq] = useState('432');
+        // Main App
+        const App = () => {
+            const [selectedFreq, setSelectedFreq] = useState(528);
+            const [selectedGroup, setSelectedGroup] = useState('peaceful_clouds');
+            const [selectedTrack, setSelectedTrack] = useState(0);
             const [isPlaying, setIsPlaying] = useState(false);
-            const [showInfo, setShowInfo] = useState(false);
-            const [showHowItWorks, setShowHowItWorks] = useState(false);
             const [currentTime, setCurrentTime] = useState(0);
-            const [duration, setDuration] = useState(0);
-            const [isLoading, setIsLoading] = useState(false);
-            
-            const audioRef = useRef(null);
-            const t = TRANSLATIONS[lang];
-            const currentFreqData = FREQUENCIES[selectedFreq][lang];
-            const currentTrackData = TRACKS[currentTrack];
+            const [selectorTab, setSelectorTab] = useState('frequencies');
+            const [showModal, setShowModal] = useState(false);
+            const [modalFreq, setModalFreq] = useState(null);
 
-            const getAudioURL = (track, freq) => `${CLOUDFLARE_WORKER}/${track}-${freq}hz-${FREQ_NAMES[freq]}.mp3`;
+            const duration = 600;
+            const currentTrackData = TRACKS[selectedGroup].tracks[selectedTrack];
+            const currentFreqData = FREQUENCIES[selectedFreq];
 
-            const loadAudio = () => {
-                const wasPlaying = isPlaying;
-                setIsLoading(true);
-                
-                if (audioRef.current) {
-                    audioRef.current.pause();
-                    audioRef.current.src = '';
-                }
-
-                const url = getAudioURL(currentTrack, selectedFreq);
-                const audio = new Audio(url);
-                audio.crossOrigin = 'anonymous';
-                audio.loop = true;
-
-                audio.addEventListener('canplaythrough', () => {
-                    setIsLoading(false);
-                    setDuration(audio.duration);
-                    if (wasPlaying) {
-                        audio.play();
-                        setIsPlaying(true);
-                    }
-                });
-
-                audio.addEventListener('timeupdate', () => setCurrentTime(audio.currentTime));
-                audio.addEventListener('error', () => setIsLoading(false));
-
-                audioRef.current = audio;
-                audio.load();
-            };
-
-            useEffect(() => { 
-                if (!currentTrackData.comingSoon) {
-                    loadAudio(); 
-                }
-            }, [currentTrack, selectedFreq]);
-
-            const togglePlay = () => {
-                if (!audioRef.current || currentTrackData.comingSoon) return;
+            useEffect(() => {
+                let interval;
                 if (isPlaying) {
-                    audioRef.current.pause();
-                    setIsPlaying(false);
-                } else {
-                    audioRef.current.play();
-                    setIsPlaying(true);
+                    interval = setInterval(() => {
+                        setCurrentTime(prev => (prev >= duration ? 0 : prev + 1));
+                    }, 1000);
                 }
+                return () => clearInterval(interval);
+            }, [isPlaying]);
+
+            const formatTime = (seconds) => {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
             };
 
-            const formatTime = (s) => `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+            const showFreqInfo = (freq) => {
+                setModalFreq(freq);
+                setShowModal(true);
+            };
 
             return (
-                <div className="min-h-screen p-4 md:p-8">
-                    {/* Language Selector - Semi Hidden */}
-                    <div className="lang-buttons">
-                        <div className="flex gap-2">
-                            <button onClick={() => setLang('it')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='it' ? 'bg-[#7fc8a9] text-white' : 'glass text-[#7fc8a9]'}`}>
-                                IT
-                            </button>
-                            <button onClick={() => setLang('en')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='en' ? 'bg-[#7fc8a9] text-white' : 'glass text-[#7fc8a9]'}`}>
-                                EN
-                            </button>
-                            <button onClick={() => setLang('fr')} className={`px-3 py-1 rounded text-xs font-semibold transition ${lang==='fr' ? 'bg-[#7fc8a9] text-white' : 'glass text-[#7fc8a9]'}`}>
-                                FR
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="max-w-7xl mx-auto">
-                        
-                        {/* Header */}
-                        <header className="text-center mb-16">
-                            <h1 className="text-8xl md:text-9xl font-black text-white logo-glow mb-2" style={{letterSpacing: '0.05em'}}>
-                                PURE FREQUENZE
-                            </h1>
-                            <p className="text-xl md:text-2xl text-[#7fc8a9] font-thin tracking-widest" style={{fontWeight: 100}}>
-                                solfeggio frequencies
-                            </p>
-                        </header>
-
-                        {/* Info Buttons */}
-                        <div className="flex flex-wrap justify-center gap-3 mb-8">
-                            <button onClick={() => setShowInfo(!showInfo)} className="glass px-6 py-3 rounded-xl text-[#7fc8a9] hover:bg-white/10 transition font-medium">
-                                {t.trackInfo}
-                            </button>
-                            <button onClick={() => setShowHowItWorks(!showHowItWorks)} className="glass px-6 py-3 rounded-xl text-[#7fc8a9] hover:bg-white/10 transition font-medium">
-                                {t.howItWorks}
-                            </button>
+                <>
+                    <div className="app-container">
+                        <div className="header">
+                            <h1 className="logo">PUREFREQUENZE</h1>
+                            <p className="tagline">FREQUENZE SOLFEGGIO</p>
                         </div>
 
-                        {/* Info Sections */}
-                        {showInfo && <div className="glass rounded-2xl p-6 mb-8 border-2 border-[#7fc8a9]/30" style={{whiteSpace: 'pre-line'}}><p className="text-[#7fc8a9] leading-relaxed">{t.trackInfoText}</p></div>}
-                        {showHowItWorks && <div className="glass rounded-2xl p-6 mb-8 border-2 border-[#7fc8a9]/30" style={{whiteSpace: 'pre-line'}}><p className="text-[#7fc8a9] leading-relaxed">{t.howItWorksText}</p></div>}
-
-                        {/* Main Container */}
-                        <div className="glass rounded-3xl p-6 md:p-10 mb-8">
-                            
-                            {/* Track Selector */}
-                            <div className="mb-12">
-                                <h3 className="text-lg font-bold text-white mb-6 text-center">{t.selectTrack}</h3>
-                                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                                    {Object.keys(TRACKS).map(k => (
-                                        <button 
-                                            key={k} 
-                                            onClick={() => !TRACKS[k].comingSoon && setCurrentTrack(k)} 
-                                            disabled={TRACKS[k].comingSoon}
-                                            className={`track-btn relative p-4 rounded-xl font-semibold transition text-center ${currentTrack===k && !TRACKS[k].comingSoon ? 'glass border-2' : 'glass hover:bg-white/5'} ${TRACKS[k].comingSoon ? 'opacity-60 cursor-not-allowed' : ''}`}
-                                            style={{borderColor: currentTrack===k ? TRACKS[k].color : 'transparent'}}
-                                        >
-                                            {TRACKS[k].comingSoon && <div className="coming-soon-badge">COMING SOON</div>}
-                                            <div className="track-circle" style={{backgroundColor: TRACKS[k].color}}></div>
-                                            <div className="text-white font-bold text-sm mb-1">{TRACKS[k][lang].name}</div>
-                                            <div className="text-[#7fc8a9] text-xs">{TRACKS[k][lang].desc}</div>
-                                        </button>
-                                    ))}
+                        <div className="main-grid">
+                            {/* Player */}
+                            <div className="card-3d">
+                                <div 
+                                    className="cover-art" 
+                                    style={{
+                                        background: `linear-gradient(135deg, ${currentFreqData.color}, #8b5cf6)`
+                                    }}
+                                >
+                                    <svg 
+                                        viewBox="0 0 24 24" 
+                                        dangerouslySetInnerHTML={{ __html: `<path d="${TRACKS[selectedGroup].icon}"/>` }} 
+                                    />
                                 </div>
-                            </div>
 
-                            {/* Frequency Title */}
-                            <h2 className="text-3xl md:text-4xl font-bold text-center text-[#7fc8a9] mb-8" style={{letterSpacing: '0.1em'}}>
-                                {t.selectFrequency}
-                            </h2>
-
-                            {/* Frequency Grid */}
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
-                                {Object.keys(FREQUENCIES).map(f => (
-                                    <button 
-                                        key={f} 
-                                        onClick={() => setSelectedFreq(f)} 
-                                        className={`freq-btn p-6 rounded-2xl transition ${selectedFreq===f ? 'active' : ''}`}
-                                        style={{
-                                            borderColor: FREQUENCIES[f].color,
-                                            backgroundColor: selectedFreq===f ? FREQUENCIES[f].color : 'rgba(0,0,0,0.3)',
-                                            color: 'white'
-                                        }}
+                                <div className="track-info">
+                                    <div 
+                                        className="freq-badge" 
+                                        style={{ background: currentFreqData.color }}
                                     >
-                                        <div className="relative z-10">
-                                            <div className="text-4xl md:text-5xl font-black mb-1">{f}</div>
-                                            <div className="text-sm font-bold mb-1">Hz</div>
-                                            <div className="text-xs opacity-90">{FREQUENCIES[f][lang].title}</div>
-                                        </div>
+                                        {currentFreqData.hz} Hz
+                                    </div>
+                                    <h2 className="track-name">{TRACKS[selectedGroup].name}</h2>
+                                    <p className="track-subtitle">{currentTrackData.name}</p>
+                                </div>
+
+                                <div className="progress-container">
+                                    <div className="progress-bar">
+                                        <div 
+                                            className="progress-fill"
+                                            style={{
+                                                width: `${(currentTime / duration) * 100}%`,
+                                                background: `linear-gradient(90deg, ${currentFreqData.color}, #8b5cf6)`
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="time-info">
+                                        <span>{formatTime(currentTime)}</span>
+                                        <span>{formatTime(duration)}</span>
+                                    </div>
+                                </div>
+
+                                <div className="player-controls">
+                                    <button className="control-btn">
+                                        <SkipBackIcon />
                                     </button>
-                                ))}
+                                    <button 
+                                        className="control-btn play"
+                                        onClick={() => setIsPlaying(!isPlaying)}
+                                    >
+                                        {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                                    </button>
+                                    <button className="control-btn">
+                                        <SkipForwardIcon />
+                                    </button>
+                                </div>
+
+                                <div className="secondary-controls">
+                                    <button className="control-btn"><ShuffleIcon /></button>
+                                    <button className="control-btn"><RepeatIcon /></button>
+                                    <button className="control-btn"><ClockIcon /></button>
+                                    <button className="control-btn"><VolumeIcon /></button>
+                                </div>
                             </div>
 
-                            {/* Play Button - Tech Style */}
-                            <button 
-                                onClick={togglePlay} 
-                                disabled={isLoading || currentTrackData.comingSoon} 
-                                className={`play-btn-tech w-full py-10 rounded-3xl font-bold text-2xl mb-6 ${isPlaying ? 'playing' : ''}`}
-                            >
-                                {currentTrackData.comingSoon ? '🔒 COMING SOON' : isLoading ? 'LOADING...' : isPlaying ? t.pause : t.play}
-                            </button>
-
-                            {/* Time Display */}
-                            {!currentTrackData.comingSoon && (
-                                <div className="flex justify-between text-[#7fc8a9] text-sm font-medium">
-                                    <span>{formatTime(currentTime)}</span>
-                                    <span>{duration ? formatTime(duration) : '--:--'}</span>
+                            {/* Selector */}
+                            <div className="card-3d">
+                                <div className="selector-tabs">
+                                    <button 
+                                        className={`selector-tab ${selectorTab === 'frequencies' ? 'active' : ''}`}
+                                        onClick={() => setSelectorTab('frequencies')}
+                                    >
+                                        Frequenze & Tracce
+                                    </button>
+                                    <button 
+                                        className={`selector-tab ${selectorTab === 'objectives' ? 'active' : ''}`}
+                                        onClick={() => setSelectorTab('objectives')}
+                                    >
+                                        Applicazioni
+                                    </button>
                                 </div>
-                            )}
-                        </div>
 
+                                {selectorTab === 'frequencies' && (
+                                    <>
+                                        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.4rem', fontWeight: '700' }}>Seleziona Frequenza</h3>
+                                        <div className="freq-grid">
+                                            {Object.entries(FREQUENCIES).map(([freq, data]) => (
+                                                <div
+                                                    key={freq}
+                                                    className={`freq-card ${selectedFreq == freq ? 'active' : ''}`}
+                                                    style={{
+                                                        '--freq-color': data.color,
+                                                        '--freq-rgb': data.rgb
+                                                    }}
+                                                    onClick={() => setSelectedFreq(parseInt(freq))}
+                                                >
+                                                    <h3>{data.hz} Hz</h3>
+                                                    <p className="description">{data.desc}</p>
+                                                    <button 
+                                                        className="info-btn"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            showFreqInfo(freq);
+                                                        }}
+                                                    >
+                                                        Informazioni
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <h3 style={{ margin: '2.5rem 0 1.5rem', fontSize: '1.4rem', fontWeight: '700' }}>Seleziona Traccia</h3>
+                                        <div className="track-grid">
+                                            {Object.entries(TRACKS).map(([groupId, group]) => (
+                                                <div key={groupId} className="track-group">
+                                                    <div className="track-group-header">
+                                                        <svg 
+                                                            className="track-group-icon"
+                                                            viewBox="0 0 24 24"
+                                                            dangerouslySetInnerHTML={{ __html: `<path d="${group.icon}"/>` }}
+                                                        />
+                                                        <h3>{group.name}</h3>
+                                                    </div>
+                                                    <div className="track-list">
+                                                        {group.tracks.map((track, idx) => (
+                                                            <div
+                                                                key={track.id}
+                                                                className={`track-item ${selectedGroup === groupId && selectedTrack === idx ? 'active' : ''}`}
+                                                                onClick={() => {
+                                                                    setSelectedGroup(groupId);
+                                                                    setSelectedTrack(idx);
+                                                                }}
+                                                            >
+                                                                <div className="track-item-info">
+                                                                    <h4>{track.name}</h4>
+                                                                    <p>{track.subtitle}</p>
+                                                                </div>
+                                                                <div className="play-icon">
+                                                                    <PlayIcon />
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+
+                                {selectorTab === 'objectives' && (
+                                    <div className="track-grid">
+                                        {Object.entries(OBJECTIVES).map(([key, section]) => (
+                                            <div key={key} className="track-group">
+                                                <div className="track-group-header">
+                                                    <svg 
+                                                        className="track-group-icon"
+                                                        viewBox="0 0 24 24"
+                                                        dangerouslySetInnerHTML={{ __html: `<path d="${section.icon}"/>` }}
+                                                    />
+                                                    <div>
+                                                        <h3>{section.title}</h3>
+                                                        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.95rem', marginTop: '0.4rem' }}>
+                                                            {section.description}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="track-list">
+                                                    {section.objectives.map((obj, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className={`track-item ${obj.priority ? 'priority' : ''}`}
+                                                        >
+                                                            <div className="track-item-info">
+                                                                <h4>{obj.name}</h4>
+                                                                <p>{obj.freqs}</p>
+                                                            </div>
+                                                            <div className="play-icon">
+                                                                <PlayIcon />
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                    {/* Modal */}
+                    {showModal && modalFreq && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+                                
+                                <div className="modal-header">
+                                    <h2 style={{ color: FREQUENCIES[modalFreq].color }}>
+                                        {FREQUENCIES[modalFreq].hz} Hz
+                                    </h2>
+                                    <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem', fontSize: '1.1rem' }}>
+                                        {FREQ_INFO[modalFreq].title}
+                                    </p>
+                                </div>
+
+                                <div className="modal-section">
+                                    <h3>Caratteristiche</h3>
+                                    <ul>
+                                        {FREQ_INFO[modalFreq].characteristics.map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="modal-section">
+                                    <h3>Applicazioni</h3>
+                                    <ul>
+                                        {FREQ_INFO[modalFreq].applications.map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </>
             );
-        }
+        };
 
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
