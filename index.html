@@ -3,441 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pure Frequenze - Frequenze Solfeggio e Battimenti Binaurali</title>
+    <title>PureFrequenze - Frequenze Solfeggio</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --freq-174: #8B0000;
+            --freq-285: #FF4500;
+            --freq-396: #FFD700;
+            --freq-417: #90EE90;
+            --freq-432: #4169E1;
+            --freq-528: #00CED1;
+            --freq-639: #FF69B4;
+            --freq-741: #9370DB;
+            --freq-852: #8A2BE2;
+            --freq-963: #E6E6FA;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
-            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #000814 0%, #001d3d 50%, #000814 100%);
+            color: white;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Orbs animati sfondo */
-        .bg-orbs {
+        /* Background Effects */
+        .background-effects {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
-            overflow: hidden;
         }
 
         .orb {
             position: absolute;
             border-radius: 50%;
             filter: blur(80px);
-            opacity: 0.15;
+            opacity: 0.12;
             animation: float 20s infinite ease-in-out;
         }
 
-        .orb1 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, #a855f7, transparent);
-            top: -200px;
-            left: -200px;
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #003566, transparent);
+            top: 10%;
+            left: 10%;
             animation-delay: 0s;
         }
 
-        .orb2 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, #3b82f6, transparent);
-            bottom: -150px;
-            right: -150px;
-            animation-delay: 7s;
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #0077b6, transparent);
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 5s;
         }
 
-        .orb3 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, #ec4899, transparent);
+        .orb-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #023e8a, transparent);
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: 14s;
+            animation-delay: 10s;
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+            33% { transform: translate(60px, -100px) scale(1.15); opacity: 0.18; }
+            66% { transform: translate(-40px, 80px) scale(0.95); opacity: 0.15; }
         }
 
-        /* Container principale */
-        .container {
-            position: relative;
-            z-index: 1;
+        /* Container */
+        .app-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Header */
-        header {
+        /* Header with Hub Logo Style */
+        .header {
             text-align: center;
-            padding: 4rem 0 3rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 3rem;
+            padding: 2rem 0 2rem;
+            margin-bottom: 2rem;
         }
 
         .logo {
-            font-size: 5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 80px;
             font-weight: 900;
-            letter-spacing: 0.3em;
-            margin-bottom: 1rem;
-            animation: glow 3s ease-in-out infinite;
-            text-shadow: 
-                0 0 10px rgba(255,255,255,0.8),
-                0 0 20px rgba(255,255,255,0.6),
-                0 0 30px rgba(168,85,247,0.4),
-                0 0 40px rgba(168,85,247,0.3),
-                0 0 50px rgba(168,85,247,0.2);
+            letter-spacing: 15px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: geometricPrecision;
+            filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6)) 
+                    drop-shadow(0 0 20px rgba(100, 150, 255, 0.4));
+            animation: logo-glow 4s ease-in-out infinite;
         }
 
-        @keyframes glow {
-            0%, 100% {
-                text-shadow: 
-                    0 0 10px rgba(255,255,255,0.8),
-                    0 0 20px rgba(255,255,255,0.6),
-                    0 0 30px rgba(168,85,247,0.4),
-                    0 0 40px rgba(168,85,247,0.3),
-                    0 0 50px rgba(168,85,247,0.2);
+        @keyframes logo-glow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6)) 
+                        drop-shadow(0 0 20px rgba(100, 150, 255, 0.4));
             }
-            50% {
-                text-shadow: 
-                    0 0 20px rgba(255,255,255,1),
-                    0 0 30px rgba(255,255,255,0.8),
-                    0 0 40px rgba(168,85,247,0.6),
-                    0 0 50px rgba(168,85,247,0.5),
-                    0 0 60px rgba(168,85,247,0.4);
+            50% { 
+                filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.8)) 
+                        drop-shadow(0 0 30px rgba(100, 150, 255, 0.5));
             }
         }
 
-        .subtitle {
-            font-size: 1.3rem;
-            color: rgba(168,85,247,0.8);
-            letter-spacing: 0.1em;
+        .tagline {
+            font-size: 18px;
+            color: #48cae4;
+            letter-spacing: 4px;
+            font-weight: 100;
         }
 
-        /* Mode selector */
-        .mode-selector {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .mode-btn {
-            padding: 1rem 2rem;
-            border: 2px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            border-radius: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .mode-btn:hover {
-            transform: translateY(-2px);
-            background: rgba(255,255,255,0.1);
-        }
-
-        .mode-btn.active {
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            border-color: #ec4899;
-            box-shadow: 
-                0 0 30px rgba(168,85,247,0.5),
-                inset 0 0 20px rgba(255,255,255,0.1);
-        }
-
-        /* Grid layout */
-        .app-grid {
+        /* Main Content Grid */
+        .main-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 1fr 2fr;
+            gap: 2.5rem;
             margin-bottom: 3rem;
         }
 
-        @media (max-width: 1024px) {
-            .app-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Card 3D */
-        .card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 1.5rem;
-            padding: 2rem;
-            backdrop-filter: blur(20px);
+        /* Enhanced 3D Card Style */
+        .card-3d {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.6), rgba(20, 15, 35, 0.4));
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 28px;
+            padding: 2.5rem;
             box-shadow: 
-                0 20px 60px rgba(0,0,0,0.5),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+                0 25px 70px rgba(0, 0, 0, 0.6),
+                0 10px 30px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), transparent);
+            border-radius: 28px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card-3d:hover::before {
+            opacity: 1;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 35px 90px rgba(0, 0, 0, 0.7),
+                0 15px 40px rgba(139, 92, 246, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        /* Cover Art Enhanced 3D */
+        .cover-art {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--freq-528), #8b5cf6);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 30px 70px rgba(0, 206, 209, 0.4),
+                0 10px 30px rgba(139, 92, 246, 0.3),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease;
         }
 
-        .icon-svg {
-            width: 2rem;
-            height: 2rem;
-            stroke: currentColor;
+        .cover-art:hover {
+            transform: translateZ(10px) scale(1.02);
+        }
+
+        .cover-art svg {
+            width: 40%;
+            height: 40%;
+            stroke: white;
             fill: none;
             stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        /* Lista frequenze */
-        .freq-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 1rem;
-        }
-
-        .freq-item {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 1rem;
-            padding: 1.25rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            opacity: 0.95;
             position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
         }
 
-        .freq-item:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(5px);
+        .cover-art::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transform: rotate(45deg);
+            animation: shine 4s infinite;
         }
 
-        .freq-item.selected {
-            background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.2));
-            border-color: #a855f7;
-            box-shadow: 0 0 30px rgba(168,85,247,0.3);
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
-        .freq-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .freq-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .freq-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px currentColor;
-        }
-
-        .freq-hz {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .freq-name {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-
-        .freq-short {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            margin-top: 0.5rem;
-        }
-
-        .freq-full {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0,0,0,0.2);
-            border-radius: 0.75rem;
-            line-height: 1.6;
-        }
-
-        .info-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .info-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.1);
-        }
-
-        /* Player */
-        .player {
-            position: sticky;
-            top: 2rem;
-        }
-
-        .player-card {
-            background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(236,72,153,0.15));
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .current-info {
+        .track-info {
             text-align: center;
             margin-bottom: 2rem;
         }
 
-        .mode-badge {
+        .freq-badge {
             display: inline-block;
-            background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(236,72,153,0.3));
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 0.75rem 1.5rem;
-            border-radius: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .mode-badge-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .mode-badge-value {
-            font-size: 1.2rem;
+            padding: 0.6rem 1.8rem;
+            background: var(--freq-528);
+            border-radius: 30px;
+            font-size: 1rem;
             font-weight: 700;
-            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 
+                0 8px 25px rgba(0, 206, 209, 0.5),
+                0 0 40px rgba(0, 206, 209, 0.3);
+            position: relative;
+            transform-style: preserve-3d;
         }
 
-        .current-freq {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin: 1rem 0 0.5rem;
+        .track-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .current-name {
+        .track-subtitle {
+            color: rgba(255, 255, 255, 0.65);
             font-size: 1.1rem;
-            color: rgba(255,255,255,0.8);
         }
 
-        /* Progress bar */
-        .progress-section {
-            margin: 2rem 0;
+        /* Progress Bar Enhanced */
+        .progress-container {
+            margin: 2.5rem 0;
         }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            position: relative;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
             cursor: pointer;
+            position: relative;
             overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #a855f7, #ec4899);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.1s linear;
+            background: linear-gradient(90deg, var(--freq-528), #8b5cf6);
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 20px rgba(0, 206, 209, 0.6);
         }
 
-        .time-display {
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 
+                0 2px 10px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .time-info {
             display: flex;
             justify-content: space-between;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
-        /* Controls */
-        .controls {
+        /* Controls Enhanced */
+        .player-controls {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 1.5rem;
-            margin: 2rem 0;
+            align-items: center;
+            gap: 2.5rem;
+            margin: 2.5rem 0;
         }
 
         .control-btn {
-            background: rgba(255,255,255,0.1);
+            background: none;
             border: none;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
+            color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+
+        .control-btn svg {
+            width: 32px;
+            height: 32px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
         }
 
         .control-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.05);
+            transform: scale(1.15) translateY(-2px);
+            filter: drop-shadow(0 8px 20px rgba(139, 92, 246, 0.6));
         }
 
-        .play-btn {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            box-shadow: 0 0 40px rgba(168,85,247,0.6);
+        .control-btn.play {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 50%;
+            box-shadow: 
+                0 15px 40px rgba(139, 92, 246, 0.6),
+                0 5px 15px rgba(99, 102, 241, 0.4),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
-        .play-btn:hover {
-            transform: scale(1.1);
+        .control-btn.play svg {
+            width: 38px;
+            height: 38px;
+            fill: white;
+            stroke: none;
+            margin-left: 4px;
         }
 
-        /* Volume */
-        .volume-section {
+        .control-btn.play:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 
+                0 20px 50px rgba(139, 92, 246, 0.8),
+                0 8px 25px rgba(99, 102, 241, 0.6),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .secondary-controls {
             display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin: 2rem 0;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .secondary-controls .control-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .secondary-controls .control-btn.active {
+            color: #48cae4;
+        }
+
+        .secondary-controls .control-btn.active svg {
+            filter: drop-shadow(0 0 10px rgba(72, 202, 228, 0.6));
+        }
+
+        /* Volume Slider */
+        .volume-control {
+            position: relative;
+        }
+
+        .volume-slider-container {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.95), rgba(20, 15, 35, 0.95));
+            border: 1px solid rgba(72, 202, 228, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
         }
 
         .volume-slider {
-            flex: 1;
+            width: 150px;
             height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
             -webkit-appearance: none;
             appearance: none;
-            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            outline: none;
         }
 
         .volume-slider::-webkit-slider-thumb {
@@ -445,398 +442,1533 @@
             appearance: none;
             width: 16px;
             height: 16px;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
+            background: #48cae4;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(168,85,247,0.8);
+            box-shadow: 0 2px 8px rgba(72, 202, 228, 0.5);
         }
 
         .volume-slider::-moz-range-thumb {
             width: 16px;
             height: 16px;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
+            background: #48cae4;
             border-radius: 50%;
             cursor: pointer;
             border: none;
-            box-shadow: 0 0 10px rgba(168,85,247,0.8);
+            box-shadow: 0 2px 8px rgba(72, 202, 228, 0.5);
         }
 
         .volume-label {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
-            min-width: 45px;
-            text-align: right;
-        }
-
-        /* Timer */
-        .timer-section {
-            margin-top: 2rem;
-        }
-
-        .timer-label {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .timer-options {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
-        }
-
-        .timer-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #48cae4;
             font-size: 0.9rem;
             font-weight: 600;
-            color: #fff;
         }
 
-        .timer-btn:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .timer-btn.active {
-            background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(236,72,153,0.3));
-            border-color: #a855f7;
-        }
-
-        /* Warning */
-        .warning {
-            margin-top: 2rem;
-            background: rgba(251,146,60,0.1);
-            border: 1px solid rgba(251,146,60,0.3);
-            border-radius: 1rem;
-            padding: 1.25rem;
-        }
-
-        .warning-title {
+        /* Timer Badge */
+        .timer-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #48cae4, #0077b6);
+            color: white;
+            font-size: 0.7rem;
             font-weight: 700;
-            color: #fb923c;
-            margin-bottom: 0.5rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(72, 202, 228, 0.5);
+            min-width: 35px;
+            text-align: center;
+        }
+
+        /* Selector Card Enhanced 3D */
+        .selector-tabs {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .warning-text {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
-            line-height: 1.5;
+        .selector-tab {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 1.2rem 2.5rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            font-family: inherit;
+            position: relative;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
+        .selector-tab::before {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b5cf6, #6366f1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .selector-tab:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .selector-tab.active {
+            color: #c084fc;
+        }
+
+        .selector-tab.active::before {
+            transform: scaleX(1);
+        }
+
+        /* Frequency Grid Enhanced 3D */
+        .freq-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.8rem;
+        }
+
+        .freq-grid::-webkit-scrollbar {
             width: 8px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
+        .freq-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #a855f7, #ec4899);
+        .freq-grid::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
             border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #9333ea, #db2777);
+        .freq-grid::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
+        }
+
+        .freq-card {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.4), rgba(20, 15, 35, 0.3));
+            border: 2px solid transparent;
+            border-radius: 18px;
+            padding: 1.8rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .freq-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--freq-color);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .freq-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top, var(--freq-color), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .freq-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .freq-card:hover::after {
+            opacity: 0.15;
+        }
+
+        .freq-card:hover {
+            background: linear-gradient(135deg, rgba(40, 30, 60, 0.6), rgba(30, 20, 45, 0.5));
+            border-color: var(--freq-color);
+            transform: translateY(-6px) translateZ(10px);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.5),
+                0 5px 20px rgba(var(--freq-rgb), 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .freq-card.active {
+            background: linear-gradient(135deg, rgba(40, 30, 60, 0.7), rgba(30, 20, 45, 0.6));
+            border-color: var(--freq-color);
+            box-shadow: 
+                0 15px 40px rgba(var(--freq-rgb), 0.5),
+                0 5px 20px rgba(var(--freq-rgb), 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .freq-card h3 {
+            font-size: 2rem;
+            color: var(--freq-color);
+            margin-bottom: 0.6rem;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(var(--freq-rgb), 0.5);
+        }
+
+        .freq-card .description {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .info-btn {
+            margin-top: 1.2rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-btn:hover {
+            background: rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Track Grid Enhanced */
+        .track-grid {
+            display: grid;
+            gap: 1.8rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.8rem;
+        }
+
+        .track-group {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.3), rgba(20, 15, 35, 0.2));
+            border-radius: 18px;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .track-group-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .track-group-icon {
+            width: 44px;
+            height: 44px;
+            stroke: #8b5cf6;
+            fill: none;
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.4));
+        }
+
+        .track-group-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .track-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .track-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .track-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #8b5cf6, #6366f1);
+            transform: scaleY(0);
+            transition: transform 0.4s ease;
+        }
+
+        .track-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .track-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateX(8px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .track-item.active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.15));
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 
+                0 8px 25px rgba(139, 92, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .track-item-info h4 {
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .track-item-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .play-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 
+                0 4px 15px rgba(139, 92, 246, 0.5),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .track-item:hover .play-icon {
+            transform: scale(1.1);
+            box-shadow: 
+                0 6px 20px rgba(139, 92, 246, 0.7),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .play-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+            stroke: none;
+            margin-left: 2px;
+        }
+
+        /* Modal Enhanced */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.95), rgba(20, 15, 35, 0.95));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 28px;
+            padding: 2.5rem;
+            max-width: 650px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.7),
+                0 10px 30px rgba(139, 92, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.8rem;
+            right: 1.8rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: 300;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(var(--freq-rgb), 0.6);
+        }
+
+        .modal-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-section h3 {
+            color: #c084fc;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+        }
+
+        .modal-section p {
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+
+        .modal-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-section li {
+            padding: 0.7rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.7;
+        }
+
+        .modal-section li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-size: 1.8rem;
+            line-height: 1;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .freq-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .logo {
-                font-size: 3rem;
+                font-size: 100px;
+                letter-spacing: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
             }
 
-            .subtitle {
-                font-size: 1rem;
+            .logo {
+                font-size: 60px;
+                letter-spacing: 10px;
             }
 
-            .container {
-                padding: 0 1rem;
+            .tagline {
+                font-size: 18px;
             }
 
-            .player {
-                position: static;
+            .freq-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-orbs">
-        <div class="orb orb1"></div>
-        <div class="orb orb2"></div>
-        <div class="orb orb3"></div>
+    <div class="background-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
     </div>
 
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <h1 class="logo">PUREFREQUENZE</h1>
-            <p class="subtitle">Frequenze Solfeggio e Battimenti Binaurali</p>
-        </header>
+    <div id="root"></div>
 
-        <!-- Mode Selector -->
-        <div class="mode-selector">
-            <button class="mode-btn active" data-mode="solfeggio">
-                <svg class="icon-svg" viewBox="0 0 24 24">
-                    <path d="M9 18V5l12-2v13M9 13c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-1c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/>
-                </svg>
-                Solfeggio
-            </button>
-            <button class="mode-btn" data-mode="binaural">
-                <svg class="icon-svg" viewBox="0 0 24 24">
-                    <path d="M12 2a3 3 0 00-3 3v14a3 3 0 106 0V5a3 3 0 00-3-3zM3 9a3 3 0 013-3h2M21 9a3 3 0 00-3-3h-2"/>
-                </svg>
-                Binaurale
-            </button>
-            <button class="mode-btn" data-mode="hybrid">
-                <svg class="icon-svg" viewBox="0 0 24 24">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                </svg>
-                Hybrid
-            </button>
-        </div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-        <!-- Main Grid -->
-        <div class="app-grid">
-            <!-- Selezione Frequenze -->
-            <div>
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg class="icon-svg" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/>
-                        </svg>
-                        Frequenza Solfeggio
-                    </h2>
+        // ==================== DATA ====================
 
-                    <div class="freq-list" id="frequencyList">
-                        <!-- Frequenze saranno inserite da JavaScript -->
-                    </div>
-                </div>
-            </div>
+        const FREQUENCIES = {
+            174: { hz: 174, color: "#8B0000", rgb: "139, 0, 0", desc: "Frequenza fondamentale per radicamento e stabilità" },
+            285: { hz: 285, color: "#FF4500", rgb: "255, 69, 0", desc: "Seconda frequenza della scala Solfeggio" },
+            396: { hz: 396, color: "#FFD700", rgb: "255, 215, 0", desc: "Frequenza di liberazione da paura e limitazioni" },
+            417: { hz: 417, color: "#90EE90", rgb: "144, 238, 144", desc: "Frequenza di facilitazione del cambiamento" },
+            432: { hz: 432, color: "#4169E1", rgb: "65, 105, 225", desc: "Accordatura naturale in armonia con l'universo" },
+            528: { hz: 528, color: "#00CED1", rgb: "0, 206, 209", desc: "Frequenza centrale della scala Solfeggio" },
+            639: { hz: 639, color: "#FF69B4", rgb: "255, 105, 180", desc: "Frequenza di connessione e relazioni" },
+            741: { hz: 741, color: "#9370DB", rgb: "147, 112, 219", desc: "Frequenza di risveglio e chiarezza" },
+            852: { hz: 852, color: "#8A2BE2", rgb: "138, 43, 226", desc: "Frequenza di ordine spirituale" },
+            963: { hz: 963, color: "#E6E6FA", rgb: "230, 230, 250", desc: "Frequenza di connessione universale" }
+        };
 
-            <!-- Player -->
-            <div class="player">
-                <div class="card player-card">
-                    <!-- Info corrente -->
-                    <div class="current-info">
-                        <div class="mode-badge">
-                            <div class="mode-badge-label">Modalità Attiva</div>
-                            <div class="mode-badge-value" id="currentMode">🎵 Solfeggio</div>
+        const FREQ_INFO = {
+            174: {
+                title: "Frequenza Fondamentale",
+                characteristics: [
+                    "Rapporto di sottomultiplo con frequenze superiori",
+                    "Presente in canti gregoriani e musica sacra antica",
+                    "Banda di frequenza associata a percezione profonda"
+                ],
+                applications: [
+                    "Meditazione per radicamento",
+                    "Pratiche di grounding",
+                    "Rilassamento profondo"
+                ]
+            },
+            285: {
+                title: "Secondo Grado",
+                characteristics: [
+                    "Intervallo di tono intero rispetto a 174 Hz",
+                    "Rapporti armonici con frequenze superiori",
+                    "Frequenza intermedia tra fondamentale e scale centrali"
+                ],
+                applications: [
+                    "Transizioni meditative",
+                    "Rigenerazione energetica",
+                    "Stati di rinnovamento"
+                ]
+            },
+            396: {
+                title: "Frequenza di Liberazione",
+                characteristics: [
+                    "Base della scala nelle tradizioni gregoriane",
+                    "Rapporto di quarta perfetta con frequenze centrali",
+                    "Intervallo stabile nelle scale modali antiche"
+                ],
+                applications: [
+                    "Liberazione da paure",
+                    "Superamento di blocchi",
+                    "Trasformazione emotiva"
+                ]
+            },
+            417: {
+                title: "Frequenza del Cambiamento",
+                characteristics: [
+                    "Semitono sopra 396 Hz nella scala temperata",
+                    "Intervallo di transizione nelle progressioni armoniche",
+                    "Frequenza di passaggio nelle modulazioni musicali"
+                ],
+                applications: [
+                    "Facilitazione cambiamenti",
+                    "Nuovi inizi",
+                    "Trasformazione situazioni"
+                ]
+            },
+            432: {
+                title: "Accordatura Naturale",
+                characteristics: [
+                    "Alternativa storica a 440 Hz (standard moderno)",
+                    "Rapporto matematico con cicli naturali (8 Hz)",
+                    "Utilizzata da alcuni compositori classici"
+                ],
+                applications: [
+                    "Armonia naturale",
+                    "Risonanza con la natura",
+                    "Equilibrio generale"
+                ]
+            },
+            528: {
+                title: "Frequenza Centrale",
+                characteristics: [
+                    "Intervallo di quinta perfetta rispetto a 396 Hz",
+                    "Rapporto armonico 4:3 con 396 Hz",
+                    "Centro geometrico della scala Solfeggio"
+                ],
+                applications: [
+                    "Meditazione profonda",
+                    "Trasformazione interiore",
+                    "Apertura del cuore"
+                ]
+            },
+            639: {
+                title: "Frequenza di Connessione",
+                characteristics: [
+                    "Intervallo di quinta perfetta nella scala armonica",
+                    "Relazione matematica con 528 Hz (terza maggiore)",
+                    "Frequenza di risonanza armonica"
+                ],
+                applications: [
+                    "Relazioni interpersonali",
+                    "Connessione emotiva",
+                    "Comunicazione armoniosa"
+                ]
+            },
+            741: {
+                title: "Frequenza di Risveglio",
+                characteristics: [
+                    "Intervallo caratteristico nelle scale modali",
+                    "Rapporti complessi con frequenze inferiori",
+                    "Sensibile nella percezione melodica"
+                ],
+                applications: [
+                    "Chiarezza mentale",
+                    "Risveglio intuizione",
+                    "Espressione autentica"
+                ]
+            },
+            852: {
+                title: "Ordine Spirituale",
+                characteristics: [
+                    "Ottava superiore parziale di frequenze base",
+                    "Range di frequenza elevato",
+                    "Presente in overtones naturali"
+                ],
+                applications: [
+                    "Ordine spirituale",
+                    "Ritorno all'armonia",
+                    "Visione superiore"
+                ]
+            },
+            963: {
+                title: "Connessione Universale",
+                characteristics: [
+                    "Rapporto armonico con 174 Hz",
+                    "Frequenza superiore della scala",
+                    "Presente in armonici naturali"
+                ],
+                applications: [
+                    "Connessione universale",
+                    "Stati contemplativi avanzati",
+                    "Espansione di coscienza"
+                ]
+            }
+        };
+
+        const TRACKS = {
+            peaceful_clouds: {
+                name: "Peaceful Clouds",
+                icon: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z",
+                tracks: [
+                    { id: "floating_free", name: "Floating Free", subtitle: "Soft ambient pads" },
+                    { id: "silk_sky", name: "Silk Sky", subtitle: "Gentle textures" },
+                    { id: "heavens_rest", name: "Heaven's Rest", subtitle: "Peaceful atmosphere" },
+                    { id: "breeze_dance", name: "Breeze Dance", subtitle: "Light movement" }
+                ]
+            },
+            nature_streams: {
+                name: "Nature Streams",
+                icon: "M14.5 2v20l-4-4-4 4V2M3.05 11h14.9M3.05 7h14.9M3.05 15h14.9",
+                tracks: [
+                    { id: "river_meditation", name: "River Meditation", subtitle: "Flowing water" },
+                    { id: "rain_forest", name: "Rain Forest", subtitle: "Natural ambience" },
+                    { id: "earth_breathing", name: "Earth Breathing", subtitle: "Organic sounds" },
+                    { id: "wind_pines", name: "Wind Pines", subtitle: "Forest atmosphere" }
+                ]
+            },
+            gentle_piano: {
+                name: "Gentle Piano",
+                icon: "M2 6h20M2 18h20M7 6v12M12 6v12M17 6v12",
+                tracks: [
+                    { id: "afternoon_tea", name: "Afternoon Tea", subtitle: "Contemplative piano" },
+                    { id: "memory_lane", name: "Memory Lane", subtitle: "Nostalgic melody" },
+                    { id: "hope_blooming", name: "Hope Blooming", subtitle: "Uplifting keys" },
+                    { id: "lullaby_heart", name: "Lullaby Heart", subtitle: "Tender composition" }
+                ]
+            },
+            sacred_flute: {
+                name: "Sacred Flute",
+                icon: "M2 12h20M5 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM13 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3z",
+                tracks: [
+                    { id: "temple_garden", name: "Temple Garden", subtitle: "Shakuhachi meditation" },
+                    { id: "mountain_breath", name: "Mountain Breath", subtitle: "Bamboo flute" },
+                    { id: "river_blessing", name: "River Blessing", subtitle: "Water and flute" },
+                    { id: "prayer_walk", name: "Prayer Walk", subtitle: "Contemplative journey" }
+                ]
+            },
+            crystal_garden: {
+                name: "Crystal Garden",
+                icon: "M12 2L4 7v10l8 5 8-5V7l-8-5zM12 22v-10M12 12L4 7M12 12l8-5",
+                tracks: [
+                    { id: "sunlit_crystals", name: "Sunlit Crystals", subtitle: "Singing bowls" },
+                    { id: "healing_spring", name: "Healing Spring", subtitle: "Crystal harmonics" },
+                    { id: "light_prism", name: "Light Prism", subtitle: "Vibrational tones" },
+                    { id: "crystal_resonance", name: "Crystal Resonance", subtitle: "Tibetan bowls" }
+                ]
+            }
+        };
+
+        const OBJECTIVES = {
+            pacificazione: {
+                title: "Pacificazione",
+                icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z",
+                description: "Stati di rilassamento e riduzione stress",
+                objectives: [
+                    { name: "Pace Interiore", freqs: "432Hz, 528Hz" },
+                    { name: "Riduzione Stress", freqs: "396Hz, 528Hz" },
+                    { name: "Calmare Ansia", freqs: "396Hz, 417Hz" },
+                    { name: "Favorire Sonno Profondo", freqs: "174Hz, 432Hz" },
+                    { name: "Rilassamento Totale", freqs: "528Hz, 963Hz" },
+                    { name: "Serenità Quotidiana", freqs: "432Hz, 639Hz" },
+                    { name: "Meditazione Profonda", freqs: "852Hz, 963Hz" },
+                    { name: "Centratura e Presenza", freqs: "417Hz, 741Hz" }
+                ]
+            },
+            performance: {
+                title: "Performance",
+                icon: "M13 10V3L4 14h7v7l9-11h-7z",
+                description: "Focus e prestazioni cognitive",
+                objectives: [
+                    { name: "Focus e Concentrazione", freqs: "741Hz, 852Hz" },
+                    { name: "Creatività e Ispirazione", freqs: "417Hz, 528Hz" },
+                    { name: "Studio e Apprendimento", freqs: "741Hz, 963Hz" },
+                    { name: "Energia Mentale", freqs: "285Hz, 417Hz" },
+                    { name: "Chiarezza Mentale", freqs: "741Hz, 852Hz" },
+                    { name: "Flow State Creativo", freqs: "528Hz, 639Hz" },
+                    { name: "Intuizione e Insight", freqs: "741Hz, 852Hz" }
+                ]
+            },
+            guarigione: {
+                title: "Guarigione",
+                icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
+                description: "Supporto per elaborazione e benessere",
+                objectives: [
+                    { name: "Elaborare un Lutto", freqs: "396Hz, 528Hz", priority: true },
+                    { name: "Alleviare Dolore Fisico", freqs: "174Hz, 285Hz", priority: true },
+                    { name: "Rilascio Trauma", freqs: "396Hz, 417Hz", priority: true },
+                    { name: "Trasformazione Emozioni", freqs: "417Hz, 528Hz", priority: true },
+                    { name: "Supporto Quotidiano", freqs: "285Hz, 528Hz" },
+                    { name: "Apertura del Cuore", freqs: "528Hz, 639Hz" },
+                    { name: "Liberazione da Paura", freqs: "396Hz" },
+                    { name: "Nuovi Inizi", freqs: "417Hz, 528Hz" },
+                    { name: "Perdono e Accettazione", freqs: "396Hz, 639Hz" },
+                    { name: "Equilibrio Energetico", freqs: "Tutte" }
+                ]
+            }
+        };
+
+        // ==================== COMPONENTS ====================
+
+        const PlayIcon = () => (
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+        );
+
+        const PauseIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <rect x="6" y="4" width="4" height="16" />
+                <rect x="14" y="4" width="4" height="16" />
+            </svg>
+        );
+
+        const SkipBackIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polygon points="19 20 9 12 19 4 19 20" />
+                <line x1="5" y1="19" x2="5" y2="5" />
+            </svg>
+        );
+
+        const SkipForwardIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polygon points="5 4 15 12 5 20 5 4" />
+                <line x1="19" y1="5" x2="19" y2="19" />
+            </svg>
+        );
+
+        const ShuffleIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polyline points="16 3 21 3 21 8" />
+                <line x1="4" y1="20" x2="21" y2="3" />
+                <polyline points="21 16 21 21 16 21" />
+                <line x1="15" y1="15" x2="21" y2="21" />
+                <line x1="4" y1="4" x2="9" y2="9" />
+            </svg>
+        );
+
+        const RepeatIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polyline points="17 1 21 5 17 9" />
+                <path d="M3 11V9a4 4 0 014-4h14" />
+                <polyline points="7 23 3 19 7 15" />
+                <path d="M21 13v2a4 4 0 01-4 4H3" />
+            </svg>
+        );
+
+        const ClockIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+            </svg>
+        );
+
+        const VolumeIcon = () => (
+            <svg viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+            </svg>
+        );
+
+        // Main App
+        const App = () => {
+            const [selectedFreq, setSelectedFreq] = useState(528);
+            const [selectedGroup, setSelectedGroup] = useState('peaceful_clouds');
+            const [selectedTrack, setSelectedTrack] = useState(0);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [currentTime, setCurrentTime] = useState(0);
+            const [selectorTab, setSelectorTab] = useState('frequencies');
+            const [showModal, setShowModal] = useState(false);
+            const [modalFreq, setModalFreq] = useState(null);
+            const [showObjectiveModal, setShowObjectiveModal] = useState(false);
+            const [selectedObjective, setSelectedObjective] = useState(null);
+            
+            // Secondary controls state
+            const [shuffleOn, setShuffleOn] = useState(false);
+            const [repeatMode, setRepeatMode] = useState('off'); // 'off', 'one', 'all'
+            const [showTimerModal, setShowTimerModal] = useState(false);
+            const [timerMinutes, setTimerMinutes] = useState(null);
+            const [timerRemaining, setTimerRemaining] = useState(0);
+            const [showVolumeSlider, setShowVolumeSlider] = useState(false);
+            const [volume, setVolume] = useState(80);
+            const [showTrackModal, setShowTrackModal] = useState(false);
+            const [pendingFreq, setPendingFreq] = useState(null);
+
+            const duration = 600;
+            const currentTrackData = TRACKS[selectedGroup].tracks[selectedTrack];
+            const currentFreqData = FREQUENCIES[selectedFreq];
+
+            useEffect(() => {
+                let interval;
+                if (isPlaying) {
+                    interval = setInterval(() => {
+                        setCurrentTime(prev => {
+                            // Track completed
+                            if (prev >= duration - 1) {
+                                handleTrackEnd();
+                                return 0;
+                            }
+                            return prev + 1;
+                        });
+                    }, 1000);
+                }
+                return () => clearInterval(interval);
+            }, [isPlaying, selectedGroup, selectedTrack, repeatMode, shuffleOn]);
+
+            // Timer countdown
+            useEffect(() => {
+                if (timerRemaining > 0) {
+                    const interval = setInterval(() => {
+                        setTimerRemaining(prev => {
+                            if (prev <= 1) {
+                                setIsPlaying(false);
+                                setTimerMinutes(null);
+                                return 0;
+                            }
+                            return prev - 1;
+                        });
+                    }, 1000);
+                    return () => clearInterval(interval);
+                }
+            }, [timerRemaining]);
+
+            const formatTime = (seconds) => {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            };
+
+            const handleTrackEnd = () => {
+                if (repeatMode === 'one') {
+                    setCurrentTime(0);
+                    return;
+                }
+                
+                if (repeatMode === 'all' || shuffleOn) {
+                    nextTrack();
+                } else {
+                    setIsPlaying(false);
+                }
+            };
+
+            const nextTrack = () => {
+                const allGroups = Object.keys(TRACKS);
+                const currentGroupIndex = allGroups.indexOf(selectedGroup);
+                const currentGroupTracks = TRACKS[selectedGroup].tracks;
+                
+                if (shuffleOn) {
+                    // Random track from random group
+                    const randomGroup = allGroups[Math.floor(Math.random() * allGroups.length)];
+                    const randomTracks = TRACKS[randomGroup].tracks;
+                    const randomTrack = Math.floor(Math.random() * randomTracks.length);
+                    setSelectedGroup(randomGroup);
+                    setSelectedTrack(randomTrack);
+                } else {
+                    // Next track in order
+                    if (selectedTrack < currentGroupTracks.length - 1) {
+                        setSelectedTrack(selectedTrack + 1);
+                    } else if (currentGroupIndex < allGroups.length - 1) {
+                        setSelectedGroup(allGroups[currentGroupIndex + 1]);
+                        setSelectedTrack(0);
+                    } else {
+                        setSelectedGroup(allGroups[0]);
+                        setSelectedTrack(0);
+                    }
+                }
+                setCurrentTime(0);
+            };
+
+            const toggleShuffle = () => {
+                setShuffleOn(!shuffleOn);
+            };
+
+            const toggleRepeat = () => {
+                if (repeatMode === 'off') setRepeatMode('all');
+                else if (repeatMode === 'all') setRepeatMode('one');
+                else setRepeatMode('off');
+            };
+
+            const setTimer = (minutes) => {
+                setTimerMinutes(minutes);
+                setTimerRemaining(minutes * 60);
+                setShowTimerModal(false);
+            };
+
+            const cancelTimer = () => {
+                setTimerMinutes(null);
+                setTimerRemaining(0);
+            };
+
+            const showFreqInfo = (freq) => {
+                setModalFreq(freq);
+                setShowModal(true);
+            };
+
+            const showObjectiveFreqs = (objective) => {
+                setSelectedObjective(objective);
+                setShowObjectiveModal(true);
+            };
+
+            const selectFreqFromObjective = (freq) => {
+                setPendingFreq(parseInt(freq));
+                setShowObjectiveModal(false);
+                setShowTrackModal(true);
+            };
+
+            const selectTrackFromModal = (groupId, trackIdx) => {
+                setSelectedFreq(pendingFreq);
+                setSelectedGroup(groupId);
+                setSelectedTrack(trackIdx);
+                setShowTrackModal(false);
+                setSelectorTab('frequencies');
+                setPendingFreq(null);
+            };
+
+            return (
+                <>
+                    <div className="app-container">
+                        <div className="header">
+                            <h1 className="logo">PUREFREQUENZE</h1>
+                            <p className="tagline">FREQUENZE SOLFEGGIO</p>
                         </div>
 
-                        <div id="currentFreqInfo">
-                            <div class="current-freq" style="color: #a855f7;">528 Hz</div>
-                            <div class="current-name">Trasformazione</div>
-                        </div>
-                    </div>
-
-                    <!-- Progress -->
-                    <div class="progress-section">
-                        <div class="progress-bar" id="progressBar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                        <div class="time-display">
-                            <span id="currentTime">0:00</span>
-                            <span id="totalTime">60:00</span>
-                        </div>
-                    </div>
-
-                    <!-- Controls -->
-                    <div class="controls">
-                        <button class="control-btn" id="prevBtn">
-                            <svg class="icon-svg" viewBox="0 0 24 24">
-                                <polygon points="19 20 9 12 19 4 19 20"/>
-                                <line x1="5" y1="19" x2="5" y2="5"/>
-                            </svg>
-                        </button>
-
-                        <button class="play-btn" id="playBtn">
-                            <svg class="icon-svg" viewBox="0 0 24 24" style="width: 2.5rem; height: 2.5rem;">
-                                <polygon points="5 3 19 12 5 21 5 3"/>
-                            </svg>
-                        </button>
-
-                        <button class="control-btn" id="nextBtn">
-                            <svg class="icon-svg" viewBox="0 0 24 24">
-                                <polygon points="5 4 15 12 5 20 5 4"/>
-                                <line x1="19" y1="5" x2="19" y2="19"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Volume -->
-                    <div class="volume-section">
-                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 1.5rem; height: 1.5rem;">
-                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                            <path d="M15.54 8.46a5 5 0 010 7.07"/>
-                            <path d="M19.07 4.93a10 10 0 010 14.14"/>
-                        </svg>
-                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
-                        <span class="volume-label" id="volumeLabel">70%</span>
-                    </div>
-
-                    <!-- Timer -->
-                    <div class="timer-section">
-                        <div class="timer-label">Sleep Timer</div>
-                        <div class="timer-options">
-                            <button class="timer-btn" data-timer="15">15m</button>
-                            <button class="timer-btn" data-timer="30">30m</button>
-                            <button class="timer-btn" data-timer="60">60m</button>
-                            <button class="timer-btn" data-timer="off">Off</button>
-                        </div>
-                    </div>
-
-                    <!-- Warning per Binaurale -->
-                    <div class="warning" id="binauralWarning" style="display: none;">
-                        <div class="warning-title">
-                            <svg class="icon-svg" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem; stroke: #fb923c;">
-                                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                                <line x1="12" y1="9" x2="12" y2="13"/>
-                                <line x1="12" y1="17" x2="12.01" y2="17"/>
-                            </svg>
-                            Attenzione
-                        </div>
-                        <div class="warning-text">
-                            Richiede cuffie stereo. Non usare mentre guidi o lavori con macchinari.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Dati frequenze
-        const frequencies = [
-            { hz: 174, name: 'Fondamenta', short: 'Sicurezza e radicamento', full: 'Fondamento della vita, sicurezza fisica ed emotiva, connessione con la terra.', color: '#8B4513' },
-            { hz: 285, name: 'Guarigione', short: 'Rigenerazione cellulare', full: 'Frequenza di guarigione fisica, rigenerazione dei tessuti, energia vitale.', color: '#CD853F' },
-            { hz: 396, name: 'Liberazione', short: 'Rilascio paura e sensi di colpa', full: 'Liberazione da paure, sensi di colpa e credenze limitanti. Trasformazione del dolore in gioia.', color: '#FF6B6B' },
-            { hz: 417, name: 'Cambiamento', short: 'Facilitare le transizioni', full: 'Facilita il cambiamento, dissolve schemi negativi, promuove nuovi inizi.', color: '#FFA500' },
-            { hz: 432, name: 'Equilibrio', short: 'Armonia universale', full: 'Frequenza dell\'armonia universale, equilibrio mente-corpo-spirito, risonanza naturale.', color: '#FFD700' },
-            { hz: 528, name: 'Trasformazione', short: 'Riparazione e miracoli', full: 'Frequenza dell\'amore e dei miracoli, trasformazione profonda, riparazione del DNA.', color: '#32CD32' },
-            { hz: 639, name: 'Connessione', short: 'Relazioni armoniche', full: 'Connessione nelle relazioni, comunicazione armoniosa, comprensione reciproca.', color: '#4169E1' },
-            { hz: 741, name: 'Espressione', short: 'Risveglio intuizione', full: 'Risveglio dell\'intuizione, espressione autentica, pulizia energetica.', color: '#8A2BE2' },
-            { hz: 852, name: 'Intuizione', short: 'Ordine spirituale', full: 'Ritorno all\'ordine spirituale, connessione con dimensioni superiori, chiarezza mentale.', color: '#9370DB' },
-            { hz: 963, name: 'Illuminazione', short: 'Connessione divina', full: 'Frequenza dell\'unità, connessione con il divino, espansione della coscienza.', color: '#DA70D6' }
-        ];
-
-        let selectedFreq = frequencies[5]; // Default 528Hz
-        let isPlaying = false;
-        let expandedFreq = null;
-
-        // Render frequenze
-        function renderFrequencies() {
-            const list = document.getElementById('frequencyList');
-            list.innerHTML = frequencies.map(freq => `
-                <div class="freq-item ${selectedFreq.hz === freq.hz ? 'selected' : ''}" 
-                     data-hz="${freq.hz}"
-                     onclick="selectFrequency(${freq.hz})">
-                    <div class="freq-header">
-                        <div class="freq-info">
-                            <div class="freq-dot" style="background-color: ${freq.color};"></div>
-                            <div>
-                                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                    <span class="freq-hz">${freq.hz} Hz</span>
-                                    <span class="freq-name" style="color: ${freq.color};">${freq.name}</span>
+                        <div className="main-grid">
+                            {/* Player */}
+                            <div className="card-3d">
+                                <div 
+                                    className="cover-art" 
+                                    style={{
+                                        background: `linear-gradient(135deg, ${currentFreqData.color}, #8b5cf6)`
+                                    }}
+                                >
+                                    <svg 
+                                        viewBox="0 0 24 24" 
+                                        dangerouslySetInnerHTML={{ __html: `<path d="${TRACKS[selectedGroup].icon}"/>` }} 
+                                    />
                                 </div>
-                                <div class="freq-short">${freq.short}</div>
-                                ${expandedFreq === freq.hz ? `<div class="freq-full">${freq.full}</div>` : ''}
+
+                                <div className="track-info">
+                                    <div 
+                                        className="freq-badge" 
+                                        style={{ background: currentFreqData.color }}
+                                    >
+                                        {currentFreqData.hz} Hz
+                                    </div>
+                                    <h2 className="track-name">{TRACKS[selectedGroup].name}</h2>
+                                    <p className="track-subtitle">{currentTrackData.name}</p>
+                                </div>
+
+                                <div className="progress-container">
+                                    <div className="progress-bar">
+                                        <div 
+                                            className="progress-fill"
+                                            style={{
+                                                width: `${(currentTime / duration) * 100}%`,
+                                                background: `linear-gradient(90deg, ${currentFreqData.color}, #8b5cf6)`
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="time-info">
+                                        <span>{formatTime(currentTime)}</span>
+                                        <span>{formatTime(duration)}</span>
+                                    </div>
+                                </div>
+
+                                <div className="player-controls">
+                                    <button className="control-btn">
+                                        <SkipBackIcon />
+                                    </button>
+                                    <button 
+                                        className="control-btn play"
+                                        onClick={() => setIsPlaying(!isPlaying)}
+                                    >
+                                        {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                                    </button>
+                                    <button className="control-btn">
+                                        <SkipForwardIcon />
+                                    </button>
+                                </div>
+
+                                <div className="secondary-controls">
+                                    <button 
+                                        className={`control-btn ${shuffleOn ? 'active' : ''}`}
+                                        onClick={toggleShuffle}
+                                        title="Riproduzione casuale"
+                                    >
+                                        <ShuffleIcon />
+                                    </button>
+                                    <button 
+                                        className={`control-btn ${repeatMode !== 'off' ? 'active' : ''}`}
+                                        onClick={toggleRepeat}
+                                        title={
+                                            repeatMode === 'off' ? 'Ripeti: Off' :
+                                            repeatMode === 'all' ? 'Ripeti: Playlist' :
+                                            'Ripeti: Traccia'
+                                        }
+                                    >
+                                        <RepeatIcon />
+                                        {repeatMode === 'one' && (
+                                            <span style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                                fontSize: '0.7rem',
+                                                fontWeight: 'bold'
+                                            }}>1</span>
+                                        )}
+                                    </button>
+                                    <button 
+                                        className={`control-btn ${timerMinutes ? 'active' : ''}`}
+                                        onClick={() => timerMinutes ? cancelTimer() : setShowTimerModal(true)}
+                                        title={timerMinutes ? `Timer: ${Math.ceil(timerRemaining / 60)} min` : 'Imposta timer'}
+                                        style={{ position: 'relative' }}
+                                    >
+                                        <ClockIcon />
+                                        {timerMinutes && (
+                                            <span className="timer-badge">
+                                                {Math.ceil(timerRemaining / 60)}'
+                                            </span>
+                                        )}
+                                    </button>
+                                    <div className="volume-control" style={{ position: 'relative' }}>
+                                        <button 
+                                            className="control-btn"
+                                            onClick={() => setShowVolumeSlider(!showVolumeSlider)}
+                                            title={`Volume: ${volume}%`}
+                                        >
+                                            <VolumeIcon />
+                                        </button>
+                                        {showVolumeSlider && (
+                                            <div className="volume-slider-container">
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    value={volume}
+                                                    onChange={(e) => setVolume(parseInt(e.target.value))}
+                                                    className="volume-slider"
+                                                />
+                                                <div className="volume-label">{volume}%</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Selector */}
+                            <div className="card-3d">
+                                <div className="selector-tabs">
+                                    <button 
+                                        className={`selector-tab ${selectorTab === 'frequencies' ? 'active' : ''}`}
+                                        onClick={() => setSelectorTab('frequencies')}
+                                    >
+                                        Frequenze & Tracce
+                                    </button>
+                                    <button 
+                                        className={`selector-tab ${selectorTab === 'objectives' ? 'active' : ''}`}
+                                        onClick={() => setSelectorTab('objectives')}
+                                    >
+                                        Applicazioni
+                                    </button>
+                                </div>
+
+                                {selectorTab === 'frequencies' && (
+                                    <>
+                                        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.4rem', fontWeight: '700' }}>Seleziona Frequenza</h3>
+                                        <div className="freq-grid">
+                                            {Object.entries(FREQUENCIES).map(([freq, data]) => (
+                                                <div
+                                                    key={freq}
+                                                    className={`freq-card ${selectedFreq == freq ? 'active' : ''}`}
+                                                    style={{
+                                                        '--freq-color': data.color,
+                                                        '--freq-rgb': data.rgb
+                                                    }}
+                                                    onClick={() => setSelectedFreq(parseInt(freq))}
+                                                >
+                                                    <h3>{data.hz} Hz</h3>
+                                                    <p className="description">{data.desc}</p>
+                                                    <button 
+                                                        className="info-btn"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            showFreqInfo(freq);
+                                                        }}
+                                                    >
+                                                        Informazioni
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <h3 style={{ margin: '2.5rem 0 1.5rem', fontSize: '1.4rem', fontWeight: '700' }}>Seleziona Traccia</h3>
+                                        <div className="track-grid">
+                                            {Object.entries(TRACKS).map(([groupId, group]) => (
+                                                <div key={groupId} className="track-group">
+                                                    <div className="track-group-header">
+                                                        <svg 
+                                                            className="track-group-icon"
+                                                            viewBox="0 0 24 24"
+                                                            dangerouslySetInnerHTML={{ __html: `<path d="${group.icon}"/>` }}
+                                                        />
+                                                        <h3>{group.name}</h3>
+                                                    </div>
+                                                    <div className="track-list">
+                                                        {group.tracks.map((track, idx) => (
+                                                            <div
+                                                                key={track.id}
+                                                                className={`track-item ${selectedGroup === groupId && selectedTrack === idx ? 'active' : ''}`}
+                                                                onClick={() => {
+                                                                    setSelectedGroup(groupId);
+                                                                    setSelectedTrack(idx);
+                                                                }}
+                                                            >
+                                                                <div className="track-item-info">
+                                                                    <h4>{track.name}</h4>
+                                                                    <p>{track.subtitle}</p>
+                                                                </div>
+                                                                <div className="play-icon">
+                                                                    <PlayIcon />
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+
+                                {selectorTab === 'objectives' && (
+                                    <div className="track-grid">
+                                        {Object.entries(OBJECTIVES).map(([key, section]) => (
+                                            <div key={key} className="track-group">
+                                                <div className="track-group-header">
+                                                    <svg 
+                                                        className="track-group-icon"
+                                                        viewBox="0 0 24 24"
+                                                        dangerouslySetInnerHTML={{ __html: `<path d="${section.icon}"/>` }}
+                                                    />
+                                                    <div>
+                                                        <h3>{section.title}</h3>
+                                                        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.95rem', marginTop: '0.4rem' }}>
+                                                            {section.description}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="track-list">
+                                                    {section.objectives.map((obj, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className={`track-item ${obj.priority ? 'priority' : ''}`}
+                                                            onClick={() => showObjectiveFreqs(obj)}
+                                                        >
+                                                            <div className="track-item-info">
+                                                                <h4>{obj.name}</h4>
+                                                                <p>{obj.freqs}</p>
+                                                            </div>
+                                                            <div className="play-icon">
+                                                                <PlayIcon />
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        <button class="info-btn" onclick="event.stopPropagation(); toggleInfo(${freq.hz})">
-                            <svg class="icon-svg" viewBox="0 0 24 24" style="width: 1rem; height: 1rem;">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
-                                <line x1="12" y1="17" x2="12.01" y2="17"/>
-                            </svg>
-                        </button>
                     </div>
-                </div>
-            `).join('');
-        }
 
-        // Seleziona frequenza
-        function selectFrequency(hz) {
-            selectedFreq = frequencies.find(f => f.hz === hz);
-            renderFrequencies();
-            updatePlayer();
-        }
+                    {/* Timer Modal */}
+                    {showTimerModal && (
+                        <div className="modal-overlay" onClick={() => setShowTimerModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '450px' }}>
+                                <button className="modal-close" onClick={() => setShowTimerModal(false)}>×</button>
+                                
+                                <div className="modal-header">
+                                    <h2 style={{ fontSize: '2rem' }}>Spegnimento Automatico</h2>
+                                    <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '1rem', fontSize: '1rem' }}>
+                                        La riproduzione si fermerà dopo il tempo selezionato
+                                    </p>
+                                </div>
 
-        // Toggle info
-        function toggleInfo(hz) {
-            expandedFreq = expandedFreq === hz ? null : hz;
-            renderFrequencies();
-        }
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                    {[5, 10, 15, 30, 45, 60].map(minutes => (
+                                        <button
+                                            key={minutes}
+                                            onClick={() => setTimer(minutes)}
+                                            style={{
+                                                background: 'linear-gradient(135deg, rgba(72, 202, 228, 0.2), rgba(0, 119, 182, 0.1))',
+                                                border: '2px solid rgba(72, 202, 228, 0.3)',
+                                                borderRadius: '16px',
+                                                padding: '1.5rem',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.3s ease',
+                                                fontFamily: 'inherit',
+                                                color: 'white'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(72, 202, 228, 0.3), rgba(0, 119, 182, 0.2))';
+                                                e.currentTarget.style.transform = 'translateY(-3px)';
+                                                e.currentTarget.style.boxShadow = '0 10px 30px rgba(72, 202, 228, 0.3)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(72, 202, 228, 0.2), rgba(0, 119, 182, 0.1))';
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = 'none';
+                                            }}
+                                        >
+                                            <div style={{ fontSize: '2rem', fontWeight: '700', color: '#48cae4' }}>
+                                                {minutes}
+                                            </div>
+                                            <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.3rem' }}>
+                                                {minutes === 1 ? 'minuto' : 'minuti'}
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
-        // Aggiorna player
-        function updatePlayer() {
-            document.getElementById('currentFreqInfo').innerHTML = `
-                <div class="current-freq" style="color: ${selectedFreq.color};">${selectedFreq.hz} Hz</div>
-                <div class="current-name">${selectedFreq.name}</div>
-            `;
-        }
+                    {/* Objective Modal */}
+                    {showObjectiveModal && selectedObjective && (
+                        <div className="modal-overlay" onClick={() => setShowObjectiveModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+                                <button className="modal-close" onClick={() => setShowObjectiveModal(false)}>×</button>
+                                
+                                <div className="modal-header">
+                                    <h2 style={{ fontSize: '2rem' }}>
+                                        {selectedObjective.name}
+                                    </h2>
+                                    <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '1rem', fontSize: '1rem' }}>
+                                        Seleziona la frequenza da utilizzare
+                                    </p>
+                                </div>
 
-        // Play/Pause
-        document.getElementById('playBtn').addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            const svg = document.querySelector('#playBtn svg');
-            if (isPlaying) {
-                svg.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
-            } else {
-                svg.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
-            }
-        });
+                                <div style={{ display: 'grid', gap: '1rem' }}>
+                                    {selectedObjective.freqs.split(',').map((freqText, i) => {
+                                        const freq = freqText.trim().replace('Hz', '');
+                                        const freqData = FREQUENCIES[parseInt(freq)];
+                                        if (!freqData) return null;
+                                        
+                                        return (
+                                            <button
+                                                key={i}
+                                                onClick={() => selectFreqFromObjective(freq)}
+                                                style={{
+                                                    background: `linear-gradient(135deg, ${freqData.color}20, ${freqData.color}10)`,
+                                                    border: `2px solid ${freqData.color}`,
+                                                    borderRadius: '16px',
+                                                    padding: '1.5rem',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.3s ease',
+                                                    textAlign: 'left',
+                                                    fontFamily: 'inherit'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = `linear-gradient(135deg, ${freqData.color}30, ${freqData.color}15)`;
+                                                    e.currentTarget.style.transform = 'translateY(-3px)';
+                                                    e.currentTarget.style.boxShadow = `0 10px 30px ${freqData.color}40`;
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = `linear-gradient(135deg, ${freqData.color}20, ${freqData.color}10)`;
+                                                    e.currentTarget.style.transform = 'translateY(0)';
+                                                    e.currentTarget.style.boxShadow = 'none';
+                                                }}
+                                            >
+                                                <div style={{ 
+                                                    fontSize: '1.8rem', 
+                                                    fontWeight: '700', 
+                                                    color: freqData.color,
+                                                    marginBottom: '0.5rem'
+                                                }}>
+                                                    {freqData.hz} Hz
+                                                </div>
+                                                <div style={{ 
+                                                    fontSize: '0.95rem', 
+                                                    color: 'rgba(255,255,255,0.7)',
+                                                    lineHeight: '1.5'
+                                                }}>
+                                                    {freqData.desc}
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
-        // Volume
-        document.getElementById('volumeSlider').addEventListener('input', (e) => {
-            document.getElementById('volumeLabel').textContent = e.target.value + '%';
-        });
+                    {/* Track Selection Modal (after frequency choice from objective) */}
+                    {showTrackModal && pendingFreq && (
+                        <div className="modal-overlay" onClick={() => setShowTrackModal(false)}>
+                            <div 
+                                className="modal-content" 
+                                onClick={(e) => e.stopPropagation()} 
+                                style={{ maxWidth: '700px', maxHeight: '80vh', overflowY: 'auto' }}
+                            >
+                                <button className="modal-close" onClick={() => setShowTrackModal(false)}>×</button>
+                                
+                                <div className="modal-header">
+                                    <h2 style={{ fontSize: '2rem' }}>
+                                        Scegli la Traccia
+                                    </h2>
+                                    <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '1rem', fontSize: '1rem' }}>
+                                        Frequenza selezionata: <span style={{ color: FREQUENCIES[pendingFreq].color, fontWeight: '600' }}>{pendingFreq} Hz</span>
+                                    </p>
+                                </div>
 
-        // Timer
-        document.querySelectorAll('.timer-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('active'));
-                if (this.dataset.timer !== 'off') {
-                    this.classList.add('active');
-                }
-            });
-        });
+                                <div style={{ display: 'grid', gap: '1.5rem', marginTop: '2rem' }}>
+                                    {Object.entries(TRACKS).map(([groupId, group]) => (
+                                        <div key={groupId} style={{
+                                            background: 'rgba(255, 255, 255, 0.03)',
+                                            borderRadius: '16px',
+                                            padding: '1.5rem',
+                                            border: '1px solid rgba(255, 255, 255, 0.05)'
+                                        }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '1rem',
+                                                marginBottom: '1rem',
+                                                paddingBottom: '1rem',
+                                                borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+                                            }}>
+                                                <svg 
+                                                    style={{
+                                                        width: '36px',
+                                                        height: '36px',
+                                                        stroke: '#48cae4',
+                                                        fill: 'none',
+                                                        strokeWidth: '2'
+                                                    }}
+                                                    viewBox="0 0 24 24"
+                                                    dangerouslySetInnerHTML={{ __html: `<path d="${group.icon}"/>` }}
+                                                />
+                                                <h3 style={{ fontSize: '1.3rem', fontWeight: '700' }}>{group.name}</h3>
+                                            </div>
+                                            <div style={{ display: 'grid', gap: '0.8rem' }}>
+                                                {group.tracks.map((track, idx) => (
+                                                    <button
+                                                        key={track.id}
+                                                        onClick={() => selectTrackFromModal(groupId, idx)}
+                                                        style={{
+                                                            background: 'rgba(255, 255, 255, 0.04)',
+                                                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                                                            borderRadius: '12px',
+                                                            padding: '1rem',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.3s ease',
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                            textAlign: 'left',
+                                                            fontFamily: 'inherit'
+                                                        }}
+                                                        onMouseEnter={(e) => {
+                                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                                            e.currentTarget.style.borderColor = 'rgba(72, 202, 228, 0.4)';
+                                                            e.currentTarget.style.transform = 'translateX(5px)';
+                                                        }}
+                                                        onMouseLeave={(e) => {
+                                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                                                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                                                            e.currentTarget.style.transform = 'translateX(0)';
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <div style={{ 
+                                                                fontSize: '1.05rem', 
+                                                                fontWeight: '600',
+                                                                marginBottom: '0.3rem',
+                                                                color: 'white'
+                                                            }}>
+                                                                {track.name}
+                                                            </div>
+                                                            <div style={{ 
+                                                                fontSize: '0.9rem', 
+                                                                color: 'rgba(255, 255, 255, 0.5)' 
+                                                            }}>
+                                                                {track.subtitle}
+                                                            </div>
+                                                        </div>
+                                                        <div style={{
+                                                            width: '36px',
+                                                            height: '36px',
+                                                            background: 'linear-gradient(135deg, #48cae4, #0077b6)',
+                                                            borderRadius: '50%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            flexShrink: '0'
+                                                        }}>
+                                                            <svg 
+                                                                viewBox="0 0 24 24" 
+                                                                style={{ 
+                                                                    width: '16px', 
+                                                                    height: '16px', 
+                                                                    fill: 'white',
+                                                                    marginLeft: '2px'
+                                                                }}
+                                                            >
+                                                                <polygon points="5 3 19 12 5 21 5 3" />
+                                                            </svg>
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
-        // Mode selector
-        document.querySelectorAll('.mode-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                const mode = this.dataset.mode;
-                const modeNames = {
-                    'solfeggio': '🎵 Solfeggio',
-                    'binaural': '🧠 Binaurale',
-                    'hybrid': '⚡ Hybrid'
-                };
-                document.getElementById('currentMode').textContent = modeNames[mode];
-                
-                // Mostra warning per binaurale/hybrid
-                const warning = document.getElementById('binauralWarning');
-                warning.style.display = (mode === 'binaural' || mode === 'hybrid') ? 'block' : 'none';
-            });
-        });
+                    {/* Modal */}
+                    {showModal && modalFreq && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+                                
+                                <div className="modal-header">
+                                    <h2 style={{ color: FREQUENCIES[modalFreq].color }}>
+                                        {FREQUENCIES[modalFreq].hz} Hz
+                                    </h2>
+                                    <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem', fontSize: '1.1rem' }}>
+                                        {FREQ_INFO[modalFreq].title}
+                                    </p>
+                                </div>
 
-        // Inizializza
-        renderFrequencies();
-        updatePlayer();
+                                <div className="modal-section">
+                                    <h3>Caratteristiche</h3>
+                                    <ul>
+                                        {FREQ_INFO[modalFreq].characteristics.map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="modal-section">
+                                    <h3>Applicazioni</h3>
+                                    <ul>
+                                        {FREQ_INFO[modalFreq].applications.map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
