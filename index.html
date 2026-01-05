@@ -360,6 +360,10 @@
             filter: drop-shadow(0 8px 20px rgba(139, 92, 246, 0.6));
         }
 
+        .control-btn.active {
+            color: #8b5cf6;
+        }
+
         .control-btn.play {
             width: 85px;
             height: 85px;
@@ -398,6 +402,88 @@
         .secondary-controls .control-btn svg {
             width: 24px;
             height: 24px;
+        }
+
+        /* Volume Slider */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Timer Modal */
+        .timer-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(30, 20, 50, 0.95), rgba(20, 15, 35, 0.95));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            z-index: 2000;
+            min-width: 300px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .timer-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .timer-option {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .timer-option:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .timer-option.active {
+            background: rgba(139, 92, 246, 0.4);
+            border-color: #8b5cf6;
         }
 
         /* Selector Card Enhanced 3D */
@@ -1035,7 +1121,8 @@
                     { id: "floating_free", name: "Floating Free", subtitle: "Soft ambient pads" },
                     { id: "silk_sky", name: "Silk Sky", subtitle: "Gentle textures" },
                     { id: "heavens_rest", name: "Heaven's Rest", subtitle: "Peaceful atmosphere" },
-                    { id: "breeze_dance", name: "Breeze Dance", subtitle: "Light movement" }
+                    { id: "breeze_dance", name: "Breeze Dance", subtitle: "Light movement" },
+                    { id: "soft_landing", name: "Soft Landing", subtitle: "Gentle descent" }
                 ]
             },
             nature_streams: {
@@ -1045,17 +1132,19 @@
                     { id: "river_meditation", name: "River Meditation", subtitle: "Flowing water" },
                     { id: "rain_forest", name: "Rain Forest", subtitle: "Natural ambience" },
                     { id: "earth_breathing", name: "Earth Breathing", subtitle: "Organic sounds" },
-                    { id: "wind_pines", name: "Wind Pines", subtitle: "Forest atmosphere" }
+                    { id: "wind_pines", name: "Wind Pines", subtitle: "Forest atmosphere" },
+                    { id: "ocean_tides", name: "Ocean Tides", subtitle: "Wave rhythms" }
                 ]
             },
             gentle_piano: {
                 name: "Gentle Piano",
                 icon: "M2 6h20M2 18h20M7 6v12M12 6v12M17 6v12",
                 tracks: [
+                    { id: "lullaby_heart", name: "Lullaby Heart", subtitle: "Tender melody" },
                     { id: "afternoon_tea", name: "Afternoon Tea", subtitle: "Contemplative piano" },
+                    { id: "letter_to_self", name: "Letter to Self", subtitle: "Introspective keys" },
                     { id: "memory_lane", name: "Memory Lane", subtitle: "Nostalgic melody" },
-                    { id: "hope_blooming", name: "Hope Blooming", subtitle: "Uplifting keys" },
-                    { id: "lullaby_heart", name: "Lullaby Heart", subtitle: "Tender composition" }
+                    { id: "hope_blooming", name: "Hope Blooming", subtitle: "Uplifting keys" }
                 ]
             },
             sacred_flute: {
@@ -1065,7 +1154,8 @@
                     { id: "temple_garden", name: "Temple Garden", subtitle: "Shakuhachi meditation" },
                     { id: "mountain_breath", name: "Mountain Breath", subtitle: "Bamboo flute" },
                     { id: "river_blessing", name: "River Blessing", subtitle: "Water and flute" },
-                    { id: "prayer_walk", name: "Prayer Walk", subtitle: "Contemplative journey" }
+                    { id: "prayer_walk", name: "Prayer Walk", subtitle: "Contemplative journey" },
+                    { id: "gratitude_song", name: "Gratitude Song", subtitle: "Sacred melody" }
                 ]
             },
             crystal_garden: {
@@ -1075,7 +1165,8 @@
                     { id: "sunlit_crystals", name: "Sunlit Crystals", subtitle: "Singing bowls" },
                     { id: "healing_spring", name: "Healing Spring", subtitle: "Crystal harmonics" },
                     { id: "light_prism", name: "Light Prism", subtitle: "Vibrational tones" },
-                    { id: "crystal_resonance", name: "Crystal Resonance", subtitle: "Tibetan bowls" }
+                    { id: "gem_harmony", name: "Gem Harmony", subtitle: "Stone sounds" },
+                    { id: "ocean_deep", name: "Ocean Deep", subtitle: "Deep resonance" }
                 ]
             }
         };
@@ -1196,28 +1287,160 @@
             const [selectedTrack, setSelectedTrack] = useState(0);
             const [isPlaying, setIsPlaying] = useState(false);
             const [currentTime, setCurrentTime] = useState(0);
+            const [duration, setDuration] = useState(300);
             const [selectorTab, setSelectorTab] = useState('frequencies');
             const [showModal, setShowModal] = useState(false);
             const [modalFreq, setModalFreq] = useState(null);
+            const [volume, setVolume] = useState(0.7);
+            const [isShuffle, setIsShuffle] = useState(false);
+            const [isRepeat, setIsRepeat] = useState(false);
+            const [showTimerModal, setShowTimerModal] = useState(false);
+            const [sleepTimer, setSleepTimer] = useState(null);
+            
+            const audioRef = useRef(null);
+            const timerRef = useRef(null);
 
-            const duration = 600;
             const currentTrackData = TRACKS[selectedGroup].tracks[selectedTrack];
             const currentFreqData = FREQUENCIES[selectedFreq];
 
+            // Costruisce URL MP3 da R2
+            const getAudioUrl = () => {
+                const baseUrl = 'https://pub-a8b8e92131354b6587fb7d02d880f3e5.r2.dev/purefrequenze';
+                const freq = `${selectedFreq}hz`;
+                const group = selectedGroup;
+                const trackNum = String(selectedTrack + 1).padStart(2, '0');
+                const track = currentTrackData.id;
+                const filename = `${group}_${trackNum}_${track}.mp3`;
+                
+                return `${baseUrl}/${freq}/${filename}`;
+            };
+
+            // Carica audio quando cambia traccia/frequenza
             useEffect(() => {
-                let interval;
-                if (isPlaying) {
-                    interval = setInterval(() => {
-                        setCurrentTime(prev => (prev >= duration ? 0 : prev + 1));
-                    }, 1000);
+                if (audioRef.current) {
+                    const url = getAudioUrl();
+                    console.log('Loading audio:', url);
+                    audioRef.current.src = url;
+                    audioRef.current.load();
+                    setIsPlaying(false);
                 }
-                return () => clearInterval(interval);
+            }, [selectedFreq, selectedGroup, selectedTrack]);
+
+            // Gestisce play/pause
+            useEffect(() => {
+                if (audioRef.current) {
+                    if (isPlaying) {
+                        audioRef.current.play().catch(err => {
+                            console.error('Play error:', err);
+                            setIsPlaying(false);
+                        });
+                    } else {
+                        audioRef.current.pause();
+                    }
+                }
             }, [isPlaying]);
 
+            // Gestisce volume
+            useEffect(() => {
+                if (audioRef.current) {
+                    audioRef.current.volume = volume;
+                }
+            }, [volume]);
+
+            // Aggiorna currentTime e duration dall'audio reale
+            useEffect(() => {
+                const audio = audioRef.current;
+                if (!audio) return;
+
+                const updateTime = () => setCurrentTime(audio.currentTime);
+                const updateDuration = () => setDuration(audio.duration || 300);
+                const handleEnded = () => {
+                    if (isRepeat) {
+                        audio.currentTime = 0;
+                        audio.play();
+                    } else {
+                        handleNextTrack();
+                    }
+                };
+                const handleError = (e) => {
+                    console.error('Audio error:', e);
+                    setIsPlaying(false);
+                };
+
+                audio.addEventListener('timeupdate', updateTime);
+                audio.addEventListener('loadedmetadata', updateDuration);
+                audio.addEventListener('ended', handleEnded);
+                audio.addEventListener('error', handleError);
+
+                return () => {
+                    audio.removeEventListener('timeupdate', updateTime);
+                    audio.removeEventListener('loadedmetadata', updateDuration);
+                    audio.removeEventListener('ended', handleEnded);
+                    audio.removeEventListener('error', handleError);
+                };
+            }, [isRepeat]);
+
+            // Sleep Timer
+            useEffect(() => {
+                if (sleepTimer) {
+                    timerRef.current = setTimeout(() => {
+                        setIsPlaying(false);
+                        setSleepTimer(null);
+                    }, sleepTimer * 60 * 1000);
+                }
+                return () => {
+                    if (timerRef.current) {
+                        clearTimeout(timerRef.current);
+                    }
+                };
+            }, [sleepTimer]);
+
             const formatTime = (seconds) => {
+                if (isNaN(seconds)) return '0:00';
                 const mins = Math.floor(seconds / 60);
                 const secs = Math.floor(seconds % 60);
                 return `${mins}:${secs.toString().padStart(2, '0')}`;
+            };
+
+            const handleProgressClick = (e) => {
+                const bar = e.currentTarget;
+                const rect = bar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                const newTime = percent * duration;
+                if (audioRef.current) {
+                    audioRef.current.currentTime = newTime;
+                }
+            };
+
+            const handlePreviousTrack = () => {
+                const allTracks = Object.values(TRACKS).flatMap((g, gIdx) =>
+                    g.tracks.map((t, tIdx) => ({ group: Object.keys(TRACKS)[gIdx], track: tIdx }))
+                );
+                const currentIdx = allTracks.findIndex(
+                    t => t.group === selectedGroup && t.track === selectedTrack
+                );
+                const prevIdx = currentIdx > 0 ? currentIdx - 1 : allTracks.length - 1;
+                setSelectedGroup(allTracks[prevIdx].group);
+                setSelectedTrack(allTracks[prevIdx].track);
+            };
+
+            const handleNextTrack = () => {
+                const allTracks = Object.values(TRACKS).flatMap((g, gIdx) =>
+                    g.tracks.map((t, tIdx) => ({ group: Object.keys(TRACKS)[gIdx], track: tIdx }))
+                );
+                
+                if (isShuffle) {
+                    const randomIdx = Math.floor(Math.random() * allTracks.length);
+                    setSelectedGroup(allTracks[randomIdx].group);
+                    setSelectedTrack(allTracks[randomIdx].track);
+                } else {
+                    const currentIdx = allTracks.findIndex(
+                        t => t.group === selectedGroup && t.track === selectedTrack
+                    );
+                    const nextIdx = (currentIdx + 1) % allTracks.length;
+                    setSelectedGroup(allTracks[nextIdx].group);
+                    setSelectedTrack(allTracks[nextIdx].track);
+                }
             };
 
             const showFreqInfo = (freq) => {
@@ -1225,8 +1448,16 @@
                 setShowModal(true);
             };
 
+            const handleTimerSet = (minutes) => {
+                setSleepTimer(minutes);
+                setShowTimerModal(false);
+            };
+
             return (
                 <>
+                    {/* Audio Player nascosto */}
+                    <audio ref={audioRef} preload="metadata" />
+
                     <div className="app-container">
                         <div className="header">
                             <h1 className="logo">PUREFREQUENZE</h1>
@@ -1260,7 +1491,7 @@
                                 </div>
 
                                 <div className="progress-container">
-                                    <div className="progress-bar">
+                                    <div className="progress-bar" onClick={handleProgressClick}>
                                         <div 
                                             className="progress-fill"
                                             style={{
@@ -1276,7 +1507,7 @@
                                 </div>
 
                                 <div className="player-controls">
-                                    <button className="control-btn">
+                                    <button className="control-btn" onClick={handlePreviousTrack}>
                                         <SkipBackIcon />
                                     </button>
                                     <button 
@@ -1285,16 +1516,44 @@
                                     >
                                         {isPlaying ? <PauseIcon /> : <PlayIcon />}
                                     </button>
-                                    <button className="control-btn">
+                                    <button className="control-btn" onClick={handleNextTrack}>
                                         <SkipForwardIcon />
                                     </button>
                                 </div>
 
                                 <div className="secondary-controls">
-                                    <button className="control-btn"><ShuffleIcon /></button>
-                                    <button className="control-btn"><RepeatIcon /></button>
-                                    <button className="control-btn"><ClockIcon /></button>
-                                    <button className="control-btn"><VolumeIcon /></button>
+                                    <button 
+                                        className={`control-btn ${isShuffle ? 'active' : ''}`}
+                                        onClick={() => setIsShuffle(!isShuffle)}
+                                    >
+                                        <ShuffleIcon />
+                                    </button>
+                                    <button 
+                                        className={`control-btn ${isRepeat ? 'active' : ''}`}
+                                        onClick={() => setIsRepeat(!isRepeat)}
+                                    >
+                                        <RepeatIcon />
+                                    </button>
+                                    <button 
+                                        className={`control-btn ${sleepTimer ? 'active' : ''}`}
+                                        onClick={() => setShowTimerModal(true)}
+                                    >
+                                        <ClockIcon />
+                                    </button>
+                                    <div className="volume-control">
+                                        <button className="control-btn">
+                                            <VolumeIcon />
+                                        </button>
+                                        <input 
+                                            type="range"
+                                            className="volume-slider"
+                                            min="0"
+                                            max="1"
+                                            step="0.01"
+                                            value={volume}
+                                            onChange={(e) => setVolume(parseFloat(e.target.value))}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -1364,6 +1623,7 @@
                                                                 onClick={() => {
                                                                     setSelectedGroup(groupId);
                                                                     setSelectedTrack(idx);
+                                                                    setIsPlaying(true);
                                                                 }}
                                                             >
                                                                 <div className="track-item-info">
@@ -1423,7 +1683,7 @@
                         </div>
                     </div>
 
-                    {/* Modal */}
+                    {/* Frequency Info Modal */}
                     {showModal && modalFreq && (
                         <div className="modal-overlay" onClick={() => setShowModal(false)}>
                             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -1455,6 +1715,41 @@
                                         ))}
                                     </ul>
                                 </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Sleep Timer Modal */}
+                    {showTimerModal && (
+                        <div className="modal-overlay" onClick={() => setShowTimerModal(false)}>
+                            <div className="timer-modal" onClick={(e) => e.stopPropagation()}>
+                                <button className="modal-close" onClick={() => setShowTimerModal(false)}>×</button>
+                                <h3 style={{ marginBottom: '0.5rem', fontSize: '1.4rem' }}>Sleep Timer</h3>
+                                <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem', marginBottom: '1rem' }}>
+                                    L'audio si fermerà automaticamente
+                                </p>
+                                <div className="timer-options">
+                                    <button className="timer-option" onClick={() => handleTimerSet(15)}>15 min</button>
+                                    <button className="timer-option" onClick={() => handleTimerSet(30)}>30 min</button>
+                                    <button className="timer-option" onClick={() => handleTimerSet(45)}>45 min</button>
+                                    <button className="timer-option" onClick={() => handleTimerSet(60)}>60 min</button>
+                                    <button className="timer-option" onClick={() => handleTimerSet(90)}>90 min</button>
+                                    <button 
+                                        className="timer-option" 
+                                        onClick={() => {
+                                            setSleepTimer(null);
+                                            if (timerRef.current) clearTimeout(timerRef.current);
+                                            setShowTimerModal(false);
+                                        }}
+                                    >
+                                        Off
+                                    </button>
+                                </div>
+                                {sleepTimer && (
+                                    <p style={{ marginTop: '1rem', color: '#8b5cf6', textAlign: 'center', fontSize: '0.95rem' }}>
+                                        Attivo: {sleepTimer} minuti
+                                    </p>
+                                )}
                             </div>
                         </div>
                     )}
