@@ -6,12 +6,8 @@
     ║  Frequenze Solfeggio e Battimenti Binaurali              ║
     ║  per Benessere, Meditazione e Relax                      ║
     ║                                                           ║
-    ║  Versione: 2.0 Professional + Stripe Integration         ║
+    ║  Versione: 2.1 Professional + Stripe Integration         ║
     ║  Sistema: Freemium (Stripe + Firebase)                   ║
-    ║  Default: FREE (isPremium = false)                       ║
-    ║                                                           ║
-    ║  FREE: 3 freq + 10 tracce + tutti binaurali             ║
-    ║  PREMIUM: 9 freq + 25 tracce + applicazioni             ║
     ║                                                           ║
     ╚═══════════════════════════════════════════════════════════╝
 -->
@@ -19,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PureFrequenze - Frequenze Solfeggio e Binaurali per il Benessere</title>
+    <title>PureFrequenze - Frequenze Solfeggio e Binaurali</title>
     <meta name="description" content="Frequenze audio per meditazione, focus e benessere. Rilassati e trova il tuo equilibrio.">
     
     <!-- Firebase SDK -->
@@ -34,32 +30,32 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         :root {
-            --primary: #FFD700;
-            --bg-dark: #0a0e27;
-            --bg-card: #1a1f3a;
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #1a1f35;
+            --accent-primary: #00d9ff;
+            --accent-secondary: #7c3aed;
             --text-primary: #ffffff;
-            --text-secondary: #b8bcc8;
+            --text-secondary: #94a3b8;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        /* HEADER */
         .app-header {
-            background: rgba(10, 14, 39, 0.95);
+            background: rgba(26, 31, 53, 0.95);
             backdrop-filter: blur(10px);
             padding: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -68,10 +64,10 @@
         .app-logo {
             font-size: 24px;
             font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .auth-section {
@@ -90,7 +86,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border: 2px solid var(--primary);
+            border: 2px solid var(--accent-primary);
         }
 
         .btn {
@@ -104,38 +100,37 @@
         }
 
         .btn-login {
-            background: #4285f4;
+            background: linear-gradient(135deg, #4285f4, #357ae8);
             color: white;
         }
 
         .btn-login:hover {
-            background: #357ae8;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
         }
 
         .btn-logout {
             background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
         }
 
         .btn-logout:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(0, 217, 255, 0.1);
         }
 
         .btn-premium {
-            background: linear-gradient(135deg, var(--primary) 0%, #FFA500 100%);
-            color: var(--bg-dark);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
             font-weight: 700;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
         }
 
         .btn-premium:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
         }
 
-        /* HERO SECTION */
         .hero {
             text-align: center;
             padding: 60px 20px;
@@ -144,46 +139,48 @@
         }
 
         .hero h1 {
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 20px;
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero p {
             font-size: 18px;
             color: var(--text-secondary);
             margin-bottom: 15px;
-            line-height: 1.8;
         }
 
         .hero-divider {
             width: 60px;
             height: 3px;
-            background: var(--primary);
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
             margin: 30px auto;
         }
 
         .free-features {
-            background: rgba(26, 31, 58, 0.6);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 12px;
+            background: rgba(26, 31, 53, 0.6);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
             padding: 30px;
             margin-top: 30px;
         }
 
         .free-features h2 {
-            font-size: 16px;
-            color: var(--primary);
+            font-size: 14px;
+            color: var(--accent-primary);
             margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
         .free-features ul {
             list-style: none;
             text-align: left;
             max-width: 300px;
-            margin: 0 auto;
+            margin: 0 auto 25px;
         }
 
         .free-features li {
@@ -196,24 +193,22 @@
 
         .free-features li::before {
             content: '✓';
-            color: var(--primary);
+            color: var(--accent-primary);
             font-weight: bold;
             font-size: 18px;
         }
 
-        /* CONTAINER */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 40px 20px;
         }
 
-        /* TABS */
         .tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 40px;
-            border-bottom: 2px solid rgba(255, 215, 0, 0.1);
+            border-bottom: 2px solid rgba(0, 217, 255, 0.1);
             overflow-x: auto;
         }
 
@@ -231,15 +226,14 @@
         }
 
         .tab:hover {
-            color: var(--primary);
+            color: var(--accent-primary);
         }
 
         .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
         }
 
-        /* TAB CONTENT */
         .tab-content {
             display: none;
         }
@@ -254,34 +248,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* GRID */
         .frequency-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
-            margin-bottom: 40px;
         }
 
-        /* CARDS */
         .frequency-card {
-            background: var(--bg-card);
+            background: var(--bg-secondary);
             border-radius: 16px;
             padding: 25px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.1);
             transition: all 0.3s;
             position: relative;
-            overflow: hidden;
         }
 
         .frequency-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
-            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.2);
+            border-color: rgba(0, 217, 255, 0.3);
         }
 
         .frequency-card.premium-locked {
-            opacity: 0.7;
-            filter: blur(1px);
+            opacity: 0.6;
+            filter: blur(2px);
+            cursor: pointer;
         }
 
         .frequency-card.premium-locked::after {
@@ -290,18 +281,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, var(--primary) 0%, #FFA500 100%);
-            color: var(--bg-dark);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: 700;
             font-size: 14px;
-            cursor: pointer;
             z-index: 10;
-        }
-
-        .frequency-card.premium-locked:hover::after {
-            transform: translate(-50%, -50%) scale(1.05);
         }
 
         .card-header {
@@ -311,7 +297,7 @@
         .card-title {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--accent-primary);
             margin-bottom: 8px;
         }
 
@@ -346,7 +332,7 @@
 
         .btn-play {
             padding: 8px 16px;
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: none;
             border-radius: 6px;
@@ -358,19 +344,18 @@
 
         .btn-play:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
         }
 
-        /* PLAYER */
         .player {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(10, 14, 39, 0.98);
+            background: rgba(10, 14, 26, 0.98);
             backdrop-filter: blur(20px);
             padding: 20px;
-            border-top: 2px solid var(--primary);
+            border-top: 2px solid var(--accent-primary);
             display: none;
             z-index: 200;
         }
@@ -388,7 +373,7 @@
         .player-info {
             text-align: center;
             margin-bottom: 15px;
-            color: var(--primary);
+            color: var(--accent-primary);
             font-weight: 600;
         }
 
@@ -396,7 +381,6 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 15px;
         }
 
         .player-btn {
@@ -404,8 +388,8 @@
             height: 50px;
             border-radius: 50%;
             border: none;
-            background: var(--primary);
-            color: var(--bg-dark);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
             font-size: 20px;
             cursor: pointer;
             transition: all 0.3s;
@@ -413,10 +397,9 @@
 
         .player-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
         }
 
-        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -437,13 +420,13 @@
         }
 
         .modal-content {
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             padding: 40px;
             border-radius: 20px;
             max-width: 500px;
             width: 100%;
             text-align: center;
-            border: 2px solid var(--primary);
+            border: 2px solid var(--accent-primary);
             position: relative;
         }
 
@@ -459,7 +442,10 @@
         }
 
         .modal-content h2 {
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px;
             font-size: 28px;
         }
@@ -481,14 +467,17 @@
 
         .premium-features li::before {
             content: '✓';
-            color: var(--primary);
+            color: var(--accent-primary);
             font-weight: bold;
             font-size: 20px;
         }
 
         .price {
             font-size: 48px;
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 30px 0;
             font-weight: 700;
         }
@@ -498,51 +487,130 @@
             color: var(--text-secondary);
         }
 
-        /* FOOTER */
         footer {
             text-align: center;
             padding: 40px 20px;
             color: var(--text-secondary);
             font-size: 12px;
-            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
             margin-top: 80px;
-        }
-
-        footer p {
-            margin: 5px 0;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .app-header {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .hero h1 {
-                font-size: 24px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .frequency-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs {
-                justify-content: flex-start;
-            }
         }
 
         .hidden {
             display: none !important;
         }
+
+        @media (max-width: 768px) {
+            .app-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero h1 {
+                font-size: 24px;
+            }
+            .frequency-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-<!-- HEADER --> <header class="app-header"> <div class="app-logo"> 🎵 PureFrequenze </div> <div class="auth-section"> <div id="userSection" class="hidden"> <div class="user-info"> <img id="userAvatar" class="user-avatar" src="" alt="User"> <span id="userName"></span> <button class="btn btn-logout" onclick="logout()">Logout</button> </div> </div> <div id="loginSection"> <button class="btn btn-login" onclick="loginWithGoogle()">Accedi</button> </div> <button class="btn btn-premium" onclick="showUpgradeModal()" id="upgradeBtn"> ✨ Diventa Premium </button> </div> </header> <!-- HERO --> <section class="hero"> <h1>Mettiti comodo e ascolta.</h1> <p>Frequenze audio per meditazione, focus e benessere.</p> <p>Rilassati e trova il tuo equilibrio.</p> <div class="hero-divider"></div> <div class="free-features"> <h2>Versione Free</h2> <ul> <li>3 Frequenze Solfeggio</li> <li>10 Audio Ottimizzati</li> <li>Frequenze Binaurali</li> </ul> <br> <button class="btn btn-premium" onclick="showUpgradeModal()"> ✨ Scopri Premium </button> </div> </section> <!-- CONTAINER --> <div class="container"> <!-- TABS --> <div class="tabs"> <button class="tab active" onclick="switchTab('solfeggio')">Frequenze Solfeggio</button> <button class="tab" onclick="switchTab('binaurali')">Frequenze Binaurali</button> <button class="tab" onclick="switchTab('applicazioni')">Applicazioni</button> </div> <!-- SOLFEGGIO TAB --> <div id="solfeggio" class="tab-content active"> <div class="frequency-grid" id="solfeggioGrid"></div> </div> <!-- BINAURALI TAB --> <div id="binaurali" class="tab-content"> <div class="frequency-grid" id="binauraliGrid"></div> </div> <!-- APPLICAZIONI TAB --> <div id="applicazioni" class="tab-content"> <div class="frequency-grid" id="applicazioniGrid"></div> </div> </div> <!-- PLAYER --> <div class="player" id="player"> <div class="player-info" id="nowPlaying">Nessuna traccia in riproduzione</div> <div class="player-controls"> <button class="player-btn" onclick="player.pause()">⏸</button> <button class="player-btn" onclick="player.play()">▶</button> <button class="player-btn" onclick="stopPlayer()">⏹</button> </div> <audio id="audioPlayer"></audio> </div> <!-- MODAL UPGRADE --> <div class="modal" id="upgradeModal"> <div class="modal-content"> <button class="modal-close" onclick="closeUpgradeModal()">✕</button> <h2>✨ PureFrequenze Premium</h2> <ul class="premium-features"> <li>Accesso a tutte le 9 frequenze Solfeggio</li> <li>25+ tracce audio ottimizzate</li> <li>Applicazioni terapeutiche esclusive</li> <li>Modalità offline</li> <li>Nuove frequenze ogni mese</li> <li>Supporto prioritario</li> </ul> <div class="price">€5<small>/mese</small></div> <button class="btn btn-premium" onclick="upgradeToPremium()" style="width: 100%; padding: 15px;"> Continua con Stripe </button> <br><br> <button class="btn btn-logout" onclick="closeUpgradeModal()">Annulla</button> </div> </div> <!-- FOOTER --> <footer> <p>© 2026 PureFrequenze - Progetto di Alessandro Macco</p> <p>P.IVA 10047100010 | Via Mompantero 22, 10093 Collegno (TO)</p> </footer> <script> // ==================== FIREBASE INIT ==================== const firebaseConfig = { apiKey: "AIzaSyB9xmneVbtdA_W7Nno6hcDA_nBLfS4ns-w", authDomain: "purefrequenze-35ff7.firebaseapp.com", projectId: "purefrequenze-35ff7", storageBucket: "purefrequenze-35ff7.firebasestorage.app", messagingSenderId: "895586868188", appId: "1:895586868188:web:5929cb5b482ab3bc93cd19" }; firebase.initializeApp(firebaseConfig); const auth = firebase.auth(); const functions = firebase.functions(); const db = firebase.firestore(); let currentUser = null; let isPremiumUser = false; // ==================== AUTH ==================== auth.onAuthStateChanged(async (user) => { currentUser = user; if (user) { document.getElementById('loginSection').classList.add('hidden'); document.getElementById('userSection').classList.remove('hidden'); document.getElementById('userName').textContent = user.displayName || user.email; document.getElementById('userAvatar').src = user.photoURL || 'https://via.placeholder.com/36'; await checkPremiumStatus(); } else { document.getElementById('loginSection').classList.remove('hidden'); document.getElementById('userSection').classList.add('hidden'); isPremiumUser = false; renderAllContent(); } }); async function loginWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); try { await auth.signInWithPopup(provider); } catch (error) { console.error('Errore login:', error); alert('Errore durante il login. Riprova.'); } } function logout() { auth.signOut(); } async function checkPremiumStatus() { try { const checkPremium = functions.httpsCallable('checkPremium'); const result = await checkPremium(); isPremiumUser = result.data.isPremium; if (isPremiumUser) { document.getElementById('upgradeBtn').classList.add('hidden'); } renderAllContent(); } catch (error) { console.error('Errore verifica premium:', error); isPremiumUser = false; renderAllContent(); } } // ==================== UPGRADE ==================== function showUpgradeModal() { if (!currentUser) { alert('Effettua il login per abbonarti'); loginWithGoogle(); return; } document.getElementById('upgradeModal').classList.add('active'); } function closeUpgradeModal() { document.getElementById('upgradeModal').classList.remove('active'); } async function upgradeToPremium() { if (!currentUser) { alert('Effettua il login prima di abbonarti'); loginWithGoogle(); return; } try { const createCheckout = functions.httpsCallable('createCheckout'); const result = await createCheckout(); window.location.href = result.data.url; } catch (error) { console.error('Errore checkout:', error); alert('Errore durante la creazione del checkout. Riprova.'); } } // ==================== DATA ==================== const solfeggioData = [ { freq: '432 Hz', desc: 'Armonia Naturale', tracks: [ {name: 'Peaceful Clouds', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/432hz-peaceful-clouds.mp3', premium: false}, {name: 'Cosmic Waves', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/432hz-cosmic-waves.mp3', premium: false}, {name: 'Ancient Whispers', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/432hz-ancient-whispers.mp3', premium: true} ] }, { freq: '528 Hz', desc: 'Frequenza dell\'Amore', tracks: [ {name: 'Gentle Piano', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/528hz-gentle-piano.mp3', premium: false}, {name: 'Heart Opening', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/528hz-heart-opening.mp3', premium: false}, {name: 'DNA Repair', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/528hz-dna-repair.mp3', premium: true} ] }, { freq: '639 Hz', desc: 'Connessione e Relazioni', tracks: [ {name: 'Warm Embrace', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/639hz-warm-embrace.mp3', premium: false}, {name: 'Harmony Flow', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/639hz-harmony-flow.mp3', premium: true}, {name: 'Soul Connection', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/639hz-soul-connection.mp3', premium: true} ] }, { freq: '174 Hz', desc: 'Fondazione e Sicurezza', tracks: [ {name: 'Nature Streams', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/174hz-nature-streams.mp3', premium: true}, {name: 'Earth Grounding', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/174hz-earth-grounding.mp3', premium: true} ] }, { freq: '285 Hz', desc: 'Guarigione dei Tessuti', tracks: [ {name: 'Sacred Flute', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/285hz-sacred-flute.mp3', premium: true}, {name: 'Cell Regeneration', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/285hz-cell-regeneration.mp3', premium: true} ] }, { freq: '396 Hz', desc: 'Liberazione dalla Paura', tracks: [ {name: 'Crystal Garden', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/396hz-crystal-garden.mp3', premium: true}, {name: 'Fear Release', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/396hz-fear-release.mp3', premium: true} ] }, { freq: '417 Hz', desc: 'Facilitare il Cambiamento', tracks: [ {name: 'Harmonious Bells', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/417hz-harmonious-bells.mp3', premium: true}, {name: 'Transformation', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/417hz-transformation.mp3', premium: true} ] }, { freq: '741 Hz', desc: 'Espressione e Soluzioni', tracks: [ {name: 'Wind Whispers', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/741hz-wind-whispers.mp3', premium: true}, {name: 'Awakening', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/741hz-awakening.mp3', premium: true} ] }, { freq: '852 Hz', desc: 'Intuizione Spirituale', tracks: [ {name: 'Celestial Harp', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/852hz-celestial-harp.mp3', premium: true}, {name: 'Third Eye', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/852hz-third-eye.mp3', premium: true} ] }, { freq: '963 Hz', desc: 'Connessione Divina', tracks: [ {name: 'Divine Light', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/963hz-divine-light.mp3', premium: true}, {name: 'Crown Chakra', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/963hz-crown-chakra.mp3', premium: true} ] } ]; const binauraliData = [ { freq: 'Delta 2Hz', desc: 'Sonno Profondo', tracks: [ {name: 'Deep Sleep', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/delta-2hz-deep-sleep.mp3', premium: false} ] }, { freq: 'Theta 6Hz', desc: 'Meditazione Profonda', tracks: [ {name: 'Meditation', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/theta-6hz-meditation.mp3', premium: false} ] }, { freq: 'Alpha 10Hz', desc: 'Rilassamento', tracks: [ {name: 'Relaxation', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/alpha-10hz-relaxation.mp3', premium: false} ] }, { freq: 'Beta 20Hz', desc: 'Concentrazione', tracks: [ {name: 'Focus', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/beta-20hz-focus.mp3', premium: false} ] }, { freq: 'Gamma 40Hz', desc: 'Attività Cognitiva', tracks: [ {name: 'Cognition', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/gamma-40hz-cognition.mp3', premium: false} ] } ]; const applicazioniData = [ { freq: 'Sonno & Riposo', desc: 'Per un riposo profondo', tracks: [ {name: 'Night Healing', url: '#', premium: true}, {name: 'Dream State', url: '#', premium: true} ] }, { freq: 'Focus & Produttività', desc: 'Massima concentrazione', tracks: [ {name: 'Work Flow', url: '#', premium: true}, {name: 'Study Session', url: '#', premium: true} ] }, { freq: 'Meditazione', desc: 'Stati meditativi profondi', tracks: [ {name: 'Inner Peace', url: '#', premium: true}, {name: 'Mindfulness', url: '#', premium: true} ] } ];        // ==================== RENDER ====================
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="app-logo">🎵 PureFrequenze</div>
+        <div class="auth-section">
+            <div id="userSection" class="hidden">
+                <div class="user-info">
+                    <img id="userAvatar" class="user-avatar" src="" alt="User">
+                    <span id="userName"></span>
+                    <button class="btn btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div id="loginSection">
+                <button class="btn btn-login" onclick="loginWithGoogle()">Accedi</button>
+            </div>
+            <button class="btn btn-premium" onclick="showUpgradeModal()" id="upgradeBtn">✨ Diventa Premium</button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Mettiti comodo e ascolta.</h1>
+        <p>Frequenze audio per meditazione, focus e benessere.</p>
+        <p>Rilassati e trova il tuo equilibrio.</p>
+        <div class="hero-divider"></div>
+        <div class="free-features">
+            <h2>Versione Free</h2>
+            <ul>
+                <li>3 Frequenze Solfeggio</li>
+                <li>10 Audio Ottimizzati</li>
+                <li>Frequenze Binaurali</li>
+            </ul>
+            <button class="btn btn-premium" onclick="showUpgradeModal()">✨ Scopri Premium</button>
+        </div>
+    </section>
+
+    <!-- CONTAINER -->
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('solfeggio')">Frequenze Solfeggio</button>
+            <button class="tab" onclick="switchTab('binaurali')">Frequenze Binaurali</button>
+            <button class="tab" onclick="switchTab('applicazioni')">Applicazioni</button>
+        </div>
+
+        <div id="solfeggio" class="tab-content active">
+            <div class="frequency-grid" id="solfeggioGrid"></div>
+        </div>
+
+        <div id="binaurali" class="tab-content">
+            <div class="frequency-grid" id="binauraliGrid"></div>
+        </div>
+
+        <div id="applicazioni" class="tab-content">
+            <div class="frequency-grid" id="applicazioniGrid"></div>
+        </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div class="player" id="player">
+        <div class="player-info" id="nowPlaying">Nessuna traccia in riproduzione</div>
+        <div class="player-controls">
+            <button class="player-btn" onclick="player.pause()">⏸</button>
+            <button class="player-btn" onclick="player.play()">▶</button>
+            <button class="player-btn" onclick="stopPlayer()">⏹</button>
+        </div>
+        <audio id="audioPlayer"></audio>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="upgradeModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeUpgradeModal()">✕</button>
+            <h2>✨ PureFrequenze Premium</h2>
+            <ul class="premium-features">
+                <li>Accesso a tutte le 9 frequenze Solfeggio</li>
+                <li>25+ tracce audio ottimizzate</li>
+                <li>Applicazioni terapeutiche esclusive</li>
+                <li>Modalità offline</li>
+                <li>Nuove frequenze ogni mese</li>
+                <li>Supporto prioritario</li>
+            </ul>
+            <div class="price">€5<small>/mese</small></div>
+            <button class="btn btn-premium" onclick="upgradeToPremium()" style="width: 100%; padding: 15px;">Continua con Stripe</button>
+            <br><br>
+            <button class="btn btn-logout" onclick="closeUpgradeModal()">Annulla</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 PureFrequenze - Progetto di Alessandro Macco</p>
+        <p>P.IVA 10047100010 | Via Mompantero 22, 10093 Collegno (TO)</p>
+    </footer>
+
+    <script>
+
+// FIREBASE INIT const firebaseConfig = { apiKey: "AIzaSyB9xmneVbtdA_W7Nno6hcDA_nBLfS4ns-w", authDomain: "purefrequenze-35ff7.firebaseapp.com", projectId: "purefrequenze-35ff7", storageBucket: "purefrequenze-35ff7.firebasestorage.app", messagingSenderId: "895586868188", appId: "1:895586868188:web:5929cb5b482ab3bc93cd19" }; firebase.initializeApp(firebaseConfig); const auth = firebase.auth(); const functions = firebase.functions(); const db = firebase.firestore(); let currentUser = null; let isPremiumUser = false; // AUTH auth.onAuthStateChanged(async (user) => { currentUser = user; if (user) { document.getElementById('loginSection').classList.add('hidden'); document.getElementById('userSection').classList.remove('hidden'); document.getElementById('userName').textContent = user.displayName || user.email; document.getElementById('userAvatar').src = user.photoURL || 'https://via.placeholder.com/36'; await checkPremiumStatus(); } else { document.getElementById('loginSection').classList.remove('hidden'); document.getElementById('userSection').classList.add('hidden'); isPremiumUser = false; renderAllContent(); } }); async function loginWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); try { await auth.signInWithPopup(provider); } catch (error) { console.error('Errore login:', error); alert('Errore durante il login'); } } function logout() { auth.signOut(); } async function checkPremiumStatus() { try { const checkPremium = functions.httpsCallable('checkPremium'); const result = await checkPremium(); isPremiumUser = result.data.isPremium; if (isPremiumUser) { document.getElementById('upgradeBtn').classList.add('hidden'); } renderAllContent(); } catch (error) { console.error('Errore premium:', error); isPremiumUser = false; renderAllContent(); } } function showUpgradeModal() { if (!currentUser) { alert('Effettua il login per abbonarti'); loginWithGoogle(); return; } document.getElementById('upgradeModal').classList.add('active'); } function closeUpgradeModal() { document.getElementById('upgradeModal').classList.remove('active'); } async function upgradeToPremium() { if (!currentUser) { alert('Effettua il login prima di abbonarti'); loginWithGoogle(); return; } try { const createCheckout = functions.httpsCallable('createCheckout'); const result = await createCheckout(); window.location.href = result.data.url; } catch (error) { console.error('Errore checkout:', error); alert('Errore creazione checkout'); } } // DATI const solfeggioData = [ {freq: '432 Hz', desc: 'Armonia Naturale', tracks: [ {name: 'Peaceful Clouds', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/432hz-peaceful-clouds.mp3', premium: false}, {name: 'Cosmic Waves', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/432hz-cosmic-waves.mp3', premium: false}, {name: 'Ancient Whispers', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/432hz-ancient-whispers.mp3', premium: true} ]}, {freq: '528 Hz', desc: 'Frequenza dell\'Amore', tracks: [ {name: 'Gentle Piano', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/528hz-gentle-piano.mp3', premium: false}, {name: 'Heart Opening', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/528hz-heart-opening.mp3', premium: false}, {name: 'DNA Repair', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/528hz-dna-repair.mp3', premium: true} ]}, {freq: '639 Hz', desc: 'Connessione', tracks: [ {name: 'Warm Embrace', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/639hz-warm-embrace.mp3', premium: false}, {name: 'Harmony Flow', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/639hz-harmony-flow.mp3', premium: true}, {name: 'Soul Connection', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/639hz-soul-connection.mp3', premium: true} ]}, {freq: '174 Hz', desc: 'Fondazione', tracks: [ {name: 'Nature Streams', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/174hz-nature-streams.mp3', premium: true}, {name: 'Earth Grounding', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/174hz-earth-grounding.mp3', premium: true} ]}, {freq: '285 Hz', desc: 'Guarigione', tracks: [ {name: 'Sacred Flute', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/285hz-sacred-flute.mp3', premium: true} ]}, {freq: '396 Hz', desc: 'Liberazione', tracks: [ {name: 'Crystal Garden', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/396hz-crystal-garden.mp3', premium: true} ]}, {freq: '417 Hz', desc: 'Cambiamento', tracks: [ {name: 'Harmonious Bells', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/417hz-harmonious-bells.mp3', premium: true} ]}, {freq: '741 Hz', desc: 'Espressione', tracks: [ {name: 'Wind Whispers', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/741hz-wind-whispers.mp3', premium: true} ]}, {freq: '852 Hz', desc: 'Intuizione', tracks: [ {name: 'Celestial Harp', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/852hz-celestial-harp.mp3', premium: true} ]}, {freq: '963 Hz', desc: 'Connessione Divina', tracks: [ {name: 'Divine Light', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/963hz-divine-light.mp3', premium: true} ]} ]; const binauraliData = [ {freq: 'Delta 2Hz', desc: 'Sonno Profondo', tracks: [{name: 'Deep Sleep', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/delta-2hz-deep-sleep.mp3', premium: false}]}, {freq: 'Theta 6Hz', desc: 'Meditazione', tracks: [{name: 'Meditation', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/theta-6hz-meditation.mp3', premium: false}]}, {freq: 'Alpha 10Hz', desc: 'Rilassamento', tracks: [{name: 'Relaxation', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/alpha-10hz-relaxation.mp3', premium: false}]}, {freq: 'Beta 20Hz', desc: 'Concentrazione', tracks: [{name: 'Focus', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/beta-20hz-focus.mp3', premium: false}]}, {freq: 'Gamma 40Hz', desc: 'Cognizione', tracks: [{name: 'Cognition', url: 'https://pub-1e1ad610910b4620883d00e6f56e3976.r2.dev/gamma-40hz-cognition.mp3', premium: false}]} ]; const applicazioniData = [ {freq: 'Sonno & Riposo', desc: 'Riposo profondo', tracks: [{name: 'Night Healing', url: '#', premium: true}, {name: 'Dream State', url: '#', premium: true}]}, {freq: 'Focus & Produttività', desc: 'Concentrazione', tracks: [{name: 'Work Flow', url: '#', premium: true}, {name: 'Study Session', url: '#', premium: true}]}, {freq: 'Meditazione', desc: 'Stati meditativi', tracks: [{name: 'Inner Peace', url: '#', premium: true}, {name: 'Mindfulness', url: '#', premium: true}]} ];        // RENDER
         function renderAllContent() {
             renderSolfeggio();
             renderBinaurali();
@@ -552,94 +620,64 @@
         function renderSolfeggio() {
             const grid = document.getElementById('solfeggioGrid');
             grid.innerHTML = solfeggioData.map(freq => {
-                const hasFreeTrack = freq.tracks.some(t => !t.premium);
-                const isPremiumCard = !hasFreeTrack;
-                const isLocked = isPremiumCard && !isPremiumUser;
-                
-                return `
-                    <div class="frequency-card ${isLocked ? 'premium-locked' : ''}" 
-                         ${isLocked ? 'onclick="showUpgradeModal()"' : ''}>
-                        <div class="card-header">
-                            <div class="card-title">${freq.freq}</div>
-                            <div class="card-subtitle">${freq.desc}</div>
-                        </div>
-                        <div class="track-list">
-                            ${freq.tracks.map(track => {
-                                const canPlay = !track.premium || isPremiumUser;
-                                return `
-                                    <div class="track-item">
-                                        <span class="track-name">${track.name} ${track.premium ? '⭐' : ''}</span>
-                                        ${canPlay ? `
-                                            <button class="btn-play" onclick="playTrack('${track.url}', '${freq.freq} - ${track.name}')">
-                                                ▶ Play
-                                            </button>
-                                        ` : ''}
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderBinaurali() {
-            const grid = document.getElementById('binauraliGrid');
-            grid.innerHTML = binauraliData.map(freq => `
-                <div class="frequency-card">
+                const hasFree = freq.tracks.some(t => !t.premium);
+                const isLocked = !hasFree && !isPremiumUser;
+                return `<div class="frequency-card ${isLocked ? 'premium-locked' : ''}" ${isLocked ? 'onclick="showUpgradeModal()"' : ''}>
                     <div class="card-header">
                         <div class="card-title">${freq.freq}</div>
                         <div class="card-subtitle">${freq.desc}</div>
                     </div>
                     <div class="track-list">
-                        ${freq.tracks.map(track => `
-                            <div class="track-item">
-                                <span class="track-name">${track.name}</span>
-                                <button class="btn-play" onclick="playTrack('${track.url}', '${freq.freq} - ${track.name}')">
-                                    ▶ Play
-                                </button>
-                            </div>
-                        `).join('')}
+                        ${freq.tracks.map(track => {
+                            const canPlay = !track.premium || isPremiumUser;
+                            return `<div class="track-item">
+                                <span class="track-name">${track.name} ${track.premium ? '⭐' : ''}</span>
+                                ${canPlay ? `<button class="btn-play" onclick="playTrack('${track.url}', '${freq.freq} - ${track.name}')">▶ Play</button>` : ''}
+                            </div>`;
+                        }).join('')}
                     </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderBinaurali() {
+            const grid = document.getElementById('binauraliGrid');
+            grid.innerHTML = binauraliData.map(freq => `<div class="frequency-card">
+                <div class="card-header">
+                    <div class="card-title">${freq.freq}</div>
+                    <div class="card-subtitle">${freq.desc}</div>
                 </div>
-            `).join('');
+                <div class="track-list">
+                    ${freq.tracks.map(track => `<div class="track-item">
+                        <span class="track-name">${track.name}</span>
+                        <button class="btn-play" onclick="playTrack('${track.url}', '${freq.freq} - ${track.name}')">▶ Play</button>
+                    </div>`).join('')}
+                </div>
+            </div>`).join('');
         }
 
         function renderApplicazioni() {
             const grid = document.getElementById('applicazioniGrid');
             const isLocked = !isPremiumUser;
-            
-            grid.innerHTML = applicazioniData.map(app => `
-                <div class="frequency-card ${isLocked ? 'premium-locked' : ''}" 
-                     ${isLocked ? 'onclick="showUpgradeModal()"' : ''}>
-                    <div class="card-header">
-                        <div class="card-title">${app.freq}</div>
-                        <div class="card-subtitle">${app.desc}</div>
-                    </div>
-                    ${!isLocked ? `
-                        <div class="track-list">
-                            ${app.tracks.map(track => `
-                                <div class="track-item">
-                                    <span class="track-name">${track.name}</span>
-                                    <button class="btn-play" onclick="alert('Traccia in arrivo!')">
-                                        ▶ Play
-                                    </button>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : ''}
+            grid.innerHTML = applicazioniData.map(app => `<div class="frequency-card ${isLocked ? 'premium-locked' : ''}" ${isLocked ? 'onclick="showUpgradeModal()"' : ''}>
+                <div class="card-header">
+                    <div class="card-title">${app.freq}</div>
+                    <div class="card-subtitle">${app.desc}</div>
                 </div>
-            `).join('');
+                ${!isLocked ? `<div class="track-list">
+                    ${app.tracks.map(track => `<div class="track-item">
+                        <span class="track-name">${track.name}</span>
+                        <button class="btn-play" onclick="alert('In arrivo!')">▶ Play</button>
+                    </div>`).join('')}
+                </div>` : ''}
+            </div>`).join('');
         }
 
-        // ==================== PLAYER ====================
+        // PLAYER
         const player = document.getElementById('audioPlayer');
 
         function playTrack(url, name) {
-            if (url === '#') {
-                alert('Traccia in arrivo!');
-                return;
-            }
+            if (url === '#') { alert('In arrivo!'); return; }
             player.src = url;
             player.play();
             document.getElementById('player').classList.add('active');
@@ -652,16 +690,15 @@
             document.getElementById('player').classList.remove('active');
         }
 
-        // ==================== TABS ====================
+        // TABS
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
         }
 
-        // ==================== INIT ====================
+        // INIT
         renderAllContent();
     </script>
 </body>
