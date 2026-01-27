@@ -542,9 +542,6 @@
     </style>
 </head>
 <body>
-📦 PARTE 2/3 - CORPO HTML E INIZIO JAVASCRIPT
-Copia questo SUBITO DOPO la Parte 1 (nello stesso file):
-
 
 html
     <!-- HEADER -->
@@ -905,9 +902,6 @@ html
                 ]
             }
         ];
-📦 PARTE 3/3 - FINALE (JavaScript + Chiusura)
-Copia questo SUBITO DOPO la Parte 2 (nello stesso file):
-
 
 javascript
         // ==================== RENDER ====================
@@ -1027,20 +1021,6 @@ javascript
             
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
-        }
-
-        // ==================== URL PARAMS ====================
-        // Gestione Success/Cancel dopo pagamento Stripe
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('session_id')) {
-            // Pagamento completato
-            setTimeout(() => {
-                alert('✅ Benvenuto in Premium! Tutte le funzionalità sono ora sbloccate.');
-                checkPremiumStatus();
-            }, 1000);
-        } else if (urlParams.get('canceled')) {
-            // Pagamento annullato
-            alert('Pagamento annullato. Puoi attivare Premium in qualsiasi momento.');
         }
 
         // ==================== INIT ====================
