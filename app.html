@@ -1762,29 +1762,22 @@
                 projectId: "purefrequenze-35ff7",
                 storageBucket: "purefrequenze-35ff7.firebasestorage.app",
                 messagingSenderId: "895586868188",
-                appId: "1:895586688188:web:5929cb5b482ab3bc93cd19"
+              appId: "1:895586688188:web:5929cb5b482ab3bc93cd19"
             };
 
-           // Inizializza Firebase 
-let auth, db, functions;
-
-// Forza re-init pulito
-if (firebase.apps.length) {
-    firebase.app().delete().then(() => {
-        firebase.initializeApp(firebaseConfig);
-        auth = firebase.auth();
-        db = firebase.firestore();
-        functions = firebase.functions();
-    });
-} else {
-    firebase.initializeApp(firebaseConfig);
-    auth = firebase.auth();
-    db = firebase.firestore();
-    functions = firebase.functions();
-}
+            // Inizializza Firebase (versione sicura)
+            let auth, db, functions;
+            
+            // Usa app esistente o creane una nuova
+            const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+            
+            auth = firebase.auth();
+            db = firebase.firestore();
+            functions = firebase.functions();
 
             // Check premium status al mount e quando cambia l'auth
             useEffect(() => {
+
                 if (!auth) return; // Se Firebase non è configurato, skip
 
                 const unsubscribe = auth.onAuthStateChanged(async (user) => {
