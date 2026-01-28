@@ -1734,24 +1734,6 @@
                 <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
         );
-// ==================== FIREBASE INIT (fuori dal componente) ====================
-const firebaseConfig = {
-    apiKey: "AIzaSyB9xmneVbtdA_W7Nno6hcDA_nBLfS4ns-w",
-    authDomain: "purefrequenze-35ff7.firebaseapp.com",
-    projectId: "purefrequenze-35ff7",
-    storageBucket: "purefrequenze-35ff7.firebasestorage.app",
-    messagingSenderId: "895586868188",
-    appId: "1:895586688188:web:5929cb5b482ab3bc93cd19"
-};
-
-// Inizializza una sola volta
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-const auth = firebase.auth();
-const db = firebase.firestore();
-const functions = firebase.app().functions('us-central1');
 
         // ==================== MAIN APP ====================
 
@@ -1775,27 +1757,30 @@ const functions = firebase.app().functions('us-central1');
 
             // ==================== FIREBASE CONFIG ====================
             const firebaseConfig = {
-                  apiKey: "AIzaSyB9xmneVbtdA_W7Nno6hcDA_nBLfS4ns-w",
+                apiKey: "AIzaSyB9xmneVbtdA_W7Nno6hcDA_nBLfS4ns-w",
                 authDomain: "purefrequenze-35ff7.firebaseapp.com",
                 projectId: "purefrequenze-35ff7",
                 storageBucket: "purefrequenze-35ff7.firebasestorage.app",
                 messagingSenderId: "895586868188",
-              appId: "1:895586688188:web:5929cb5b482ab3bc93cd19"
+                appId: "1:895586688188:web:5929cb5b482ab3bc93cd19"
             };
 
-            // Inizializza Firebase (versione sicura)
+            // Inizializza Firebase (solo una volta)
             let auth, db, functions;
-            
-            // Usa app esistente o creane una nuova
-            const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
-            
-            auth = firebase.auth();
-            db = firebase.firestore();
-            functions = firebase.functions();
+            try {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                auth = firebase.auth();
+                db = firebase.firestore();
+                functions = firebase.functions();
+            } catch (error) {
+                console.error('Errore inizializzazione Firebase:', error);
+                // App continua a funzionare in modalità offline
+            }
 
             // Check premium status al mount e quando cambia l'auth
             useEffect(() => {
-
                 if (!auth) return; // Se Firebase non è configurato, skip
 
                 const unsubscribe = auth.onAuthStateChanged(async (user) => {
