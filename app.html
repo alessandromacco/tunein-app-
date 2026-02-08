@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--
     ╔═══════════════════════════════════════════════════════════╗
@@ -18,14 +19,16 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="PureFrequenze - Ritrova equilibrio e benessere con frequenze Solfeggio e battimenti binaurali.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PureFrequenze - Ritrova equilibrio e benessere con frequenze Solfeggio e battimenti binaurali. 3 frequenze gratuite, 10 tracce rilassanti.">
     <meta name="keywords" content="frequenze solfeggio, battimenti binaurali, meditazione, benessere, relax, sonno, focus">
     <meta property="og:title" content="PureFrequenze - Frequenze per il Benessere">
     <meta property="og:description" content="Ritrova equilibrio con frequenze Solfeggio e battimenti binaurali">
     <meta property="og:type" content="website">
+    <title>PureFrequenze - Frequenze Solfeggio e Binaurali per il Benessere</title>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PureFrequenze - Frequenze Solfeggio & Battimenti Binaurali</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -64,13 +67,7 @@
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
             color: white;
             min-height: 100vh;
-            min-height: -webkit-fill-available;
-            height: 100vh;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: none;
+            overflow-x: hidden;
         }
 
         .background-effects {
@@ -1439,144 +1436,79 @@
         ==================== 📞 SUPPORTO ====================
         Vedi chat pagamenti per dettagli completi implementazione.
         */
-
-        // ═══════════════════════════════════════════════════════════════════════════════
-        // 🎛️ CONFIGURAZIONE CENTRALIZZATA - MODIFICA SOLO QUESTA SEZIONE
-        // ═══════════════════════════════════════════════════════════════════════════════
-        // 
-        // Tutti i parametri modificabili dell'app sono qui.
-        // Cambia questi valori per aggiornare prezzi, contenuti free/premium, URL audio, etc.
-        // NON modificare il codice sotto "FINE CONFIGURAZIONE"
-        //
-        // ═══════════════════════════════════════════════════════════════════════════════
-
-        const CONFIG = {
-            // ─────────────────────────────────────────────────────────────────────────
-            // 💰 PREZZI VISUALIZZATI (modifica qui per cambiare prezzi nel modal)
-            // ─────────────────────────────────────────────────────────────────────────
-            pricing: {
-                monthly: { price: "5,00", label: "Mensile", period: "/mese" },
-                annual: { price: "42,00", label: "Annuale", period: "/anno", save: "Risparmi 30%" },
-                lifetime: { price: "100,00", label: "Lifetime", period: "una tantum", save: "Per sempre" }
-            },
-
-            // ─────────────────────────────────────────────────────────────────────────
-            // 🔓 MODALITÀ ACCESSO (true = tutto gratis, false = freemium)
-            // ─────────────────────────────────────────────────────────────────────────
-            allFree: true,  // ← CAMBIA A false PER ATTIVARE FREEMIUM
-
-            // ─────────────────────────────────────────────────────────────────────────
-            // 🎵 FREQUENZE GRATUITE (quali frequenze sono accessibili senza premium)
-            // ─────────────────────────────────────────────────────────────────────────
-            freeFrequencies: [174, 285, 396, 417, 432, 528, 639, 741, 852],  // Tutti gratis per ora
-
-            // ─────────────────────────────────────────────────────────────────────────
-            // 🎼 TRACCE GRATUITE (ID delle tracce accessibili senza premium)
-            // ─────────────────────────────────────────────────────────────────────────
-            freeTracks: [
-                "floating_free", "silk_sky", "heavens_rest", "breeze_dance", "soft_landing",
-                "river_meditation", "rain_forest", "earth_breathing", "wind_pines", "ocean_tides",
-                "lullaby_heart", "afternoon_tea", "letter_to_self", "memory_lane", "hope_blooming",
-                "temple_garden", "mountain_breath", "river_blessing", "prayer_walk", "gratitude_song",
-                "sunlit_crystals", "healing_spring", "light_prism", "gem_harmony", "ocean_deep"
-            ],  // Tutte gratis per ora
-
-            // ─────────────────────────────────────────────────────────────────────────
-            // 🧠 BATTIMENTI BINAURALI GRATUITI
-            // ─────────────────────────────────────────────────────────────────────────
-            freeBinaurals: ["delta", "theta", "alpha", "beta", "gamma"],  // Tutti gratis per ora
-
-            // ─────────────────────────────────────────────────────────────────────────
-            // ⏰ TIMER DISPONIBILI (minuti disponibili per sleep timer)
-            // ─────────────────────────────────────────────────────────────────────────
-            freeTimers: [15, 30, 45, 60, 90, 120],  // Tutti gratis per ora
-
-            // ─────────────────────────────────────────────────────────────────────────
-            // 🌐 URL AUDIO BASE (dove sono hostati i file audio)
-            // ─────────────────────────────────────────────────────────────────────────
-            audioBaseUrl: "https://pub-a8b8e92131354b6587fb7d02d880f3e5.r2.dev/purefrequenze"
-        };
-
-        // ═══════════════════════════════════════════════════════════════════════════════
-        // ⚠️ FINE CONFIGURAZIONE - NON MODIFICARE SOTTO QUESTA RIGA
-        // ═══════════════════════════════════════════════════════════════════════════════
-
         const { useState, useEffect, useRef } = React;
 
         // ==================== DATA ====================
 
         const FREQUENCIES = {
-            174: { hz: 174, color: "#8B0000", rgb: "139, 0, 0", desc: "Radicamento e stabilità", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(174) },
-            285: { hz: 285, color: "#FF4500", rgb: "255, 69, 0", desc: "Rigenerazione tissutale", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(285) },
-            396: { hz: 396, color: "#FFD700", rgb: "255, 215, 0", desc: "Liberazione da paura", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(396) },
-            417: { hz: 417, color: "#90EE90", rgb: "144, 238, 144", desc: "Facilitazione del cambiamento", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(417) },
-            432: { hz: 432, color: "#4169E1", rgb: "65, 105, 225", desc: "Accordatura naturale", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(432) },
-            528: { hz: 528, color: "#00CED1", rgb: "0, 206, 209", desc: "Trasformazione e guarigione", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(528) },
-            639: { hz: 639, color: "#FF69B4", rgb: "255, 105, 180", desc: "Connessione e relazioni", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(639) },
-            741: { hz: 741, color: "#9370DB", rgb: "147, 112, 219", desc: "Risveglio e intuizione", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(741) },
-            852: { hz: 852, color: "#8A2BE2", rgb: "138, 43, 226", desc: "Ordine spirituale", premium: !CONFIG.allFree && !CONFIG.freeFrequencies.includes(852) }
-        };
-
-        // Helper: determina se una traccia è premium basandosi su CONFIG
-        const isTrackPremium = (trackId) => {
-            if (CONFIG.allFree) return false;
-            return !CONFIG.freeTracks.includes(trackId);
+            174: { hz: 174, color: "#8B0000", rgb: "139, 0, 0", desc: "Radicamento e stabilità", premium: true },
+            285: { hz: 285, color: "#FF4500", rgb: "255, 69, 0", desc: "Rigenerazione tissutale", premium: true },
+            396: { hz: 396, color: "#FFD700", rgb: "255, 215, 0", desc: "Liberazione da paura", free: true },
+            417: { hz: 417, color: "#90EE90", rgb: "144, 238, 144", desc: "Facilitazione del cambiamento", premium: true },
+            432: { hz: 432, color: "#4169E1", rgb: "65, 105, 225", desc: "Accordatura naturale", free: true },
+            528: { hz: 528, color: "#00CED1", rgb: "0, 206, 209", desc: "Trasformazione e guarigione", free: true },
+            639: { hz: 639, color: "#FF69B4", rgb: "255, 105, 180", desc: "Connessione e relazioni", premium: true },
+            741: { hz: 741, color: "#9370DB", rgb: "147, 112, 219", desc: "Risveglio e intuizione", premium: true },
+            852: { hz: 852, color: "#8A2BE2", rgb: "138, 43, 226", desc: "Ordine spirituale", premium: true }
         };
 
         const TRACK_GROUPS = {
             peaceful_clouds: {
                 name: "Peaceful Clouds",
                 icon: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z",
+                free: true,
                 tracks: [
-                    { id: "floating_free", name: "Floating Free", subtitle: "Soft ambient pads", get premium() { return isTrackPremium(this.id); } },
-                    { id: "silk_sky", name: "Silk Sky", subtitle: "Gentle textures", get premium() { return isTrackPremium(this.id); } },
-                    { id: "heavens_rest", name: "Heaven's Rest", subtitle: "Peaceful atmosphere", get premium() { return isTrackPremium(this.id); } },
-                    { id: "breeze_dance", name: "Breeze Dance", subtitle: "Light movement", get premium() { return isTrackPremium(this.id); } },
-                    { id: "soft_landing", name: "Soft Landing", subtitle: "Gentle descent", get premium() { return isTrackPremium(this.id); } }
+                    { id: "floating_free", name: "Floating Free", subtitle: "Soft ambient pads", free: true },
+                    { id: "silk_sky", name: "Silk Sky", subtitle: "Gentle textures", free: true },
+                    { id: "heavens_rest", name: "Heaven's Rest", subtitle: "Peaceful atmosphere", premium: true },
+                    { id: "breeze_dance", name: "Breeze Dance", subtitle: "Light movement", premium: true },
+                    { id: "soft_landing", name: "Soft Landing", subtitle: "Gentle descent", premium: true }
                 ]
             },
             nature_streams: {
                 name: "Nature Streams",
                 icon: "M14.5 2v20l-4-4-4 4V2M3.05 11h14.9M3.05 7h14.9M3.05 15h14.9",
+                free: true,
                 tracks: [
-                    { id: "river_meditation", name: "River Meditation", subtitle: "Flowing water", get premium() { return isTrackPremium(this.id); } },
-                    { id: "rain_forest", name: "Rain Forest", subtitle: "Natural ambience", get premium() { return isTrackPremium(this.id); } },
-                    { id: "earth_breathing", name: "Earth Breathing", subtitle: "Organic sounds", get premium() { return isTrackPremium(this.id); } },
-                    { id: "wind_pines", name: "Wind Pines", subtitle: "Forest atmosphere", get premium() { return isTrackPremium(this.id); } },
-                    { id: "ocean_tides", name: "Ocean Tides", subtitle: "Wave rhythms", get premium() { return isTrackPremium(this.id); } }
+                    { id: "river_meditation", name: "River Meditation", subtitle: "Flowing water", free: true },
+                    { id: "rain_forest", name: "Rain Forest", subtitle: "Natural ambience", free: true },
+                    { id: "earth_breathing", name: "Earth Breathing", subtitle: "Organic sounds", premium: true },
+                    { id: "wind_pines", name: "Wind Pines", subtitle: "Forest atmosphere", premium: true },
+                    { id: "ocean_tides", name: "Ocean Tides", subtitle: "Wave rhythms", premium: true }
                 ]
             },
             gentle_piano: {
                 name: "Gentle Piano",
                 icon: "M2 6h20M2 18h20M7 6v12M12 6v12M17 6v12",
                 tracks: [
-                    { id: "lullaby_heart", name: "Lullaby Heart", subtitle: "Tender melody", get premium() { return isTrackPremium(this.id); } },
-                    { id: "afternoon_tea", name: "Afternoon Tea", subtitle: "Contemplative piano", get premium() { return isTrackPremium(this.id); } },
-                    { id: "letter_to_self", name: "Letter to Self", subtitle: "Introspective keys", get premium() { return isTrackPremium(this.id); } },
-                    { id: "memory_lane", name: "Memory Lane", subtitle: "Nostalgic melody", get premium() { return isTrackPremium(this.id); } },
-                    { id: "hope_blooming", name: "Hope Blooming", subtitle: "Uplifting keys", get premium() { return isTrackPremium(this.id); } }
+                    { id: "lullaby_heart", name: "Lullaby Heart", subtitle: "Tender melody", free: true },
+                    { id: "afternoon_tea", name: "Afternoon Tea", subtitle: "Contemplative piano", free: true },
+                    { id: "letter_to_self", name: "Letter to Self", subtitle: "Introspective keys", premium: true },
+                    { id: "memory_lane", name: "Memory Lane", subtitle: "Nostalgic melody", premium: true },
+                    { id: "hope_blooming", name: "Hope Blooming", subtitle: "Uplifting keys", premium: true }
                 ]
             },
             sacred_flute: {
                 name: "Sacred Flute",
                 icon: "M2 12h20M5 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM13 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17 12a1.5 1.5 0 000-3 1.5 1.5 0 000 3z",
+                premium: true,
                 tracks: [
-                    { id: "temple_garden", name: "Temple Garden", subtitle: "Shakuhachi meditation", get premium() { return isTrackPremium(this.id); } },
-                    { id: "mountain_breath", name: "Bamboo flute", subtitle: "Bamboo flute", get premium() { return isTrackPremium(this.id); } },
-                    { id: "river_blessing", name: "River Blessing", subtitle: "Water and flute", get premium() { return isTrackPremium(this.id); } },
-                    { id: "prayer_walk", name: "Prayer Walk", subtitle: "Contemplative journey", get premium() { return isTrackPremium(this.id); } },
-                    { id: "gratitude_song", name: "Gratitude Song", subtitle: "Sacred melody", get premium() { return isTrackPremium(this.id); } }
+                    { id: "temple_garden", name: "Temple Garden", subtitle: "Shakuhachi meditation", free: true },
+                    { id: "mountain_breath", name: "Bamboo flute", subtitle: "Bamboo flute", free: true },
+                    { id: "river_blessing", name: "River Blessing", subtitle: "Water and flute", premium: true },
+                    { id: "prayer_walk", name: "Prayer Walk", subtitle: "Contemplative journey", premium: true },
+                    { id: "gratitude_song", name: "Gratitude Song", subtitle: "Sacred melody", premium: true }
                 ]
             },
             crystal_garden: {
                 name: "Crystal Garden",
                 icon: "M12 2L4 7v10l8 5 8-5V7l-8-5zM12 22v-10M12 12L4 7M12 12l8-5",
                 tracks: [
-                    { id: "sunlit_crystals", name: "Sunlit Crystals", subtitle: "Singing bowls", get premium() { return isTrackPremium(this.id); } },
-                    { id: "healing_spring", name: "Healing Spring", subtitle: "Crystal harmonics", get premium() { return isTrackPremium(this.id); } },
-                    { id: "light_prism", name: "Light Prism", subtitle: "Vibrational tones", get premium() { return isTrackPremium(this.id); } },
-                    { id: "gem_harmony", name: "Gem Harmony", subtitle: "Stone sounds", get premium() { return isTrackPremium(this.id); } },
-                    { id: "ocean_deep", name: "Ocean Deep", subtitle: "Deep resonance", get premium() { return isTrackPremium(this.id); } }
+                    { id: "sunlit_crystals", name: "Sunlit Crystals", subtitle: "Singing bowls", free: true },
+                    { id: "healing_spring", name: "Healing Spring", subtitle: "Crystal harmonics", free: true },
+                    { id: "light_prism", name: "Light Prism", subtitle: "Vibrational tones", premium: true },
+                    { id: "gem_harmony", name: "Gem Harmony", subtitle: "Stone sounds", premium: true },
+                    { id: "ocean_deep", name: "Ocean Deep", subtitle: "Deep resonance", premium: true }
                 ]
             }
         };
@@ -1645,11 +1577,11 @@
         };
 
         const BINAURAL_RANGES = {
-            delta: { name: "Delta (0.5-4 Hz)", desc: "Sonno profondo, guarigione", freq: 2, carrier: 200, premium: !CONFIG.allFree && !CONFIG.freeBinaurals.includes('delta') },
-            theta: { name: "Theta (4-8 Hz)", desc: "Meditazione, creatività", freq: 6, carrier: 200, premium: !CONFIG.allFree && !CONFIG.freeBinaurals.includes('theta') },
-            alpha: { name: "Alpha (8-14 Hz)", desc: "Rilassamento, focus calmo", freq: 10, carrier: 200, premium: !CONFIG.allFree && !CONFIG.freeBinaurals.includes('alpha') },
-            beta: { name: "Beta (14-30 Hz)", desc: "Concentrazione, vigilanza", freq: 20, carrier: 250, premium: !CONFIG.allFree && !CONFIG.freeBinaurals.includes('beta') },
-            gamma: { name: "Gamma (30-40 Hz)", desc: "Cognizione elevata", freq: 35, carrier: 250, premium: !CONFIG.allFree && !CONFIG.freeBinaurals.includes('gamma') }
+            delta: { name: "Delta (0.5-4 Hz)", desc: "Sonno profondo, guarigione", freq: 2, carrier: 200, premium: true },
+            theta: { name: "Theta (4-8 Hz)", desc: "Meditazione, creatività", freq: 6, carrier: 200, free: true },
+            alpha: { name: "Alpha (8-14 Hz)", desc: "Rilassamento, focus calmo", freq: 10, carrier: 200, premium: true },
+            beta: { name: "Beta (14-30 Hz)", desc: "Concentrazione, vigilanza", freq: 20, carrier: 250, premium: true },
+            gamma: { name: "Gamma (30-40 Hz)", desc: "Cognizione elevata", freq: 35, carrier: 250, premium: true }
         };
 
         // ==================== ICONS ====================
@@ -1824,7 +1756,7 @@
 
             // Get audio URL from R2
             const getAudioUrl = () => {
-                const baseUrl = CONFIG.audioBaseUrl;
+                const baseUrl = 'https://pub-a8b8e92131354b6587fb7d02d880f3e5.r2.dev/purefrequenze';
                 const freq = `${selectedFreq}hz`;
                 const group = selectedGroup;
                 const trackNum = String(selectedTrack + 1).padStart(2, '0');
@@ -1842,64 +1774,6 @@
                     audioRef.current.load();
                 }
             }, [selectedFreq, selectedGroup, selectedTrack]);
-
-            // Auto-resume audio dopo interruzioni (chiamate, Siri, notifiche)
-            useEffect(() => {
-                if (!audioRef.current) return;
-
-                const audio = audioRef.current;
-                let wasPlayingBeforeInterruption = false;
-
-                const handleInterruptionBegin = () => {
-                    wasPlayingBeforeInterruption = isPlaying && !audio.paused;
-                    console.log('Audio interrupted, was playing:', wasPlayingBeforeInterruption);
-                };
-
-                const handleInterruptionEnd = async () => {
-                    if (wasPlayingBeforeInterruption) {
-                        console.log('Resuming audio after interruption...');
-                        try {
-                            // Resume AudioContext se sospeso
-                            if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
-                                await audioContextRef.current.resume();
-                            }
-                            // Riavvia audio
-                            await audio.play();
-                            // Riavvia binaural se era attivo
-                            if (binauralMode && (binauralMode === 'pure' || binauralMode === 'hybrid')) {
-                                startBinaural();
-                            }
-                        } catch (err) {
-                            console.error('Error resuming audio:', err);
-                        }
-                    }
-                };
-
-                // iOS: gestione interruzioni
-                audio.addEventListener('pause', handleInterruptionBegin);
-                
-                // Web Audio API: gestione state changes
-                if (audioContextRef.current) {
-                    audioContextRef.current.addEventListener('statechange', () => {
-                        if (audioContextRef.current.state === 'running' && wasPlayingBeforeInterruption) {
-                            handleInterruptionEnd();
-                        }
-                    });
-                }
-
-                // Visibilità pagina: riprendi quando torni alla tab
-                const handleVisibilityChange = () => {
-                    if (document.visibilityState === 'visible' && wasPlayingBeforeInterruption) {
-                        handleInterruptionEnd();
-                    }
-                };
-                document.addEventListener('visibilitychange', handleVisibilityChange);
-
-                return () => {
-                    audio.removeEventListener('pause', handleInterruptionBegin);
-                    document.removeEventListener('visibilitychange', handleVisibilityChange);
-                };
-            }, [isPlaying, binauralMode]);
 
             // Start/Stop Binaural Beats
             const startBinaural = () => {
@@ -2215,7 +2089,7 @@
             };
 
             const handleTimerSet = (minutes) => {
-                if (!CONFIG.allFree && !isPremium && !CONFIG.freeTimers.includes(minutes)) {
+                if (!isPremium && minutes !== 30 && minutes !== 60) {
                     setShowUpgradeModal(true);
                     setShowTimerModal(false);
                     return;
@@ -2766,21 +2640,21 @@
 
                                 <div className="upgrade-pricing">
                                     <div className="pricing-option" onClick={() => handleUpgrade('monthly')}>
-                                        <h3>{CONFIG.pricing.monthly.label}</h3>
-                                        <div className="price">€{CONFIG.pricing.monthly.price}</div>
-                                        <div className="period">{CONFIG.pricing.monthly.period}</div>
+                                        <h3>Mensile</h3>
+                                        <div className="price">€5,00</div>
+                                        <div className="period">/mese</div>
                                     </div>
                                     <div className="pricing-option" onClick={() => handleUpgrade('annual')}>
-                                        <h3>{CONFIG.pricing.annual.label}</h3>
-                                        <div className="price">€{CONFIG.pricing.annual.price}</div>
-                                        <div className="period">{CONFIG.pricing.annual.period}</div>
-                                        <div className="save">{CONFIG.pricing.annual.save}</div>
+                                        <h3>Annuale</h3>
+                                        <div className="price">€42,00</div>
+                                        <div className="period">/anno</div>
+                                        <div className="save">Risparmi 30%</div>
                                     </div>
                                     <div className="pricing-option" onClick={() => handleUpgrade('lifetime')}>
-                                        <h3>{CONFIG.pricing.lifetime.label}</h3>
-                                        <div className="price">€{CONFIG.pricing.lifetime.price}</div>
-                                        <div className="period">{CONFIG.pricing.lifetime.period}</div>
-                                        <div className="save">{CONFIG.pricing.lifetime.save}</div>
+                                        <h3>Lifetime</h3>
+                                        <div className="price">€100,00</div>
+                                        <div className="period">una tantum</div>
+                                        <div className="save">Per sempre</div>
                                     </div>
                                 </div>
 
